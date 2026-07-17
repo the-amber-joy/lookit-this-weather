@@ -1,18 +1,11 @@
-import { ReactNode, useState } from "react";
 import { CalendarIcon, SunIcon, TimeIcon, ViewIcon } from "@chakra-ui/icons";
 import type { ComponentWithAs, IconProps } from "@chakra-ui/react";
-import {
-  Box,
-  Button,
-  Flex,
-  Icon,
-  Stack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Icon, Stack, Text, VStack } from "@chakra-ui/react";
+import { ReactNode, useState } from "react";
 
 import ComingSoon from "./ComingSoon";
 import CurrentWeather from "./CurrentWeather";
+import HourlyForecast from "./HourlyForecast";
 
 interface TabItem {
   label: string;
@@ -29,12 +22,7 @@ const tabs: TabItem[] = [
   {
     label: "Hourly",
     icon: TimeIcon,
-    panel: (
-      <ComingSoon
-        title="Hourly forecast"
-        description="Hour-by-hour conditions are coming soon."
-      />
-    ),
+    panel: <HourlyForecast />,
   },
   {
     label: "Daily",
@@ -62,7 +50,11 @@ const Layout = () => {
   const [active, setActive] = useState(0);
 
   return (
-    <Flex direction={{ base: "column", md: "row" }} minH="100dvh">
+    <Flex
+      direction={{ base: "column", md: "row" }}
+      height="100dvh"
+      overflow="hidden"
+    >
       {/* Desktop: left sidebar */}
       <VStack
         as="nav"
@@ -97,8 +89,8 @@ const Layout = () => {
       {/* Content */}
       <Box
         flex="1"
+        minH={0}
         overflowY="auto"
-        height="100dvh"
         px={{ base: 4, md: 8 }}
         pb={{ base: "5.5rem", md: 0 }}
       >

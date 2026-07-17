@@ -1,7 +1,9 @@
 import {
+  Box,
   Center,
   Flex,
   Heading,
+  HStack,
   Image,
   Stack,
   Text,
@@ -9,7 +11,11 @@ import {
 } from "@chakra-ui/react";
 import dayjs from "dayjs";
 
-import { getWeatherBackground, getWeatherIcon } from "../api/weatherIcon";
+import {
+  dewPointIcon,
+  getWeatherBackground,
+  getWeatherIcon,
+} from "../api/weatherIcon";
 import { useWeatherContext } from "../context/WeatherContext";
 
 const Hero = () => {
@@ -85,14 +91,23 @@ const Hero = () => {
             </Text>
           )}
           {dewPoint && (
-            <Text
-              color={colors.white}
-              fontSize="xl"
-              fontWeight="bold"
-              textShadow={`1px 1px ${colors.brand.ajBlueLvls["200"]}`}
-            >
-              Dew point {dewPoint}
-            </Text>
+            <HStack justify="center" spacing={1} color={colors.white}>
+              <Box
+                aria-hidden
+                boxSize="1.75rem"
+                sx={{
+                  "& svg": { width: "100%", height: "100%", display: "block" },
+                }}
+                dangerouslySetInnerHTML={{ __html: dewPointIcon }}
+              />
+              <Text
+                fontSize="xl"
+                fontWeight="bold"
+                textShadow={`1px 1px ${colors.brand.ajBlueLvls["200"]}`}
+              >
+                Dew point {dewPoint}
+              </Text>
+            </HStack>
           )}
           <Text color={colors.whiteAlpha["900"]} fontSize="md">
             {updatedAt()}

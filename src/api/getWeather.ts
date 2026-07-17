@@ -6,6 +6,9 @@ export async function getWeather(location: Location): Promise<WeatherResponse> {
     longitude: String(location.longitude),
     current:
       "temperature_2m,dew_point_2m,precipitation_probability,weather_code,is_day,wind_speed_10m,wind_gusts_10m,wind_direction_10m",
+    hourly:
+      "temperature_2m,dew_point_2m,precipitation_probability,weather_code,is_day,wind_speed_10m",
+    forecast_days: "3",
     temperature_unit: "fahrenheit",
     wind_speed_unit: "mph",
     timezone: "auto",

@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Center, Spinner, Stack } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Center, Flex, Spinner } from "@chakra-ui/react";
 
 import { getPrecipitationType, getWindDirection } from "../api/weatherHelpers";
 import { getPrecipitationIcon, getWindSpeedIcon } from "../api/weatherIcon";
@@ -43,24 +43,35 @@ const MetricGrid = () => {
     : [];
 
   return (
-    <Stack spacing={4} justify="center" w={{ base: "100%", md: "22rem" }}>
+    <Flex
+      direction={{ base: "row", md: "column" }}
+      wrap="wrap"
+      gap={4}
+      justify="center"
+      w={{ base: "100%", md: "22rem" }}
+    >
       {error && (
-        <Alert status="error" borderRadius="1rem">
+        <Alert status="error" borderRadius="1rem" w="100%">
           <AlertIcon />
           {error}
         </Alert>
       )}
 
       {metrics.map((metric) => (
-        <MetricCard
+        <Box
           key={metric.label}
-          label={metric.label}
-          value={metric.value}
-          detail={metric.detail}
-          icon={metric.icon}
-        />
+          flex={{ base: "1 1 12rem", md: "1 1 auto" }}
+          minW={0}
+        >
+          <MetricCard
+            label={metric.label}
+            value={metric.value}
+            detail={metric.detail}
+            icon={metric.icon}
+          />
+        </Box>
       ))}
-    </Stack>
+    </Flex>
   );
 };
 

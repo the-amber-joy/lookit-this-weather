@@ -24,6 +24,7 @@ import drizzleMono from "@meteocons/svg/monochrome/drizzle.svg?raw";
 import rainMono from "@meteocons/svg/monochrome/rain.svg?raw";
 import sleetMono from "@meteocons/svg/monochrome/sleet.svg?raw";
 import snowMono from "@meteocons/svg/monochrome/snow.svg?raw";
+import thermometerWaterMono from "@meteocons/svg/monochrome/thermometer-water.svg?raw";
 import thunderstormsMono from "@meteocons/svg/monochrome/thunderstorms.svg?raw";
 import umbrellaClosed from "@meteocons/svg/monochrome/umbrella-closed.svg?raw";
 import beaufort0 from "@meteocons/svg/monochrome/wind-beaufort-0.svg?raw";
@@ -43,6 +44,9 @@ import beaufort9 from "@meteocons/svg/monochrome/wind-beaufort-9.svg?raw";
 // The monochrome icons are hardcoded to black; swap to currentColor so they
 // inherit the surrounding text color when inlined.
 const toCurrentColor = (svg: string) => svg.replace(/black/g, "currentColor");
+
+/** Monochrome dew point icon markup that inherits the current text color. */
+export const dewPointIcon = toCurrentColor(thermometerWaterMono);
 
 const PRECIPITATION_ICONS = {
   none: toCurrentColor(umbrellaClosed),
