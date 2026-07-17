@@ -8,6 +8,7 @@ import {
   useState,
 } from "react";
 
+import { setWeatherFavicon } from "../api/favicon";
 import { getLocation, HOME_LOCATION } from "../api/getLocation";
 import { getWeather } from "../api/getWeather";
 import { Location, WeatherResponse } from "../api/types";
@@ -63,6 +64,12 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
     const intervalId = setInterval(refresh, REFRESH_INTERVAL);
     return () => clearInterval(intervalId);
   }, [refresh]);
+
+  useEffect(() => {
+    if (weather) {
+      setWeatherFavicon(weather.current.weather_code, weather.current.is_day);
+    }
+  }, [weather]);
 
   const value = useMemo(
     () => ({ location, weather, isLoading, error, status, refresh }),
