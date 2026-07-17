@@ -26,13 +26,13 @@ const MetricCard = ({ label, value, icon, detail }: MetricCardProps) => {
   const iconColor = useColorModeValue("gray.800", "whiteAlpha.900");
 
   return (
-    <Card shadow="md" borderRadius="1rem" minH="7rem">
-      <CardBody>
-        <Flex align="center" gap={4}>
+    <Card shadow="md" borderRadius="1rem" minH={{ base: "5rem", md: "7rem" }}>
+      <CardBody px={{ base: 3, md: 5 }} py={{ base: 2, md: 5 }}>
+        <Flex align="center" gap={{ base: 3, md: 4 }}>
           <Box
             aria-hidden
             flexShrink={0}
-            boxSize="2.75rem"
+            boxSize={{ base: "2rem", md: "2.75rem" }}
             color={iconColor}
             sx={{
               "& svg": { width: "100%", height: "100%", display: "block" },
@@ -42,17 +42,26 @@ const MetricCard = ({ label, value, icon, detail }: MetricCardProps) => {
           <Stat>
             <StatLabel
               color={labelColor}
-              fontSize="sm"
+              fontSize={{ base: "2xs", md: "sm" }}
               textTransform="uppercase"
               letterSpacing="wide"
             >
               {label}
             </StatLabel>
-            <StatNumber as={Heading} size="lg" mt={1}>
+            <StatNumber
+              as={Heading}
+              fontSize={{ base: "md", md: "2xl" }}
+              mt={1}
+            >
               {value}
             </StatNumber>
             {detail && (
-              <StatHelpText mb={0} mt={1} opacity={0.8}>
+              <StatHelpText
+                fontSize={{ base: "2xs", md: "sm" }}
+                mb={0}
+                mt={1}
+                opacity={0.8}
+              >
                 {detail}
               </StatHelpText>
             )}

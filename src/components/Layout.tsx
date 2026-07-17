@@ -2,7 +2,7 @@ import { CalendarIcon, SunIcon, TimeIcon } from "@chakra-ui/icons";
 // import { ViewIcon } from "@chakra-ui/icons"; // Re-enable with the Radar tab
 import type { ComponentWithAs, IconProps } from "@chakra-ui/react";
 import { Box, Button, Flex, Icon, Stack, Text, VStack } from "@chakra-ui/react";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useRef, useState } from "react";
 
 // import ComingSoon from "./ComingSoon"; // Re-enable with the Radar tab
 import CurrentWeather from "./CurrentWeather";
@@ -46,6 +46,11 @@ const tabs: TabItem[] = [
 
 const Layout = () => {
   const [active, setActive] = useState(0);
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    contentRef.current?.scrollTo(0, 0);
+  }, [active]);
 
   return (
     <Flex
@@ -86,6 +91,7 @@ const Layout = () => {
 
       {/* Content */}
       <Box
+        ref={contentRef}
         flex="1"
         minH={0}
         overflowY="auto"

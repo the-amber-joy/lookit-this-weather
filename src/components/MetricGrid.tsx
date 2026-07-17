@@ -15,7 +15,7 @@ const MetricGrid = () => {
   if (isLoading) {
     return (
       <Center
-        minH={{ base: "8rem", md: "16rem" }}
+        minH={{ base: "5rem", md: "16rem" }}
         w={{ base: "100%", md: "22rem" }}
       >
         <Spinner size="xl" thickness="4px" color="brand.ajPurple" />
@@ -50,7 +50,7 @@ const MetricGrid = () => {
     <Flex
       direction={{ base: "row", md: "column" }}
       wrap="wrap"
-      gap={4}
+      gap={{ base: 2, md: 4 }}
       justify="center"
       w={{ base: "100%", md: "22rem" }}
     >

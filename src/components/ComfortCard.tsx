@@ -23,14 +23,14 @@ const ComfortCard = () => {
 
   return (
     <Stack
-      spacing={1}
+      spacing={{ base: 0, md: 1 }}
       textAlign="center"
       background={background}
       transition="background 0.6s ease"
       borderRadius="1.5rem"
       shadow="xl"
-      px={{ base: 8, md: 16 }}
-      py={{ base: 5, md: 8 }}
+      px={{ base: 5, md: 16 }}
+      py={{ base: 2, md: 8 }}
       w="100%"
       maxW="42rem"
     >
@@ -38,21 +38,21 @@ const ComfortCard = () => {
         color={colors.whiteAlpha["800"]}
         textTransform="uppercase"
         letterSpacing="widest"
-        fontSize="sm"
+        fontSize={{ base: "xs", md: "sm" }}
       >
         Comfort level
       </Text>
       <Heading
         color={colors.white}
         textShadow={`2px 2px ${colors.brand.ajBlueLvls["200"]}`}
-        fontSize={{ base: "4xl", md: "6xl" }}
+        fontSize={{ base: "2xl", md: "6xl" }}
         lineHeight="1.1"
       >
         {comfort.label}
       </Heading>
       <Text
         color={colors.whiteAlpha["900"]}
-        fontSize={{ base: "md", md: "xl" }}
+        fontSize={{ base: "xs", md: "xl" }}
       >
         {comfort.blurb}
       </Text>

@@ -51,21 +51,21 @@ const Hero = () => {
   return (
     <Flex justifyContent="center">
       <Center
-        minW="xs"
+        minW={{ base: "auto", md: "xs" }}
         textAlign="center"
         background={background}
         transition="background 0.6s ease"
         borderRadius="1rem"
         shadow="lg"
-        px={8}
-        py={{ base: 4, md: 6 }}
+        px={{ base: 5, md: 8 }}
+        py={{ base: 2, md: 6 }}
       >
-        <Stack spacing={1}>
+        <Stack spacing={{ base: 0, md: 1 }}>
           {icon && (
             <Image
               src={icon.src}
               alt={icon.label}
-              boxSize={{ base: "5.5rem", md: "8rem" }}
+              boxSize={{ base: "3.5rem", md: "8rem" }}
               mx="auto"
               draggable={false}
             />
@@ -73,20 +73,20 @@ const Hero = () => {
           <Heading
             color={colors.white}
             textShadow={`2px 2px ${colors.brand.ajBlueLvls["200"]}`}
-            size="lg"
+            fontSize={{ base: "md", md: "2rem" }}
           >
             {heading}
           </Heading>
           <Heading
             color={colors.white}
             textShadow={`2px 2px ${colors.brand.ajBlueLvls["200"]}`}
-            fontSize={{ base: "5xl", md: "6xl" }}
+            fontSize={{ base: "3xl", md: "6xl" }}
             lineHeight="1.1"
           >
             {temperature}
           </Heading>
           {icon && (
-            <Text color={colors.white} fontSize="lg">
+            <Text color={colors.white} fontSize={{ base: "xs", md: "lg" }}>
               {icon.label}
             </Text>
           )}
@@ -94,14 +94,14 @@ const Hero = () => {
             <HStack justify="center" spacing={1} color={colors.white}>
               <Box
                 aria-hidden
-                boxSize="1.75rem"
+                boxSize={{ base: "1.1rem", md: "1.75rem" }}
                 sx={{
                   "& svg": { width: "100%", height: "100%", display: "block" },
                 }}
                 dangerouslySetInnerHTML={{ __html: dewPointIcon }}
               />
               <Text
-                fontSize="xl"
+                fontSize={{ base: "xs", md: "xl" }}
                 fontWeight="bold"
                 textShadow={`1px 1px ${colors.brand.ajBlueLvls["200"]}`}
               >
@@ -109,7 +109,10 @@ const Hero = () => {
               </Text>
             </HStack>
           )}
-          <Text color={colors.whiteAlpha["900"]} fontSize="md">
+          <Text
+            color={colors.whiteAlpha["900"]}
+            fontSize={{ base: "xs", md: "md" }}
+          >
             {updatedAt()}
           </Text>
         </Stack>
