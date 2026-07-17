@@ -1,6 +1,10 @@
 import { Alert, AlertIcon, Box, Center, Flex, Spinner } from "@chakra-ui/react";
 
-import { getPrecipitationType, getWindDirection } from "../api/weatherHelpers";
+import {
+  formatWindUnit,
+  getPrecipitationType,
+  getWindDirection,
+} from "../api/weatherHelpers";
 import { getPrecipitationIcon, getWindSpeedIcon } from "../api/weatherIcon";
 import { useWeatherContext } from "../context/WeatherContext";
 import MetricCard from "./MetricCard";
@@ -35,8 +39,8 @@ const MetricGrid = () => {
         },
         {
           label: "Wind",
-          value: `${getWindDirection(weather.current.wind_direction_10m)} ${Math.round(weather.current.wind_speed_10m)} ${weather.current_units.wind_speed_10m}`,
-          detail: `Gusts ${Math.round(weather.current.wind_gusts_10m)} ${weather.current_units.wind_gusts_10m}`,
+          value: `${getWindDirection(weather.current.wind_direction_10m)} ${Math.round(weather.current.wind_speed_10m)} ${formatWindUnit(weather.current_units.wind_speed_10m)}`,
+          detail: `Gusts ${Math.round(weather.current.wind_gusts_10m)} ${formatWindUnit(weather.current_units.wind_gusts_10m)}`,
           icon: getWindSpeedIcon(weather.current.wind_speed_10m),
         },
       ]

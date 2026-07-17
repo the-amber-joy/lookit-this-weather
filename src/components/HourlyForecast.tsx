@@ -11,6 +11,7 @@ import {
 import dayjs from "dayjs";
 
 import { getHourlyForecast, HourlyPoint } from "../api/getHourlyForecast";
+import { formatWindUnit } from "../api/weatherHelpers";
 import {
   dewPointIconStatic,
   getStaticPrecipitationIcon,
@@ -136,7 +137,7 @@ const HourlyForecast = () => {
     temperature: weather.hourly_units.temperature_2m,
     dewPoint: weather.hourly_units.dew_point_2m,
     precip: weather.hourly_units.precipitation_probability,
-    wind: weather.hourly_units.wind_speed_10m,
+    wind: formatWindUnit(weather.hourly_units.wind_speed_10m),
   };
 
   return (

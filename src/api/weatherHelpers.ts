@@ -30,3 +30,8 @@ export function getWindDirection(degrees: number): string {
   const directionIndex = Math.round(degrees / 45) % directions.length;
   return directions[directionIndex];
 }
+
+/** Open-Meteo reports mph as "mp/h"; normalize it to the familiar "mph". */
+export function formatWindUnit(unit?: string): string {
+  return unit === "mp/h" ? "mph" : (unit ?? "mph");
+}

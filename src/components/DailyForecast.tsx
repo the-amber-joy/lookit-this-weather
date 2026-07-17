@@ -10,7 +10,7 @@ import {
 import dayjs from "dayjs";
 
 import { DailyPoint, getDailyForecast } from "../api/getDailyForecast";
-import { getWindDirection } from "../api/weatherHelpers";
+import { formatWindUnit, getWindDirection } from "../api/weatherHelpers";
 import {
   getStaticPrecipitationIcon,
   getStaticWeatherIcon,
@@ -40,63 +40,73 @@ const DayRow = ({
   const windIcon = getStaticWindIcon(point.windSpeed);
 
   return (
-    <Flex align="center" gap={{ base: 3, md: 4 }} py={2}>
-      <Box minW={{ base: "4rem", md: "5.5rem" }}>
-        <Text fontWeight="bold" fontSize="sm">
-          {label}
-        </Text>
-        <Text fontSize="xs" opacity={0.6}>
-          {dayjs(point.time).format("MMM D")}
-        </Text>
-      </Box>
-
-      <Box
-        aria-label={icon.label}
-        role="img"
-        flexShrink={0}
-        boxSize="2.75rem"
-        sx={{ "& svg": { width: "100%", height: "100%", display: "block" } }}
-        dangerouslySetInnerHTML={{ __html: icon.svg }}
-      />
-
-      <HStack minW={{ base: "3.5rem", md: "4.5rem" }} spacing={1}>
+    <Flex direction="column" gap={1} py={3}>
+      {/* Line 1: conditions icon, day, and the high/low temps. */}
+      <Flex align="center" gap={3}>
         <Box
-          aria-hidden
-          flexShrink={0}
-          boxSize="1.5rem"
-          sx={{ "& svg": { width: "100%", height: "100%", display: "block" } }}
-          dangerouslySetInnerHTML={{ __html: precipIcon }}
-        />
-        <Text fontSize="sm">
-          {Math.round(point.precipitationProbability)}
-          {units?.precip ?? "%"}
-        </Text>
-      </HStack>
-
-      <HStack minW={{ base: "5rem", md: "6.5rem" }} spacing={1}>
-        <Box
-          aria-label={windIcon.label}
+          aria-label={icon.label}
           role="img"
           flexShrink={0}
-          boxSize="1.5rem"
+          boxSize="2.75rem"
           sx={{ "& svg": { width: "100%", height: "100%", display: "block" } }}
-          dangerouslySetInnerHTML={{ __html: windIcon.svg }}
+          dangerouslySetInnerHTML={{ __html: icon.svg }}
         />
-        <Text fontSize="sm" opacity={0.8}>
-          {getWindDirection(point.windDirection)} {Math.round(point.windSpeed)}{" "}
-          {units?.wind ?? "mph"}
-        </Text>
-      </HStack>
 
-      <HStack ml="auto" spacing={2} whiteSpace="nowrap">
-        <Text fontWeight="bold">
-          {Math.round(point.temperatureMax)}
-          {units?.temperature ?? "°"}
-        </Text>
-        <Text opacity={0.6}>
-          {Math.round(point.temperatureMin)}
-          {units?.temperature ?? "°"}
-        </Text>
+        <Box>
+          <Text fontWeight="bold" whiteSpace="nowrap">
+            {label}
+          </Text>
+          <Text fontSize="xs" opacity={0.6}>
+            {dayjs(point.time).format("MMM D")}
+          </Text>
+        </Box>
+
+        <HStack ml="auto" spacing={2} whiteSpace="nowrap">
+          <Text fontWeight="bold" fontSize="lg">
+            {Math.round(point.temperatureMax)}
+            {units?.temperature ?? "°"}
+          </Text>
+          <Text opacity={0.6} fontSize="lg">
+            {Math.round(point.temperatureMin)}
+            {units?.temperature ?? "°"}
+          </Text>
+        </HStack>
+      </Flex>
+
+      {/* Line 2: precipitation and wind, aligned under the day name. */}
+      <HStack spacing={6} pl="3.5rem" opacity={0.9}>
+        <HStack spacing={1}>
+          <Box
+            aria-hidden
+            flexShrink={0}
+            boxSize="1.5rem"
+            sx={{
+              "& svg": { width: "100%", height: "100%", display: "block" },
+            }}
+            dangerouslySetInnerHTML={{ __html: precipIcon }}
+          />
+          <Text fontSize="sm">
+            {Math.round(point.precipitationProbability)}
+            {units?.precip ?? "%"}
+          </Text>
+        </HStack>
+
+        <HStack spacing={1}>
+          <Box
+            aria-label={windIcon.label}
+            role="img"
+            flexShrink={0}
+            boxSize="1.5rem"
+            sx={{
+              "& svg": { width: "100%", height: "100%", display: "block" },
+            }}
+            dangerouslySetInnerHTML={{ __html: windIcon.svg }}
+          />
+          <Text fontSize="sm" whiteSpace="nowrap">
+            {getWindDirection(point.windDirection)}{" "}
+            {Math.round(point.windSpeed)} {units?.wind ?? "mph"}
+          </Text>
+        </HStack>
       </HStack>
     </Flex>
   );
@@ -125,7 +135,7 @@ const DailyForecast = () => {
   const units = weather?.daily_units && {
     temperature: weather.daily_units.temperature_2m_max,
     precip: weather.daily_units.precipitation_probability_max,
-    wind: weather.daily_units.wind_speed_10m_max,
+    wind: formatWindUnit(weather.daily_units.wind_speed_10m_max),
   };
 
   return (
