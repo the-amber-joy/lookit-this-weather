@@ -18,7 +18,7 @@ export interface HourlyDay {
   hours: HourlyPoint[];
 }
 
-const HOURS = 48;
+const HOURS = 72;
 
 function dayLabel(time: dayjs.Dayjs, now: dayjs.Dayjs): string {
   const days = time.startOf("day").diff(now.startOf("day"), "day");

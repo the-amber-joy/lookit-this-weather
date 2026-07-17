@@ -4,7 +4,6 @@ import {
   Flex,
   Heading,
   HStack,
-  Image,
   Spinner,
   Stack,
   Text,
@@ -13,9 +12,10 @@ import dayjs from "dayjs";
 
 import { getHourlyForecast, HourlyPoint } from "../api/getHourlyForecast";
 import {
-  dewPointIcon,
-  getPrecipitationIcon,
-  getWeatherIcon,
+  dewPointIconStatic,
+  getStaticPrecipitationIcon,
+  getStaticWeatherIcon,
+  getStaticWindIcon,
 } from "../api/weatherIcon";
 import { useWeatherContext } from "../context/WeatherContext";
 
@@ -33,11 +33,12 @@ const HourRow = ({
     wind: string;
   };
 }) => {
-  const icon = getWeatherIcon(point.weatherCode, point.isDay);
-  const precipIcon = getPrecipitationIcon(
+  const icon = getStaticWeatherIcon(point.weatherCode, point.isDay);
+  const precipIcon = getStaticPrecipitationIcon(
     point.precipitationProbability,
     point.weatherCode,
   );
+  const windIcon = getStaticWindIcon(point.windSpeed);
 
   return (
     <Flex align="center" gap={{ base: 3, md: 4 }} py={2}>
@@ -49,12 +50,13 @@ const HourRow = ({
         {isFirst ? "Now" : dayjs(point.time).format("h A")}
       </Text>
 
-      <Image
-        src={icon.src}
-        alt={icon.label}
-        boxSize="2.5rem"
+      <Box
+        aria-label={icon.label}
+        role="img"
         flexShrink={0}
-        draggable={false}
+        boxSize="2.5rem"
+        sx={{ "& svg": { width: "100%", height: "100%", display: "block" } }}
+        dangerouslySetInnerHTML={{ __html: icon.svg }}
       />
 
       <Box minW={{ base: "4.5rem", md: "6rem" }}>
@@ -70,7 +72,7 @@ const HourRow = ({
             sx={{
               "& svg": { width: "100%", height: "100%", display: "block" },
             }}
-            dangerouslySetInnerHTML={{ __html: dewPointIcon }}
+            dangerouslySetInnerHTML={{ __html: dewPointIconStatic }}
           />
           <Text fontSize="xs">
             {Math.round(point.dewPoint)}
@@ -93,9 +95,19 @@ const HourRow = ({
         </Text>
       </HStack>
 
-      <Text fontSize="sm" opacity={0.8} ml="auto" whiteSpace="nowrap">
-        {Math.round(point.windSpeed)} {units?.wind ?? "mph"}
-      </Text>
+      <HStack ml="auto" spacing={1} whiteSpace="nowrap">
+        <Box
+          aria-label={windIcon.label}
+          role="img"
+          flexShrink={0}
+          boxSize="1.5rem"
+          sx={{ "& svg": { width: "100%", height: "100%", display: "block" } }}
+          dangerouslySetInnerHTML={{ __html: windIcon.svg }}
+        />
+        <Text fontSize="sm" opacity={0.8}>
+          {Math.round(point.windSpeed)} {units?.wind ?? "mph"}
+        </Text>
+      </HStack>
     </Flex>
   );
 };

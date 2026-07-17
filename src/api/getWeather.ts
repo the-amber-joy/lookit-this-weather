@@ -8,7 +8,9 @@ export async function getWeather(location: Location): Promise<WeatherResponse> {
       "temperature_2m,dew_point_2m,precipitation_probability,weather_code,is_day,wind_speed_10m,wind_gusts_10m,wind_direction_10m",
     hourly:
       "temperature_2m,dew_point_2m,precipitation_probability,weather_code,is_day,wind_speed_10m",
-    forecast_days: "3",
+    daily:
+      "weather_code,temperature_2m_max,temperature_2m_min,precipitation_probability_max,wind_speed_10m_max,wind_direction_10m_dominant",
+    forecast_days: "14",
     temperature_unit: "fahrenheit",
     wind_speed_unit: "mph",
     timezone: "auto",

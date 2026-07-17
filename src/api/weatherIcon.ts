@@ -20,6 +20,41 @@ import thunderstormsDay from "@meteocons/svg/fill/thunderstorms-day.svg";
 import thunderstormsNightRain from "@meteocons/svg/fill/thunderstorms-night-rain.svg";
 import thunderstormsNight from "@meteocons/svg/fill/thunderstorms-night.svg";
 
+import clearDayStatic from "@meteocons/svg/flat/clear-day.svg?raw";
+import clearNightStatic from "@meteocons/svg/flat/clear-night.svg?raw";
+import drizzleStatic from "@meteocons/svg/flat/drizzle.svg?raw";
+import fogDayStatic from "@meteocons/svg/flat/fog-day.svg?raw";
+import fogNightStatic from "@meteocons/svg/flat/fog-night.svg?raw";
+import notAvailableStatic from "@meteocons/svg/flat/not-available.svg?raw";
+import overcastDayStatic from "@meteocons/svg/flat/overcast-day.svg?raw";
+import overcastNightStatic from "@meteocons/svg/flat/overcast-night.svg?raw";
+import partlyCloudyDayRainStatic from "@meteocons/svg/flat/partly-cloudy-day-rain.svg?raw";
+import partlyCloudyDaySnowStatic from "@meteocons/svg/flat/partly-cloudy-day-snow.svg?raw";
+import partlyCloudyDayStatic from "@meteocons/svg/flat/partly-cloudy-day.svg?raw";
+import partlyCloudyNightRainStatic from "@meteocons/svg/flat/partly-cloudy-night-rain.svg?raw";
+import partlyCloudyNightSnowStatic from "@meteocons/svg/flat/partly-cloudy-night-snow.svg?raw";
+import partlyCloudyNightStatic from "@meteocons/svg/flat/partly-cloudy-night.svg?raw";
+import rainStatic from "@meteocons/svg/flat/rain.svg?raw";
+import sleetStatic from "@meteocons/svg/flat/sleet.svg?raw";
+import snowStatic from "@meteocons/svg/flat/snow.svg?raw";
+import thunderstormsDayRainStatic from "@meteocons/svg/flat/thunderstorms-day-rain.svg?raw";
+import thunderstormsDayStatic from "@meteocons/svg/flat/thunderstorms-day.svg?raw";
+import thunderstormsNightRainStatic from "@meteocons/svg/flat/thunderstorms-night-rain.svg?raw";
+import thunderstormsNightStatic from "@meteocons/svg/flat/thunderstorms-night.svg?raw";
+import beaufort0Static from "@meteocons/svg/flat/wind-beaufort-0.svg?raw";
+import beaufort1Static from "@meteocons/svg/flat/wind-beaufort-1.svg?raw";
+import beaufort10Static from "@meteocons/svg/flat/wind-beaufort-10.svg?raw";
+import beaufort11Static from "@meteocons/svg/flat/wind-beaufort-11.svg?raw";
+import beaufort12Static from "@meteocons/svg/flat/wind-beaufort-12.svg?raw";
+import beaufort2Static from "@meteocons/svg/flat/wind-beaufort-2.svg?raw";
+import beaufort3Static from "@meteocons/svg/flat/wind-beaufort-3.svg?raw";
+import beaufort4Static from "@meteocons/svg/flat/wind-beaufort-4.svg?raw";
+import beaufort5Static from "@meteocons/svg/flat/wind-beaufort-5.svg?raw";
+import beaufort6Static from "@meteocons/svg/flat/wind-beaufort-6.svg?raw";
+import beaufort7Static from "@meteocons/svg/flat/wind-beaufort-7.svg?raw";
+import beaufort8Static from "@meteocons/svg/flat/wind-beaufort-8.svg?raw";
+import beaufort9Static from "@meteocons/svg/flat/wind-beaufort-9.svg?raw";
+
 import drizzleMono from "@meteocons/svg/monochrome/drizzle.svg?raw";
 import rainMono from "@meteocons/svg/monochrome/rain.svg?raw";
 import sleetMono from "@meteocons/svg/monochrome/sleet.svg?raw";
@@ -45,8 +80,27 @@ import beaufort9 from "@meteocons/svg/monochrome/wind-beaufort-9.svg?raw";
 // inherit the surrounding text color when inlined.
 const toCurrentColor = (svg: string) => svg.replace(/black/g, "currentColor");
 
+// Meteocons ship with SMIL animations baked in. Strip the animation elements so
+// the icon renders as a still frame (its resting/base state) for calm lists.
+const stripAnimation = (svg: string) =>
+  svg
+    .replace(/<(animate|animateTransform|animateMotion|set)\b[^>]*\/>/g, "")
+    .replace(
+      /<(animate|animateTransform|animateMotion|set)\b[^>]*>[\s\S]*?<\/\1>/g,
+      "",
+    );
+
+/** Inline SVG markup plus an accessible label. */
+export interface InlineIcon {
+  svg: string;
+  label: string;
+}
+
 /** Monochrome dew point icon markup that inherits the current text color. */
 export const dewPointIcon = toCurrentColor(thermometerWaterMono);
+
+/** Non-animated dew point icon for calm lists. */
+export const dewPointIconStatic = stripAnimation(dewPointIcon);
 
 const PRECIPITATION_ICONS = {
   none: toCurrentColor(umbrellaClosed),
@@ -71,6 +125,14 @@ export function getPrecipitationIcon(
   return PRECIPITATION_ICONS.rain;
 }
 
+/** Non-animated precipitation icon for calm lists. */
+export function getStaticPrecipitationIcon(
+  probability: number,
+  weatherCode: number,
+): string {
+  return stripAnimation(getPrecipitationIcon(probability, weatherCode));
+}
+
 // Beaufort icons indexed 0–12, so the wind tile reflects the actual speed.
 const BEAUFORT_ICONS = [
   beaufort0,
@@ -88,15 +150,45 @@ const BEAUFORT_ICONS = [
   beaufort12,
 ].map(toCurrentColor);
 
+// Static (non-animated) colorful Beaufort icons, indexed 0–12.
+const BEAUFORT_ICONS_STATIC = [
+  beaufort0Static,
+  beaufort1Static,
+  beaufort2Static,
+  beaufort3Static,
+  beaufort4Static,
+  beaufort5Static,
+  beaufort6Static,
+  beaufort7Static,
+  beaufort8Static,
+  beaufort9Static,
+  beaufort10Static,
+  beaufort11Static,
+  beaufort12Static,
+];
+
 // Lower bounds (mph) for Beaufort forces 1–12.
 const BEAUFORT_THRESHOLDS = [1, 4, 8, 13, 19, 25, 32, 39, 47, 55, 64, 73];
 
-export function getWindSpeedIcon(mph: number): string {
+function getBeaufortForce(mph: number): number {
   let force = 0;
   for (let i = 0; i < BEAUFORT_THRESHOLDS.length; i += 1) {
     if (mph >= BEAUFORT_THRESHOLDS[i]) force = i + 1;
   }
-  return BEAUFORT_ICONS[force];
+  return force;
+}
+
+export function getWindSpeedIcon(mph: number): string {
+  return BEAUFORT_ICONS[getBeaufortForce(mph)];
+}
+
+/** Static (non-animated) colorful wind icon markup for the given speed. */
+export function getStaticWindIcon(mph: number): InlineIcon {
+  const force = getBeaufortForce(mph);
+  return {
+    svg: stripAnimation(BEAUFORT_ICONS_STATIC[force]),
+    label: `Beaufort force ${force}`,
+  };
 }
 
 interface WeatherIcon {
@@ -106,77 +198,147 @@ interface WeatherIcon {
   label: string;
 }
 
+type IconKey =
+  | "clearDay"
+  | "clearNight"
+  | "partlyCloudyDay"
+  | "partlyCloudyNight"
+  | "overcastDay"
+  | "overcastNight"
+  | "fogDay"
+  | "fogNight"
+  | "drizzle"
+  | "sleet"
+  | "rain"
+  | "snow"
+  | "partlyCloudyDayRain"
+  | "partlyCloudyNightRain"
+  | "partlyCloudyDaySnow"
+  | "partlyCloudyNightSnow"
+  | "thunderstormsDay"
+  | "thunderstormsNight"
+  | "thunderstormsDayRain"
+  | "thunderstormsNightRain";
+
+// Animated (fill) and static (flat) URLs for each icon key, so callers can pick
+// the presentation that fits: lively for the current view, calm lists elsewhere.
+const ANIMATED_ICONS: Record<IconKey, string> = {
+  clearDay,
+  clearNight,
+  partlyCloudyDay,
+  partlyCloudyNight,
+  overcastDay,
+  overcastNight,
+  fogDay,
+  fogNight,
+  drizzle,
+  sleet,
+  rain,
+  snow,
+  partlyCloudyDayRain,
+  partlyCloudyNightRain,
+  partlyCloudyDaySnow,
+  partlyCloudyNightSnow,
+  thunderstormsDay,
+  thunderstormsNight,
+  thunderstormsDayRain,
+  thunderstormsNightRain,
+};
+
+const STATIC_ICONS: Record<IconKey, string> = {
+  clearDay: clearDayStatic,
+  clearNight: clearNightStatic,
+  partlyCloudyDay: partlyCloudyDayStatic,
+  partlyCloudyNight: partlyCloudyNightStatic,
+  overcastDay: overcastDayStatic,
+  overcastNight: overcastNightStatic,
+  fogDay: fogDayStatic,
+  fogNight: fogNightStatic,
+  drizzle: drizzleStatic,
+  sleet: sleetStatic,
+  rain: rainStatic,
+  snow: snowStatic,
+  partlyCloudyDayRain: partlyCloudyDayRainStatic,
+  partlyCloudyNightRain: partlyCloudyNightRainStatic,
+  partlyCloudyDaySnow: partlyCloudyDaySnowStatic,
+  partlyCloudyNightSnow: partlyCloudyNightSnowStatic,
+  thunderstormsDay: thunderstormsDayStatic,
+  thunderstormsNight: thunderstormsNightStatic,
+  thunderstormsDayRain: thunderstormsDayRainStatic,
+  thunderstormsNightRain: thunderstormsNightRainStatic,
+};
+
 interface IconVariants {
-  day: string;
-  night: string;
+  day: IconKey;
+  night: IconKey;
   label: string;
 }
 
 // WMO weather interpretation codes returned by Open-Meteo, mapped to Meteocons.
 // https://open-meteo.com/en/docs#weathervariables
 const WMO_CODES: Record<number, IconVariants> = {
-  0: { day: clearDay, night: clearNight, label: "Clear sky" },
-  1: { day: clearDay, night: clearNight, label: "Mainly clear" },
+  0: { day: "clearDay", night: "clearNight", label: "Clear sky" },
+  1: { day: "clearDay", night: "clearNight", label: "Mainly clear" },
   2: {
-    day: partlyCloudyDay,
-    night: partlyCloudyNight,
+    day: "partlyCloudyDay",
+    night: "partlyCloudyNight",
     label: "Partly cloudy",
   },
-  3: { day: overcastDay, night: overcastNight, label: "Overcast" },
-  45: { day: fogDay, night: fogNight, label: "Fog" },
-  48: { day: fogDay, night: fogNight, label: "Depositing rime fog" },
-  51: { day: drizzle, night: drizzle, label: "Light drizzle" },
-  53: { day: drizzle, night: drizzle, label: "Moderate drizzle" },
-  55: { day: drizzle, night: drizzle, label: "Dense drizzle" },
-  56: { day: sleet, night: sleet, label: "Light freezing drizzle" },
-  57: { day: sleet, night: sleet, label: "Dense freezing drizzle" },
-  61: { day: rain, night: rain, label: "Slight rain" },
-  63: { day: rain, night: rain, label: "Moderate rain" },
-  65: { day: rain, night: rain, label: "Heavy rain" },
-  66: { day: sleet, night: sleet, label: "Light freezing rain" },
-  67: { day: sleet, night: sleet, label: "Heavy freezing rain" },
-  71: { day: snow, night: snow, label: "Slight snowfall" },
-  73: { day: snow, night: snow, label: "Moderate snowfall" },
-  75: { day: snow, night: snow, label: "Heavy snowfall" },
-  77: { day: snow, night: snow, label: "Snow grains" },
+  3: { day: "overcastDay", night: "overcastNight", label: "Overcast" },
+  45: { day: "fogDay", night: "fogNight", label: "Fog" },
+  48: { day: "fogDay", night: "fogNight", label: "Depositing rime fog" },
+  51: { day: "drizzle", night: "drizzle", label: "Light drizzle" },
+  53: { day: "drizzle", night: "drizzle", label: "Moderate drizzle" },
+  55: { day: "drizzle", night: "drizzle", label: "Dense drizzle" },
+  56: { day: "sleet", night: "sleet", label: "Light freezing drizzle" },
+  57: { day: "sleet", night: "sleet", label: "Dense freezing drizzle" },
+  61: { day: "rain", night: "rain", label: "Slight rain" },
+  63: { day: "rain", night: "rain", label: "Moderate rain" },
+  65: { day: "rain", night: "rain", label: "Heavy rain" },
+  66: { day: "sleet", night: "sleet", label: "Light freezing rain" },
+  67: { day: "sleet", night: "sleet", label: "Heavy freezing rain" },
+  71: { day: "snow", night: "snow", label: "Slight snowfall" },
+  73: { day: "snow", night: "snow", label: "Moderate snowfall" },
+  75: { day: "snow", night: "snow", label: "Heavy snowfall" },
+  77: { day: "snow", night: "snow", label: "Snow grains" },
   80: {
-    day: partlyCloudyDayRain,
-    night: partlyCloudyNightRain,
+    day: "partlyCloudyDayRain",
+    night: "partlyCloudyNightRain",
     label: "Slight rain showers",
   },
   81: {
-    day: partlyCloudyDayRain,
-    night: partlyCloudyNightRain,
+    day: "partlyCloudyDayRain",
+    night: "partlyCloudyNightRain",
     label: "Moderate rain showers",
   },
   82: {
-    day: partlyCloudyDayRain,
-    night: partlyCloudyNightRain,
+    day: "partlyCloudyDayRain",
+    night: "partlyCloudyNightRain",
     label: "Violent rain showers",
   },
   85: {
-    day: partlyCloudyDaySnow,
-    night: partlyCloudyNightSnow,
+    day: "partlyCloudyDaySnow",
+    night: "partlyCloudyNightSnow",
     label: "Slight snow showers",
   },
   86: {
-    day: partlyCloudyDaySnow,
-    night: partlyCloudyNightSnow,
+    day: "partlyCloudyDaySnow",
+    night: "partlyCloudyNightSnow",
     label: "Heavy snow showers",
   },
   95: {
-    day: thunderstormsDay,
-    night: thunderstormsNight,
+    day: "thunderstormsDay",
+    night: "thunderstormsNight",
     label: "Thunderstorm",
   },
   96: {
-    day: thunderstormsDayRain,
-    night: thunderstormsNightRain,
+    day: "thunderstormsDayRain",
+    night: "thunderstormsNightRain",
     label: "Thunderstorm with slight hail",
   },
   99: {
-    day: thunderstormsDayRain,
-    night: thunderstormsNightRain,
+    day: "thunderstormsDayRain",
+    night: "thunderstormsNightRain",
     label: "Thunderstorm with heavy hail",
   },
 };
@@ -191,10 +353,26 @@ export function getWeatherIcon(
     return { src: notAvailable, label: "Unknown conditions" };
   }
 
-  return {
-    src: isDay ? variants.day : variants.night,
-    label: variants.label,
-  };
+  const key = isDay ? variants.day : variants.night;
+  return { src: ANIMATED_ICONS[key], label: variants.label };
+}
+
+/** Static (non-animated) colorful weather icon for calm lists and outlooks. */
+export function getStaticWeatherIcon(
+  weatherCode: number,
+  isDay: number,
+): InlineIcon {
+  const variants = WMO_CODES[weatherCode];
+
+  if (!variants) {
+    return {
+      svg: stripAnimation(notAvailableStatic),
+      label: "Unknown conditions",
+    };
+  }
+
+  const key = isDay ? variants.day : variants.night;
+  return { svg: stripAnimation(STATIC_ICONS[key]), label: variants.label };
 }
 
 type Condition = "clear" | "cloudy" | "fog" | "rain" | "snow" | "thunder";
