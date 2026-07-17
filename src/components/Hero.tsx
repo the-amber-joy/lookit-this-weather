@@ -1,0 +1,106 @@
+import {
+  Center,
+  Flex,
+  Heading,
+  Image,
+  Stack,
+  Text,
+  useTheme,
+} from "@chakra-ui/react";
+import dayjs from "dayjs";
+
+import { getWeatherBackground, getWeatherIcon } from "../api/weatherIcon";
+import { useWeatherContext } from "../context/WeatherContext";
+
+const Hero = () => {
+  const { location, weather, error } = useWeatherContext();
+  const { colors } = useTheme();
+
+  const icon = weather
+    ? getWeatherIcon(weather.current.weather_code, weather.current.is_day)
+    : null;
+
+  const background = weather
+    ? getWeatherBackground(weather.current.weather_code, weather.current.is_day)
+    : "linear-gradient(160deg, #1b467e, #245da8, #5790db)";
+
+  const temperature = weather
+    ? `${Math.round(weather.current.temperature_2m)}${weather.current_units.temperature_2m}`
+    : "--";
+
+  const dewPoint = weather
+    ? `${Math.round(weather.current.dew_point_2m)}${weather.current_units.dew_point_2m}`
+    : null;
+
+  const heading = error
+    ? "Weather unavailable"
+    : (location?.name ?? "Loading location...");
+
+  const updatedAt = () => {
+    if (error) return "Please try again.";
+    if (!weather) return "Getting current conditions...";
+    return `Updated ${dayjs(weather.current.time).format("h:mm A")} ${weather.timezone_abbreviation}`;
+  };
+
+  return (
+    <Flex justifyContent="center">
+      <Center
+        minW="xs"
+        textAlign="center"
+        background={background}
+        transition="background 0.6s ease"
+        borderRadius="1rem"
+        shadow="lg"
+        px={8}
+        py={{ base: 4, md: 6 }}
+      >
+        <Stack spacing={1}>
+          {icon && (
+            <Image
+              src={icon.src}
+              alt={icon.label}
+              boxSize={{ base: "5.5rem", md: "8rem" }}
+              mx="auto"
+              draggable={false}
+            />
+          )}
+          <Heading
+            color={colors.white}
+            textShadow={`2px 2px ${colors.brand.ajBlueLvls["200"]}`}
+            size="lg"
+          >
+            {heading}
+          </Heading>
+          <Heading
+            color={colors.white}
+            textShadow={`2px 2px ${colors.brand.ajBlueLvls["200"]}`}
+            fontSize={{ base: "5xl", md: "6xl" }}
+            lineHeight="1.1"
+          >
+            {temperature}
+          </Heading>
+          {icon && (
+            <Text color={colors.white} fontSize="lg">
+              {icon.label}
+            </Text>
+          )}
+          {dewPoint && (
+            <Text
+              color={colors.white}
+              fontSize="xl"
+              fontWeight="bold"
+              textShadow={`1px 1px ${colors.brand.ajBlueLvls["200"]}`}
+            >
+              Dew point {dewPoint}
+            </Text>
+          )}
+          <Text color={colors.whiteAlpha["900"]} fontSize="md">
+            {updatedAt()}
+          </Text>
+        </Stack>
+      </Center>
+    </Flex>
+  );
+};
+
+export default Hero;
