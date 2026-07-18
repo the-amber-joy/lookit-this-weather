@@ -1,13 +1,12 @@
-import { CalendarIcon, SunIcon, TimeIcon } from "@chakra-ui/icons";
-// import { ViewIcon } from "@chakra-ui/icons"; // Re-enable with the Radar tab
+import { CalendarIcon, SunIcon, TimeIcon, ViewIcon } from "@chakra-ui/icons";
 import type { ComponentWithAs, IconProps } from "@chakra-ui/react";
 import { Box, Button, Flex, Icon, Stack, Text, VStack } from "@chakra-ui/react";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
-// import ComingSoon from "./ComingSoon"; // Re-enable with the Radar tab
 import CurrentWeather from "./CurrentWeather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
+import RadarMap from "./RadarMap";
 
 interface TabItem {
   label: string;
@@ -31,17 +30,11 @@ const tabs: TabItem[] = [
     icon: CalendarIcon,
     panel: <DailyForecast />,
   },
-  // Radar tab hidden until the interactive map is ready.
-  // {
-  //   label: "Radar",
-  //   icon: ViewIcon,
-  //   panel: (
-  //     <ComingSoon
-  //       title="Radar map"
-  //       description="An interactive radar map is coming soon."
-  //     />
-  //   ),
-  // },
+  {
+    label: "Radar",
+    icon: ViewIcon,
+    panel: <RadarMap />,
+  },
 ];
 
 const Layout = () => {
