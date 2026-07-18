@@ -9,13 +9,15 @@ import {
 } from "react";
 
 import { setWeatherFavicon } from "../api/favicon";
+import { getAirQuality } from "../api/getAirQuality";
 import { getLocation, HOME_LOCATION } from "../api/getLocation";
 import { getWeather } from "../api/getWeather";
-import { Location, WeatherResponse } from "../api/types";
+import { AirQualityResponse, Location, WeatherResponse } from "../api/types";
 
 interface WeatherContextValue {
   location: Location | null;
   weather: WeatherResponse | null;
+  airQuality: AirQualityResponse | null;
   isLoading: boolean;
   error: string | null;
   status: string;
@@ -29,6 +31,7 @@ const WeatherContext = createContext<WeatherContextValue | undefined>(
 export const WeatherProvider = ({ children }: { children: ReactNode }) => {
   const [location, setLocation] = useState<Location | null>(null);
   const [weather, setWeather] = useState<WeatherResponse | null>(null);
+  const [airQuality, setAirQuality] = useState<AirQualityResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState("");
@@ -40,9 +43,13 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
 
     try {
       const nextLocation = await getLocation();
-      const nextWeather = await getWeather(nextLocation);
+      const [nextWeather, nextAirQuality] = await Promise.all([
+        getWeather(nextLocation),
+        getAirQuality(nextLocation).catch(() => null),
+      ]);
       setLocation(nextLocation);
       setWeather(nextWeather);
+      setAirQuality(nextAirQuality);
       setStatus(
         nextLocation === HOME_LOCATION
           ? "Using Home because location is unavailable."
@@ -50,6 +57,7 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
       );
     } catch (err) {
       setWeather(null);
+      setAirQuality(null);
       setStatus("");
       setError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
@@ -72,8 +80,16 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
   }, [weather]);
 
   const value = useMemo(
-    () => ({ location, weather, isLoading, error, status, refresh }),
-    [location, weather, isLoading, error, status, refresh],
+    () => ({
+      location,
+      weather,
+      airQuality,
+      isLoading,
+      error,
+      status,
+      refresh,
+    }),
+    [location, weather, airQuality, isLoading, error, status, refresh],
   );
 
   return (

@@ -2,15 +2,15 @@ import { Alert, AlertIcon, Box, Center, Flex, Spinner } from "@chakra-ui/react";
 
 import {
   formatWindUnit,
-  getPrecipitationType,
+  getAqiCategory,
   getWindDirection,
 } from "../api/weatherHelpers";
-import { getPrecipitationIcon, getWindSpeedIcon } from "../api/weatherIcon";
+import { airQualityIcon, getWindSpeedIcon } from "../api/weatherIcon";
 import { useWeatherContext } from "../context/WeatherContext";
 import MetricCard from "./MetricCard";
 
 const MetricGrid = () => {
-  const { weather, isLoading, error } = useWeatherContext();
+  const { weather, airQuality, isLoading, error } = useWeatherContext();
 
   if (isLoading) {
     return (
@@ -26,24 +26,23 @@ const MetricGrid = () => {
   const metrics = weather
     ? [
         {
-          label: "Precipitation",
-          value: getPrecipitationType(
-            weather.current.precipitation_probability,
-            weather.current.weather_code,
-          ),
-          detail: `${Math.round(weather.current.precipitation_probability)}${weather.current_units.precipitation_probability} chance`,
-          icon: getPrecipitationIcon(
-            weather.current.precipitation_probability,
-            weather.current.weather_code,
-          ),
-        },
-        {
           label: "Wind",
           value: `${getWindDirection(weather.current.wind_direction_10m)} ${Math.round(weather.current.wind_speed_10m)} ${formatWindUnit(weather.current_units.wind_speed_10m)}`,
           detail: `Gusting ${Math.round(weather.current.wind_gusts_10m)} ${formatWindUnit(weather.current_units.wind_gusts_10m)}`,
           icon: getWindSpeedIcon(weather.current.wind_speed_10m),
           windDirectionDegrees: weather.current.wind_direction_10m,
         },
+        ...(airQuality
+          ? [
+              {
+                label: "Air Quality",
+                value: `${Math.round(airQuality.current.us_aqi)} AQI`,
+                detail: getAqiCategory(airQuality.current.us_aqi).label,
+                icon: airQualityIcon,
+                accentColor: getAqiCategory(airQuality.current.us_aqi).color,
+              },
+            ]
+          : []),
       ]
     : [];
 
@@ -65,7 +64,7 @@ const MetricGrid = () => {
       {metrics.map((metric) => (
         <Box
           key={metric.label}
-          flex={{ base: "1 1 12rem", md: "1 1 auto" }}
+          flex={{ base: "1 1 9rem", md: "1 1 auto" }}
           minW={0}
         >
           <MetricCard
@@ -74,6 +73,7 @@ const MetricGrid = () => {
             detail={metric.detail}
             icon={metric.icon}
             windDirectionDegrees={metric.windDirectionDegrees}
+            accentColor={metric.accentColor}
           />
         </Box>
       ))}

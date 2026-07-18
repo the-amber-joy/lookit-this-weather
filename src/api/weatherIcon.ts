@@ -56,6 +56,7 @@ import beaufort8Static from "@meteocons/svg/flat/wind-beaufort-8.svg?raw";
 import beaufort9Static from "@meteocons/svg/flat/wind-beaufort-9.svg?raw";
 
 import drizzleMono from "@meteocons/svg/monochrome/drizzle.svg?raw";
+import hazeMono from "@meteocons/svg/monochrome/haze.svg?raw";
 import rainMono from "@meteocons/svg/monochrome/rain.svg?raw";
 import sleetMono from "@meteocons/svg/monochrome/sleet.svg?raw";
 import snowMono from "@meteocons/svg/monochrome/snow.svg?raw";
@@ -101,6 +102,9 @@ export const dewPointIcon = toCurrentColor(thermometerWaterMono);
 
 /** Non-animated dew point icon for calm lists. */
 export const dewPointIconStatic = stripAnimation(dewPointIcon);
+
+/** Non-animated air quality icon that inherits the current text color. */
+export const airQualityIcon = stripAnimation(toCurrentColor(hazeMono));
 
 const PRECIPITATION_ICONS = {
   none: toCurrentColor(umbrellaClosed),

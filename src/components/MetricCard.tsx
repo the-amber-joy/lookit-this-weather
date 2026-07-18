@@ -7,7 +7,6 @@ import {
   Heading,
   Stat,
   StatHelpText,
-  StatLabel,
   StatNumber,
   useColorModeValue,
 } from "@chakra-ui/react";
@@ -19,6 +18,8 @@ interface MetricCardProps {
   detail?: string;
   /** Wind direction in degrees (meteorological "from" convention). When set, renders a rotated arrow after the value showing the direction the wind is blowing toward. */
   windDirectionDegrees?: number;
+  /** Color of a small dot shown before the detail text, e.g. an AQI category color. */
+  accentColor?: string;
 }
 
 const MetricCard = ({
@@ -27,16 +28,13 @@ const MetricCard = ({
   icon,
   detail,
   windDirectionDegrees,
+  accentColor,
 }: MetricCardProps) => {
-  const labelColor = useColorModeValue(
-    "brand.ajBlueLvls.300",
-    "brand.ajCheezLvls.700",
-  );
   const iconColor = useColorModeValue("gray.800", "whiteAlpha.900");
 
   return (
-    <Card shadow="md" borderRadius="1rem" minH={{ base: "5rem", md: "7rem" }}>
-      <CardBody px={{ base: 3, md: 5 }} py={{ base: 2, md: 5 }}>
+    <Card shadow="md" borderRadius="1rem" h="100%">
+      <CardBody px={{ base: 3, md: 5 }} py={{ base: 2, md: 4 }}>
         <Flex align="center" gap={{ base: 3, md: 4 }}>
           <Box
             aria-hidden
@@ -48,19 +46,10 @@ const MetricCard = ({
             }}
             dangerouslySetInnerHTML={{ __html: icon }}
           />
-          <Stat>
-            <StatLabel
-              color={labelColor}
-              fontSize={{ base: "2xs", md: "sm" }}
-              textTransform="uppercase"
-              letterSpacing="wide"
-            >
-              {label}
-            </StatLabel>
+          <Stat aria-label={label}>
             <StatNumber
               as={Heading}
               fontSize={{ base: "md", md: "2xl" }}
-              mt={1}
               display="flex"
               alignItems="center"
               gap={1}
@@ -80,7 +69,19 @@ const MetricCard = ({
                 mb={0}
                 mt={1}
                 opacity={0.8}
+                display="flex"
+                alignItems="center"
+                gap={1.5}
               >
+                {accentColor && (
+                  <Box
+                    aria-hidden
+                    boxSize="0.5rem"
+                    borderRadius="full"
+                    bg={accentColor}
+                    flexShrink={0}
+                  />
+                )}
                 {detail}
               </StatHelpText>
             )}

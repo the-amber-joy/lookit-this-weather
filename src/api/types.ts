@@ -68,3 +68,12 @@ export interface WeatherResponse {
   daily_units?: DailyUnits;
   timezone_abbreviation: string;
 }
+
+export interface CurrentAirQuality {
+  time: string;
+  us_aqi: number;
+}
+
+export interface AirQualityResponse {
+  current: CurrentAirQuality;
+}

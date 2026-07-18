@@ -35,3 +35,20 @@ export function getWindDirection(degrees: number): string {
 export function formatWindUnit(unit?: string): string {
   return unit === "mp/h" ? "mph" : (unit ?? "mph");
 }
+
+export interface AqiCategory {
+  label: string;
+  color: string;
+}
+
+/** US AQI breakpoints and colors, per the EPA. https://www.airnow.gov/aqi/aqi-basics/ */
+export function getAqiCategory(aqi: number): AqiCategory {
+  if (aqi <= 50) return { label: "Good", color: "#00e400" };
+  if (aqi <= 100) return { label: "Moderate", color: "#ffde33" };
+  if (aqi <= 150) {
+    return { label: "Unhealthy for sensitive groups", color: "#ff9933" };
+  }
+  if (aqi <= 200) return { label: "Unhealthy", color: "#cc0033" };
+  if (aqi <= 300) return { label: "Very unhealthy", color: "#9933cc" };
+  return { label: "Hazardous", color: "#7e0023" };
+}
