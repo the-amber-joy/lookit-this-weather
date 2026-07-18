@@ -90,6 +90,7 @@ const MetricGrid = () => {
       wrap="wrap"
       gap={{ base: 2, md: 4 }}
       justify="center"
+      flex={{ md: "0 1 22rem" }}
       w={{ base: "100%", md: "22rem" }}
     >
       {error && (

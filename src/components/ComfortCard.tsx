@@ -32,7 +32,6 @@ const ComfortCard = () => {
       px={{ base: 6, md: 16 }}
       py={{ base: 4, md: 8 }}
       w="100%"
-      maxW="42rem"
     >
       <Text
         color={colors.whiteAlpha["800"]}

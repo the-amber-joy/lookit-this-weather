@@ -54,9 +54,10 @@ const Hero = () => {
   };
 
   return (
-    <Flex justifyContent="center">
+    <Flex flex={{ md: "1 1 0%" }} minW={0} justifyContent="center">
       <Center
-        minW={{ base: "auto", md: "xs" }}
+        w={{ md: "100%" }}
+        minW={{ base: "auto", md: "12rem" }}
         textAlign="center"
         background={background}
         transition="background 0.6s ease"
