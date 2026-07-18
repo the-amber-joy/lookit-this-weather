@@ -30,7 +30,7 @@ const ComfortCard = () => {
       borderRadius="1.5rem"
       shadow="xl"
       px={{ base: 5, md: 16 }}
-      py={{ base: 2, md: 8 }}
+      py={{ base: 1, md: 8 }}
       w="100%"
       maxW="42rem"
     >

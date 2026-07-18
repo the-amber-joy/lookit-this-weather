@@ -1,3 +1,4 @@
+import { ArrowUpIcon } from "@chakra-ui/icons";
 import {
   Box,
   Card,
@@ -16,9 +17,17 @@ interface MetricCardProps {
   value: string;
   icon: string;
   detail?: string;
+  /** Wind direction in degrees (meteorological "from" convention). When set, renders a rotated arrow after the value showing the direction the wind is blowing toward. */
+  windDirectionDegrees?: number;
 }
 
-const MetricCard = ({ label, value, icon, detail }: MetricCardProps) => {
+const MetricCard = ({
+  label,
+  value,
+  icon,
+  detail,
+  windDirectionDegrees,
+}: MetricCardProps) => {
   const labelColor = useColorModeValue(
     "brand.ajBlueLvls.300",
     "brand.ajCheezLvls.700",
@@ -52,8 +61,18 @@ const MetricCard = ({ label, value, icon, detail }: MetricCardProps) => {
               as={Heading}
               fontSize={{ base: "md", md: "2xl" }}
               mt={1}
+              display="flex"
+              alignItems="center"
+              gap={1}
             >
               {value}
+              {windDirectionDegrees !== undefined && (
+                <ArrowUpIcon
+                  aria-hidden
+                  boxSize={{ base: "0.7rem", md: "1rem" }}
+                  transform={`rotate(${windDirectionDegrees + 180}deg)`}
+                />
+              )}
             </StatNumber>
             {detail && (
               <StatHelpText

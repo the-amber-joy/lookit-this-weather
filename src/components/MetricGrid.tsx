@@ -40,8 +40,9 @@ const MetricGrid = () => {
         {
           label: "Wind",
           value: `${getWindDirection(weather.current.wind_direction_10m)} ${Math.round(weather.current.wind_speed_10m)} ${formatWindUnit(weather.current_units.wind_speed_10m)}`,
-          detail: `Gusts ${Math.round(weather.current.wind_gusts_10m)} ${formatWindUnit(weather.current_units.wind_gusts_10m)}`,
+          detail: `Gusting ${Math.round(weather.current.wind_gusts_10m)} ${formatWindUnit(weather.current_units.wind_gusts_10m)}`,
           icon: getWindSpeedIcon(weather.current.wind_speed_10m),
+          windDirectionDegrees: weather.current.wind_direction_10m,
         },
       ]
     : [];
@@ -72,6 +73,7 @@ const MetricGrid = () => {
             value={metric.value}
             detail={metric.detail}
             icon={metric.icon}
+            windDirectionDegrees={metric.windDirectionDegrees}
           />
         </Box>
       ))}

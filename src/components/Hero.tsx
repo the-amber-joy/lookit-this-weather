@@ -38,6 +38,11 @@ const Hero = () => {
     ? `${Math.round(weather.current.dew_point_2m)}${weather.current_units.dew_point_2m}`
     : null;
 
+  const highLow =
+    weather?.daily && weather.daily_units
+      ? `${Math.round(weather.daily.temperature_2m_max[0])}${weather.daily_units.temperature_2m_max} / ${Math.round(weather.daily.temperature_2m_min[0])}${weather.daily_units.temperature_2m_min}`
+      : null;
+
   const heading = error
     ? "Weather unavailable"
     : (location?.name ?? "Loading location...");
@@ -58,7 +63,7 @@ const Hero = () => {
         borderRadius="1rem"
         shadow="lg"
         px={{ base: 5, md: 8 }}
-        py={{ base: 2, md: 6 }}
+        py={{ base: 1, md: 6 }}
       >
         <Stack spacing={{ base: 0, md: 1 }}>
           {icon && (
@@ -108,6 +113,14 @@ const Hero = () => {
                 Dew point {dewPoint}
               </Text>
             </HStack>
+          )}
+          {highLow && (
+            <Text
+              color={colors.whiteAlpha["900"]}
+              fontSize={{ base: "xs", md: "md" }}
+            >
+              {highLow}
+            </Text>
           )}
           <Text
             color={colors.whiteAlpha["900"]}
