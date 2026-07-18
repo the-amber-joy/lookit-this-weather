@@ -1,11 +1,17 @@
 import { Alert, AlertIcon, Box, Center, Flex, Spinner } from "@chakra-ui/react";
 
+import { getDailyForecast } from "../api/getDailyForecast";
+import { getPrecipitationTiming } from "../api/getHourlyForecast";
 import {
   formatWindUnit,
   getAqiCategory,
   getWindDirection,
 } from "../api/weatherHelpers";
-import { airQualityIcon, getWindSpeedIcon } from "../api/weatherIcon";
+import {
+  airQualityIcon,
+  getPrecipitationIcon,
+  getWindSpeedIcon,
+} from "../api/weatherIcon";
 import { useWeatherContext } from "../context/WeatherContext";
 import MetricCard from "./MetricCard";
 
@@ -22,6 +28,25 @@ const MetricGrid = () => {
       </Center>
     );
   }
+
+  const today = weather ? getDailyForecast(weather)[0]?.point : undefined;
+
+  const PRECIP_TIMING_THRESHOLD = 25;
+  const precipTiming = today
+    ? getPrecipitationTiming(weather ?? null, PRECIP_TIMING_THRESHOLD)
+    : null;
+  const precipVerb = !precipTiming
+    ? ""
+    : precipTiming.probability >= 60
+      ? "starting"
+      : precipTiming.probability >= 45
+        ? "likely"
+        : "possible";
+  const precipTimingSuffix = !precipTiming
+    ? ""
+    : precipTiming.time === "now"
+      ? `, ${precipVerb} now`
+      : `, ${precipVerb} at ${precipTiming.time}`;
 
   const metrics = weather
     ? [
@@ -43,12 +68,25 @@ const MetricGrid = () => {
               },
             ]
           : []),
+        ...(today && weather.daily_units
+          ? [
+              {
+                label: "Today",
+                value: `${Math.round(today.temperatureMax)}${weather.daily_units.temperature_2m_max} / ${Math.round(today.temperatureMin)}${weather.daily_units.temperature_2m_min}`,
+                detail: `${Math.round(today.precipitationProbability)}${weather.daily_units.precipitation_probability_max} chance of rain${precipTimingSuffix}`,
+                icon: getPrecipitationIcon(
+                  today.precipitationProbability,
+                  today.weatherCode,
+                ),
+              },
+            ]
+          : []),
       ]
     : [];
 
   return (
     <Flex
-      direction={{ base: "row", md: "column" }}
+      direction={{ base: "column", sm: "row", md: "column" }}
       wrap="wrap"
       gap={{ base: 2, md: 4 }}
       justify="center"
@@ -64,7 +102,7 @@ const MetricGrid = () => {
       {metrics.map((metric) => (
         <Box
           key={metric.label}
-          flex={{ base: "1 1 9rem", md: "1 1 auto" }}
+          flex={{ base: "1 1 auto", sm: "1 1 9rem", md: "1 1 auto" }}
           minW={0}
         >
           <MetricCard

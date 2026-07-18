@@ -34,12 +34,12 @@ const MetricCard = ({
 
   return (
     <Card shadow="md" borderRadius="1rem" h="100%">
-      <CardBody px={{ base: 3, md: 5 }} py={{ base: 2, md: 4 }}>
+      <CardBody px={{ base: 4, md: 5 }} py={{ base: 3, md: 4 }}>
         <Flex align="center" gap={{ base: 3, md: 4 }}>
           <Box
             aria-hidden
             flexShrink={0}
-            boxSize={{ base: "2rem", md: "2.75rem" }}
+            boxSize={{ base: "2.5rem", md: "2.75rem" }}
             color={iconColor}
             sx={{
               "& svg": { width: "100%", height: "100%", display: "block" },
@@ -49,7 +49,7 @@ const MetricCard = ({
           <Stat aria-label={label}>
             <StatNumber
               as={Heading}
-              fontSize={{ base: "md", md: "2xl" }}
+              fontSize={{ base: "xl", md: "2xl" }}
               display="flex"
               alignItems="center"
               gap={1}
@@ -58,14 +58,14 @@ const MetricCard = ({
               {windDirectionDegrees !== undefined && (
                 <ArrowUpIcon
                   aria-hidden
-                  boxSize={{ base: "0.7rem", md: "1rem" }}
+                  boxSize={{ base: "0.9rem", md: "1rem" }}
                   transform={`rotate(${windDirectionDegrees + 180}deg)`}
                 />
               )}
             </StatNumber>
             {detail && (
               <StatHelpText
-                fontSize={{ base: "2xs", md: "sm" }}
+                fontSize={{ base: "sm", md: "sm" }}
                 mb={0}
                 mt={1}
                 opacity={0.8}

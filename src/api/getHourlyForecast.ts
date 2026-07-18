@@ -64,3 +64,38 @@ export function getHourlyForecast(
 
   return days;
 }
+
+/**
+ * Details about the next upcoming hour today whose precipitation chance
+ * meets or exceeds a threshold: a display time like "3:00 PM" (or "now" if
+ * it's already the current hour), plus the probability at that hour.
+ */
+export interface PrecipitationTiming {
+  time: string;
+  probability: number;
+}
+
+/**
+ * Finds the first upcoming hour today whose precipitation chance meets or
+ * exceeds `thresholdPercent`. Returns null if no hour today meets the
+ * threshold.
+ */
+export function getPrecipitationTiming(
+  weather: WeatherResponse | null,
+  thresholdPercent = 25,
+): PrecipitationTiming | null {
+  if (!weather?.hourly) return null;
+
+  const now = dayjs(weather.current.time);
+  const today = getHourlyForecast(weather).find((day) => day.label === "Today");
+  const hit = today?.hours.find(
+    (hour) => hour.precipitationProbability >= thresholdPercent,
+  );
+  if (!hit) return null;
+
+  const hitTime = dayjs(hit.time);
+  return {
+    time: hitTime.isSame(now, "hour") ? "now" : hitTime.format("h:mm A"),
+    probability: hit.precipitationProbability,
+  };
+}

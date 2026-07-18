@@ -1,4 +1,4 @@
-import { AspectRatio, Box, Center, Spinner, Text } from "@chakra-ui/react";
+import { Box, Center, Spinner, Text } from "@chakra-ui/react";
 import { useMemo } from "react";
 
 import { useWeatherContext } from "../context/WeatherContext";
@@ -37,7 +37,8 @@ const RadarMap = () => {
   const { location, isLoading, error } = useWeatherContext();
 
   const src = useMemo(
-    () => (location ? buildRadarUrl(location.latitude, location.longitude) : null),
+    () =>
+      location ? buildRadarUrl(location.latitude, location.longitude) : null,
     [location],
   );
 
@@ -64,22 +65,31 @@ const RadarMap = () => {
   const headerOffset = "56px";
 
   return (
-    <Box maxW="50rem" mx="auto" py={{ base: 4, md: 8 }}>
-      <AspectRatio ratio={{ base: 3 / 4, md: 4 / 3 }}>
-        <Box position="relative" overflow="hidden" borderRadius="md">
-          <Box
-            as="iframe"
-            src={src}
-            title="NWS radar map"
-            border="0"
-            position="absolute"
-            top={`-${headerOffset}`}
-            left={0}
-            width="100%"
-            height={`calc(100% + ${headerOffset})`}
-          />
-        </Box>
-      </AspectRatio>
+    <Box
+      h={{ base: "100%", md: "auto" }}
+      maxW={{ base: "none", md: "50rem" }}
+      mx="auto"
+      py={{ base: 0, md: 8 }}
+    >
+      <Box
+        position="relative"
+        overflow="hidden"
+        borderRadius="md"
+        h={{ base: "100%", md: "auto" }}
+        sx={{ aspectRatio: { md: "4 / 3" } }}
+      >
+        <Box
+          as="iframe"
+          src={src}
+          title="NWS radar map"
+          border="0"
+          position="absolute"
+          top={`-${headerOffset}`}
+          left={0}
+          width="100%"
+          height={`calc(100% + ${headerOffset})`}
+        />
+      </Box>
     </Box>
   );
 };
