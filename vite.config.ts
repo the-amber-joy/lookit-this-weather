@@ -1,12 +1,33 @@
+import { execSync } from "node:child_process";
+import { writeFileSync } from "node:fs";
+import { resolve } from "node:path";
 import react from "@vitejs/plugin-react";
-import { defineConfig } from "vite";
+import { defineConfig, type Plugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
+
+function buildInfo(): Plugin {
+  return {
+    name: "build-info",
+    apply: "build",
+    closeBundle() {
+      let commit = "unknown";
+      try {
+        commit = execSync("git rev-parse --short HEAD").toString().trim();
+      } catch {
+        // git not available; leave as "unknown"
+      }
+      const contents = `commit: ${commit}\nbuilt: ${new Date().toISOString()}\n`;
+      writeFileSync(resolve(__dirname, "dist/build.txt"), contents);
+    },
+  };
+}
 
 // https://vitejs.dev/config/
 export default defineConfig({
   base: "/",
   plugins: [
     react(),
+    buildInfo(),
     VitePWA({
       registerType: "autoUpdate",
       includeAssets: [
