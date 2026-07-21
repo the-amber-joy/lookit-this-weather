@@ -1,7 +1,10 @@
 import { Alert, AlertIcon, Box, Center, Flex, Spinner } from "@chakra-ui/react";
 
 import { getDailyForecast } from "../api/getDailyForecast";
-import { getPrecipitationTiming } from "../api/getHourlyForecast";
+import {
+  getPrecipitationTiming,
+  getRemainingPrecipitationProbability,
+} from "../api/getHourlyForecast";
 import {
   formatWindUnit,
   getHighestAirQuality,
@@ -48,6 +51,11 @@ const MetricGrid = () => {
       ? `, ${precipVerb} now`
       : `, ${precipVerb} at ${precipTiming.time}`;
 
+  const remainingPrecipitationProbability =
+    getRemainingPrecipitationProbability(weather ?? null) ??
+    today?.precipitationProbability ??
+    0;
+
   const highestAirQuality = airQuality
     ? getHighestAirQuality(airQuality)
     : null;
@@ -76,8 +84,8 @@ const MetricGrid = () => {
           ? [
               {
                 label: "Today",
-                value: `${Math.round(today.temperatureMax)}${weather.daily_units.temperature_2m_max} / ${Math.round(today.temperatureMin)}${weather.daily_units.temperature_2m_min}`,
-                detail: `${Math.round(today.precipitationProbability)}${weather.daily_units.precipitation_probability_max} chance of rain${precipTimingSuffix}`,
+                value: `Hi ${Math.round(today.temperatureMax)}${weather.daily_units.temperature_2m_max} / Lo ${Math.round(today.temperatureMin)}${weather.daily_units.temperature_2m_min}`,
+                detail: `${Math.round(remainingPrecipitationProbability)}${weather.daily_units.precipitation_probability_max} chance of rain${precipTimingSuffix}`,
                 icon: getPrecipitationIcon(
                   today.precipitationProbability,
                   today.weatherCode,

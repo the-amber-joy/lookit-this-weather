@@ -99,3 +99,20 @@ export function getPrecipitationTiming(
     probability: hit.precipitationProbability,
   };
 }
+
+/**
+ * Highest precipitation chance among today's remaining hours (from now
+ * through end of day). Unlike the daily forecast's max, this excludes hours
+ * that have already passed, so it stays consistent with
+ * `getPrecipitationTiming`. Returns null if there's no hourly data.
+ */
+export function getRemainingPrecipitationProbability(
+  weather: WeatherResponse | null,
+): number | null {
+  if (!weather?.hourly) return null;
+
+  const today = getHourlyForecast(weather).find((day) => day.label === "Today");
+  if (!today || today.hours.length === 0) return null;
+
+  return Math.max(...today.hours.map((hour) => hour.precipitationProbability));
+}
