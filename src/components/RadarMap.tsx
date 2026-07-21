@@ -1,7 +1,8 @@
-import { Box, Center, Spinner, Text } from "@chakra-ui/react";
+import { Box, Center, Text } from "@chakra-ui/react";
 import { useMemo } from "react";
 
 import { useWeatherContext } from "../context/WeatherContext";
+import ThemedSpinner from "./ThemedSpinner";
 
 const buildRadarUrl = (latitude: number, longitude: number) => {
   const settings = {
@@ -45,7 +46,7 @@ const RadarMap = () => {
   if (isLoading) {
     return (
       <Center minH="40vh">
-        <Spinner size="xl" thickness="4px" color="brand.ajPurple" />
+        <ThemedSpinner />
       </Center>
     );
   }

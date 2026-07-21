@@ -13,6 +13,7 @@ import CurrentWeather from "./CurrentWeather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
 import RadarMap from "./RadarMap";
+import Sparkles from "./Sparkles";
 import Themes from "./Themes";
 
 interface TabItem {
@@ -63,6 +64,8 @@ const Layout = () => {
       height="100dvh"
       overflow="hidden"
     >
+      <Sparkles />
+
       {/* Desktop: left sidebar */}
       <VStack
         as="nav"

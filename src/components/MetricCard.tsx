@@ -33,7 +33,7 @@ const MetricCard = ({
   const iconColor = useColorModeValue("gray.800", "whiteAlpha.900");
 
   return (
-    <Card shadow="md" borderRadius="1rem" h="100%">
+    <Card shadow="card" borderRadius="1rem" h="100%">
       <CardBody px={{ base: 4, md: 5 }} py={{ base: 3, md: 4 }}>
         <Flex align="center" gap={{ base: 3, md: 4 }}>
           <Box

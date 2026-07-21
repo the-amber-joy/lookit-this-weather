@@ -31,7 +31,7 @@ const ComfortCard = () => {
       background={background}
       transition="background 0.6s ease"
       borderRadius="1.5rem"
-      shadow="xl"
+      shadow="card"
       px={{ base: 6, md: 16 }}
       py={{ base: 4, md: 8 }}
       w="100%"

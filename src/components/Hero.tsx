@@ -64,7 +64,7 @@ const Hero = () => {
         background={background}
         transition="background 0.6s ease"
         borderRadius="1rem"
-        shadow="lg"
+        shadow="card"
         px={{ base: 6, md: 8 }}
         py={{ base: 4, md: 6 }}
       >

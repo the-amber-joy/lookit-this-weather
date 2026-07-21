@@ -13,7 +13,18 @@ const headingFonts: Record<ThemeName, string> = {
   fairycore: `"Cormorant Garamond", serif`,
 };
 
-function buildTheme(brand: BrandPalette, headingFont: string) {
+const fairycoreGlowColor = brandPalettes.fairycore.ajPurple;
+
+// Card shadows: default theme keeps a standard drop shadow, fairycore gets
+// a subtle color glow to match the whimsical palette (kept small so it
+// doesn't get clipped by tight layout margins).
+const cardShadows: Record<ThemeName, string> = {
+  default:
+    "0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4)",
+  fairycore: `0 0 6px ${fairycoreGlowColor}40, 0 4px 10px rgba(28, 26, 46, 0.4)`,
+};
+
+function buildTheme(brand: BrandPalette, headingFont: string, cardShadow: string) {
   return extendTheme({
     config,
     fonts: {
@@ -22,6 +33,9 @@ function buildTheme(brand: BrandPalette, headingFont: string) {
     },
     colors: {
       brand,
+    },
+    shadows: {
+      card: cardShadow,
     },
     styles: {
       global: {
@@ -60,9 +74,14 @@ function buildTheme(brand: BrandPalette, headingFont: string) {
 }
 
 export const themesByName: Record<ThemeName, ReturnType<typeof buildTheme>> = {
-  default: buildTheme(brandPalettes.default, headingFonts.default),
-  fairycore: buildTheme(brandPalettes.fairycore, headingFonts.fairycore),
+  default: buildTheme(brandPalettes.default, headingFonts.default, cardShadows.default),
+  fairycore: buildTheme(
+    brandPalettes.fairycore,
+    headingFonts.fairycore,
+    cardShadows.fairycore,
+  ),
 };
+
 
 export function getTheme(themeName: ThemeName) {
   return themesByName[themeName];

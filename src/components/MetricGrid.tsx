@@ -1,4 +1,4 @@
-import { Alert, AlertIcon, Box, Center, Flex, Spinner } from "@chakra-ui/react";
+import { Alert, AlertIcon, Box, Center, Flex } from "@chakra-ui/react";
 
 import { getDailyForecast } from "../api/getDailyForecast";
 import {
@@ -17,6 +17,7 @@ import {
 } from "../api/weatherIcon";
 import { useWeatherContext } from "../context/WeatherContext";
 import MetricCard from "./MetricCard";
+import ThemedSpinner from "./ThemedSpinner";
 
 const MetricGrid = () => {
   const { weather, airQuality, isLoading, error } = useWeatherContext();
@@ -27,7 +28,7 @@ const MetricGrid = () => {
         minH={{ base: "5rem", md: "16rem" }}
         w={{ base: "100%", md: "22rem" }}
       >
-        <Spinner size="xl" thickness="4px" color="brand.ajPurple" />
+        <ThemedSpinner />
       </Center>
     );
   }

@@ -4,7 +4,6 @@ import {
   Flex,
   Heading,
   HStack,
-  Spinner,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -19,6 +18,7 @@ import {
   getStaticWindIcon,
 } from "../api/weatherIcon";
 import { useWeatherContext } from "../context/WeatherContext";
+import ThemedSpinner from "./ThemedSpinner";
 
 const HourRow = ({
   point,
@@ -119,7 +119,7 @@ const HourlyForecast = () => {
   if (isLoading) {
     return (
       <Center minH="40vh">
-        <Spinner size="xl" thickness="4px" color="brand.ajPurple" />
+        <ThemedSpinner />
       </Center>
     );
   }

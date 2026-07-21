@@ -1,12 +1,4 @@
-import {
-  Box,
-  Center,
-  Flex,
-  HStack,
-  Spinner,
-  Stack,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Center, Flex, HStack, Stack, Text } from "@chakra-ui/react";
 import dayjs from "dayjs";
 
 import { DailyPoint, getDailyForecast } from "../api/getDailyForecast";
@@ -17,6 +9,8 @@ import {
   getStaticWindIcon,
 } from "../api/weatherIcon";
 import { useWeatherContext } from "../context/WeatherContext";
+
+import ThemedSpinner from "./ThemedSpinner";
 
 const DayRow = ({
   point,
@@ -118,7 +112,7 @@ const DailyForecast = () => {
   if (isLoading) {
     return (
       <Center minH="40vh">
-        <Spinner size="xl" thickness="4px" color="brand.ajPurple" />
+        <ThemedSpinner />
       </Center>
     );
   }
