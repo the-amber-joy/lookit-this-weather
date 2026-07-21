@@ -1,10 +1,4 @@
-import {
-  Box,
-  Center,
-  HStack,
-  IconButton,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Center, HStack, IconButton, Text } from "@chakra-ui/react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { useEffect, useMemo, useRef, useState } from "react";
