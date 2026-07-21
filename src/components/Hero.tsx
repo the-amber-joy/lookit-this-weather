@@ -19,6 +19,7 @@ import {
 } from "../api/weatherIcon";
 import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
+import { getOrganicCardStyle } from "../theme/organicCard";
 
 const Hero = () => {
   const { location, weather, error } = useWeatherContext();
@@ -36,6 +37,13 @@ const Hero = () => {
         themeName,
       )
     : getFallbackBackground(themeName);
+
+  const cardStyle = getOrganicCardStyle(
+    themeName,
+    colors.brand,
+    background,
+    "1rem",
+  );
 
   const temperature = weather
     ? `${Math.round(weather.current.temperature_2m)}${weather.current_units.temperature_2m}`
@@ -61,9 +69,10 @@ const Hero = () => {
         w={{ md: "100%" }}
         minW={{ base: "auto", md: "12rem" }}
         textAlign="center"
-        background={background}
+        background={cardStyle.background}
+        border={cardStyle.border}
         transition="background 0.6s ease"
-        borderRadius="1rem"
+        borderRadius={cardStyle.borderRadius}
         shadow="card"
         px={{ base: 6, md: 8 }}
         py={{ base: 4, md: 6 }}

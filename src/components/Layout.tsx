@@ -7,6 +7,7 @@ import {
 } from "@chakra-ui/icons";
 import type { ComponentWithAs, IconProps } from "@chakra-ui/react";
 import { Box, Button, Flex, Icon, Stack, Text, VStack } from "@chakra-ui/react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
 import CurrentWeather from "./CurrentWeather";
@@ -50,9 +51,12 @@ const tabs: TabItem[] = [
   },
 ];
 
+const MotionBox = motion(Box);
+
 const Layout = () => {
   const [active, setActive] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
 
   useEffect(() => {
     contentRef.current?.scrollTo(0, 0);
@@ -106,7 +110,17 @@ const Layout = () => {
         px={{ base: 4, md: 8 }}
         pb={{ base: "5.5rem", md: 0 }}
       >
-        {tabs[active].panel}
+        <AnimatePresence mode="wait" initial={false}>
+          <MotionBox
+            key={active}
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={shouldReduceMotion ? undefined : { opacity: 0, y: -8 }}
+            transition={{ duration: shouldReduceMotion ? 0 : 0.2, ease: "easeOut" }}
+          >
+            {tabs[active].panel}
+          </MotionBox>
+        </AnimatePresence>
       </Box>
 
       {/* Mobile: pinned bottom bar */}

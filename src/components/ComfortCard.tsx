@@ -4,6 +4,7 @@ import { getComfort } from "../api/comfort";
 import { getWeatherBackground } from "../api/weatherIcon";
 import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
+import { getOrganicCardStyle } from "../theme/organicCard";
 
 const ComfortCard = () => {
   const { weather } = useWeatherContext();
@@ -24,13 +25,21 @@ const ComfortCard = () => {
     themeName,
   );
 
+  const cardStyle = getOrganicCardStyle(
+    themeName,
+    colors.brand,
+    background,
+    "1.5rem",
+  );
+
   return (
     <Stack
       spacing={{ base: 0, md: 1 }}
       textAlign="center"
-      background={background}
+      background={cardStyle.background}
+      border={cardStyle.border}
       transition="background 0.6s ease"
-      borderRadius="1.5rem"
+      borderRadius={cardStyle.borderRadius}
       shadow="card"
       px={{ base: 6, md: 16 }}
       py={{ base: 4, md: 8 }}
