@@ -128,7 +128,10 @@ const Hero = () => {
               </Text>
             </HStack>
           )}
-          <Text fontSize={{ base: "sm", md: "md" }} color={dayMode.subTextColor}>
+          <Text
+            fontSize={{ base: "sm", md: "md" }}
+            color={dayMode.subTextColor}
+          >
             {updatedAt()}
           </Text>
         </Stack>

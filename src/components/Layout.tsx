@@ -19,13 +19,13 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
+import { useFairycoreDayMode } from "../theme/fairycoreDayMode";
 import CurrentWeather from "./CurrentWeather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
 import RadarMap from "./RadarMap";
 import Sparkles from "./Sparkles";
 import Themes from "./Themes";
-import { useFairycoreDayMode } from "../theme/fairycoreDayMode";
 
 interface TabItem {
   label: string;
@@ -74,12 +74,12 @@ const Layout = () => {
     contentRef.current?.scrollTo(0, 0);
   }, [active]);
 
-  // Fairycore gets a brighter "garden in bloom" page background during the
+  // Fairycore gets a brighter "dusk garden" page background during the
   // day. Starting with lilac (bridging the Hero/ComfortCard's purple-gold
-  // gradient) before easing into blush and sage keeps the page from
-  // clashing with the purple showcase cards up top.
+  // gradient) before easing into blush and antique gold keeps the page
+  // from clashing with the purple showcase cards up top.
   const dayBackground = dayMode.isFairycoreDay
-    ? `linear-gradient(160deg, ${colors.brand.ajPurpleLvls["300"]}, ${colors.brand.ajPinkLvls["300"]}, ${colors.brand.ajLtGreenLvls["300"]})`
+    ? `linear-gradient(160deg, ${colors.brand.ajPurpleLvls["300"]}, ${colors.brand.ajPinkLvls["300"]}, ${colors.brand.ajCheezLvls["300"]})`
     : undefined;
 
   return (
@@ -151,7 +151,10 @@ const Layout = () => {
             initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? undefined : { opacity: 0, y: -8 }}
-            transition={{ duration: shouldReduceMotion ? 0 : 0.2, ease: "easeOut" }}
+            transition={{
+              duration: shouldReduceMotion ? 0 : 0.2,
+              ease: "easeOut",
+            }}
           >
             {tabs[active].panel}
           </MotionBox>

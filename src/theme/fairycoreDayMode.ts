@@ -47,8 +47,8 @@ export function useFairycoreDayMode(): FairycoreDayMode {
     isFairycoreDay,
     textColor: colors.brand.ajBlueLvls["200"],
     textShadow: colors.brand.ajPurpleLvls["900"],
-    subTextColor: colors.brand.ajBlueLvls["300"],
-    surfaceBg: colors.brand.ajPurpleLvls["800"],
-    accentColor: "brand.ajCheezLvls.300",
+    subTextColor: colors.brand.ajBlueLvls["100"],
+    surfaceBg: colors.brand.ajPurpleLvls["600"],
+    accentColor: "brand.ajPinkLvls.200",
   };
 }
