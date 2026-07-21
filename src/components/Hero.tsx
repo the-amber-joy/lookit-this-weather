@@ -19,12 +19,14 @@ import {
 } from "../api/weatherIcon";
 import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
+import { useFairycoreDayMode } from "../theme/fairycoreDayMode";
 import { getOrganicCardStyle } from "../theme/organicCard";
 
 const Hero = () => {
   const { location, weather, error } = useWeatherContext();
   const { colors } = useTheme();
   const { themeName } = useThemeName();
+  const dayMode = useFairycoreDayMode();
 
   const icon = weather
     ? getWeatherIcon(weather.current.weather_code, weather.current.is_day)
@@ -88,27 +90,27 @@ const Hero = () => {
             />
           )}
           <Heading
-            color={colors.white}
-            textShadow={`2px 2px ${colors.brand.ajBlueLvls["200"]}`}
+            color={dayMode.textColor}
+            textShadow={`2px 2px ${dayMode.textShadow}`}
             fontSize={{ base: "xl", md: "2rem" }}
           >
             {heading}
           </Heading>
           <Heading
-            color={colors.white}
-            textShadow={`2px 2px ${colors.brand.ajBlueLvls["200"]}`}
+            color={dayMode.textColor}
+            textShadow={`2px 2px ${dayMode.textShadow}`}
             fontSize={{ base: "5xl", md: "6xl" }}
             lineHeight="1.1"
           >
             {temperature}
           </Heading>
           {icon && (
-            <Text color={colors.white} fontSize={{ base: "md", md: "lg" }}>
+            <Text color={dayMode.textColor} fontSize={{ base: "md", md: "lg" }}>
               {icon.label}
             </Text>
           )}
           {dewPoint && (
-            <HStack justify="center" spacing={1} color={colors.white}>
+            <HStack justify="center" spacing={1} color={dayMode.textColor}>
               <Box
                 aria-hidden
                 boxSize={{ base: "1.5rem", md: "1.75rem" }}
@@ -120,16 +122,13 @@ const Hero = () => {
               <Text
                 fontSize={{ base: "md", md: "xl" }}
                 fontWeight="bold"
-                textShadow={`1px 1px ${colors.brand.ajBlueLvls["200"]}`}
+                textShadow={`1px 1px ${dayMode.textShadow}`}
               >
                 Dew point {dewPoint}
               </Text>
             </HStack>
           )}
-          <Text
-            color={colors.whiteAlpha["900"]}
-            fontSize={{ base: "sm", md: "md" }}
-          >
+          <Text fontSize={{ base: "sm", md: "md" }} color={dayMode.subTextColor}>
             {updatedAt()}
           </Text>
         </Stack>

@@ -11,6 +11,8 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
+import { useFairycoreDayMode } from "../theme/fairycoreDayMode";
+
 interface MetricCardProps {
   label: string;
   value: string;
@@ -30,10 +32,21 @@ const MetricCard = ({
   windDirectionDegrees,
   accentColor,
 }: MetricCardProps) => {
-  const iconColor = useColorModeValue("gray.800", "whiteAlpha.900");
+  const defaultIconColor = useColorModeValue("gray.800", "whiteAlpha.900");
+  const dayMode = useFairycoreDayMode();
+
+  // Fairycore's default dark navy card surface reads great against the
+  // twilight-indigo night background, but clashes with the brighter
+  // rose/moss daytime page background, so swap in a pastel surface (and
+  // dark text/icons for contrast) then.
+  const cardBg = dayMode.surfaceBg;
+  const iconColor = dayMode.isFairycoreDay
+    ? dayMode.textColor
+    : defaultIconColor;
+  const textColor = dayMode.isFairycoreDay ? dayMode.textColor : undefined;
 
   return (
-    <Card shadow="card" borderRadius="1rem" h="100%">
+    <Card shadow="card" borderRadius="1rem" h="100%" bg={cardBg}>
       <CardBody px={{ base: 4, md: 5 }} py={{ base: 3, md: 4 }}>
         <Flex align="center" gap={{ base: 3, md: 4 }}>
           <Box
@@ -49,6 +62,7 @@ const MetricCard = ({
           <Stat aria-label={label}>
             <StatNumber
               as={Heading}
+              color={textColor}
               fontSize={{ base: "xl", md: "2xl" }}
               display="flex"
               alignItems="center"
@@ -65,6 +79,7 @@ const MetricCard = ({
             </StatNumber>
             {detail && (
               <StatHelpText
+                color={textColor}
                 fontSize={{ base: "sm", md: "sm" }}
                 mb={0}
                 mt={1}

@@ -4,12 +4,14 @@ import { getComfort } from "../api/comfort";
 import { getWeatherBackground } from "../api/weatherIcon";
 import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
+import { useFairycoreDayMode } from "../theme/fairycoreDayMode";
 import { getOrganicCardStyle } from "../theme/organicCard";
 
 const ComfortCard = () => {
   const { weather } = useWeatherContext();
   const { colors } = useTheme();
   const { themeName } = useThemeName();
+  const dayMode = useFairycoreDayMode();
 
   if (!weather) return null;
 
@@ -46,7 +48,7 @@ const ComfortCard = () => {
       w="100%"
     >
       <Text
-        color={colors.whiteAlpha["800"]}
+        color={dayMode.subTextColor}
         textTransform="uppercase"
         letterSpacing="widest"
         fontSize={{ base: "sm", md: "sm" }}
@@ -54,17 +56,14 @@ const ComfortCard = () => {
         Comfort level
       </Text>
       <Heading
-        color={colors.white}
-        textShadow={`2px 2px ${colors.brand.ajBlueLvls["200"]}`}
+        color={dayMode.textColor}
+        textShadow={`2px 2px ${dayMode.textShadow}`}
         fontSize={{ base: "4xl", md: "6xl" }}
         lineHeight="1.1"
       >
         {comfort.label}
       </Heading>
-      <Text
-        color={colors.whiteAlpha["900"]}
-        fontSize={{ base: "md", md: "xl" }}
-      >
+      <Text fontSize={{ base: "md", md: "xl" }} color={dayMode.subTextColor}>
         {comfort.blurb}
       </Text>
     </Stack>

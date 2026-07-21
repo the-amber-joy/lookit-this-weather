@@ -6,7 +6,16 @@ import {
   ViewIcon,
 } from "@chakra-ui/icons";
 import type { ComponentWithAs, IconProps } from "@chakra-ui/react";
-import { Box, Button, Flex, Icon, Stack, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Icon,
+  Stack,
+  Text,
+  useTheme,
+  VStack,
+} from "@chakra-ui/react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
@@ -16,6 +25,7 @@ import HourlyForecast from "./HourlyForecast";
 import RadarMap from "./RadarMap";
 import Sparkles from "./Sparkles";
 import Themes from "./Themes";
+import { useFairycoreDayMode } from "../theme/fairycoreDayMode";
 
 interface TabItem {
   label: string;
@@ -57,10 +67,20 @@ const Layout = () => {
   const [active, setActive] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
+  const { colors } = useTheme();
+  const dayMode = useFairycoreDayMode();
 
   useEffect(() => {
     contentRef.current?.scrollTo(0, 0);
   }, [active]);
+
+  // Fairycore gets a brighter "garden in bloom" page background during the
+  // day. Starting with lilac (bridging the Hero/ComfortCard's purple-gold
+  // gradient) before easing into blush and sage keeps the page from
+  // clashing with the purple showcase cards up top.
+  const dayBackground = dayMode.isFairycoreDay
+    ? `linear-gradient(160deg, ${colors.brand.ajPurpleLvls["300"]}, ${colors.brand.ajPinkLvls["300"]}, ${colors.brand.ajLtGreenLvls["300"]})`
+    : undefined;
 
   return (
     <Flex
@@ -68,6 +88,15 @@ const Layout = () => {
       height="100dvh"
       overflow="hidden"
     >
+      {dayBackground && (
+        <Box
+          position="fixed"
+          inset={0}
+          zIndex={-2}
+          pointerEvents="none"
+          background={dayBackground}
+        />
+      )}
       <Sparkles />
 
       {/* Desktop: left sidebar */}
@@ -94,7 +123,13 @@ const Layout = () => {
             onClick={() => setActive(index)}
             aria-current={active === index ? "page" : undefined}
             bg={active === index ? "whiteAlpha.200" : undefined}
-            color={active === index ? "brand.ajCheez" : undefined}
+            color={
+              active === index
+                ? dayMode.accentColor
+                : dayMode.isFairycoreDay
+                  ? dayMode.textColor
+                  : undefined
+            }
           >
             {label}
           </Button>
@@ -133,7 +168,7 @@ const Layout = () => {
         right={0}
         zIndex={10}
         justify="space-around"
-        bg="brand.ajBlueLvls.200"
+        bg={dayMode.surfaceBg ?? "brand.ajBlueLvls.200"}
         borderTopWidth="1px"
         borderColor="whiteAlpha.200"
         pt={2}
@@ -146,7 +181,13 @@ const Layout = () => {
             flex="1"
             onClick={() => setActive(index)}
             aria-current={active === index ? "page" : undefined}
-            color={active === index ? "brand.ajCheez" : "whiteAlpha.800"}
+            color={
+              active === index
+                ? dayMode.accentColor
+                : dayMode.isFairycoreDay
+                  ? dayMode.textColor
+                  : "whiteAlpha.800"
+            }
           >
             <Stack spacing={1} align="center">
               <Icon as={icon} boxSize={5} />
