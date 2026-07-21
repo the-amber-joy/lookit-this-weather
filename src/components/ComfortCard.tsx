@@ -2,11 +2,13 @@ import { Heading, Stack, Text, useTheme } from "@chakra-ui/react";
 
 import { getComfort } from "../api/comfort";
 import { getWeatherBackground } from "../api/weatherIcon";
+import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
 
 const ComfortCard = () => {
   const { weather } = useWeatherContext();
   const { colors } = useTheme();
+  const { themeName } = useThemeName();
 
   if (!weather) return null;
 
@@ -19,6 +21,7 @@ const ComfortCard = () => {
   const background = getWeatherBackground(
     weather.current.weather_code,
     weather.current.is_day,
+    themeName,
   );
 
   return (

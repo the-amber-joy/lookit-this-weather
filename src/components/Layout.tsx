@@ -1,4 +1,10 @@
-import { CalendarIcon, SunIcon, TimeIcon, ViewIcon } from "@chakra-ui/icons";
+import {
+  CalendarIcon,
+  SettingsIcon,
+  SunIcon,
+  TimeIcon,
+  ViewIcon,
+} from "@chakra-ui/icons";
 import type { ComponentWithAs, IconProps } from "@chakra-ui/react";
 import { Box, Button, Flex, Icon, Stack, Text, VStack } from "@chakra-ui/react";
 import { ReactNode, useEffect, useRef, useState } from "react";
@@ -7,6 +13,7 @@ import CurrentWeather from "./CurrentWeather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
 import RadarMap from "./RadarMap";
+import Themes from "./Themes";
 
 interface TabItem {
   label: string;
@@ -34,6 +41,11 @@ const tabs: TabItem[] = [
     label: "Radar",
     icon: ViewIcon,
     panel: <RadarMap />,
+  },
+  {
+    label: "Themes",
+    icon: SettingsIcon,
+    panel: <Themes />,
   },
 ];
 

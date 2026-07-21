@@ -13,22 +13,29 @@ import dayjs from "dayjs";
 
 import {
   dewPointIcon,
+  getFallbackBackground,
   getWeatherBackground,
   getWeatherIcon,
 } from "../api/weatherIcon";
+import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
 
 const Hero = () => {
   const { location, weather, error } = useWeatherContext();
   const { colors } = useTheme();
+  const { themeName } = useThemeName();
 
   const icon = weather
     ? getWeatherIcon(weather.current.weather_code, weather.current.is_day)
     : null;
 
   const background = weather
-    ? getWeatherBackground(weather.current.weather_code, weather.current.is_day)
-    : "linear-gradient(160deg, #1b467e, #245da8, #5790db)";
+    ? getWeatherBackground(
+        weather.current.weather_code,
+        weather.current.is_day,
+        themeName,
+      )
+    : getFallbackBackground(themeName);
 
   const temperature = weather
     ? `${Math.round(weather.current.temperature_2m)}${weather.current_units.temperature_2m}`
