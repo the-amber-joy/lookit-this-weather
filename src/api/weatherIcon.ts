@@ -60,6 +60,7 @@ import hazeMono from "@meteocons/svg/monochrome/haze.svg?raw";
 import rainMono from "@meteocons/svg/monochrome/rain.svg?raw";
 import sleetMono from "@meteocons/svg/monochrome/sleet.svg?raw";
 import snowMono from "@meteocons/svg/monochrome/snow.svg?raw";
+
 import thermometerWaterMono from "@meteocons/svg/monochrome/thermometer-water.svg?raw";
 import thunderstormsMono from "@meteocons/svg/monochrome/thunderstorms.svg?raw";
 import umbrellaClosed from "@meteocons/svg/monochrome/umbrella-closed.svg?raw";
@@ -76,6 +77,7 @@ import beaufort6 from "@meteocons/svg/monochrome/wind-beaufort-6.svg?raw";
 import beaufort7 from "@meteocons/svg/monochrome/wind-beaufort-7.svg?raw";
 import beaufort8 from "@meteocons/svg/monochrome/wind-beaufort-8.svg?raw";
 import beaufort9 from "@meteocons/svg/monochrome/wind-beaufort-9.svg?raw";
+import { DEFAULT_THEME_NAME, ThemeName } from "../theme/themeNames";
 
 // The monochrome icons are hardcoded to black; swap to currentColor so they
 // inherit the surrounding text color when inlined.
@@ -380,33 +382,64 @@ export function getStaticWeatherIcon(
 }
 
 type Condition = "clear" | "cloudy" | "fog" | "rain" | "snow" | "thunder";
+type ConditionBackgrounds = Record<Condition, { day: string; night: string }>;
 
-// Static, on-brand gradients (brand blues/purples/gold) for each condition,
-// split into day and night so the card background reflects the weather.
-const BACKGROUNDS: Record<Condition, { day: string; night: string }> = {
-  clear: {
-    day: "linear-gradient(160deg, #245da8 0%, #5790db 70%, #abc8ed 100%)",
-    night: "linear-gradient(160deg, #09172a, #1b467e, #4d2f7c)",
+// Per-theme gradients for each condition, split into day and night.
+const BACKGROUNDS: Record<ThemeName, ConditionBackgrounds> = {
+  // Static, on-brand gradients (brand blues/purples/gold) for each condition.
+  default: {
+    clear: {
+      day: "linear-gradient(160deg, #245da8 0%, #5790db 70%, #abc8ed 100%)",
+      night: "linear-gradient(160deg, #09172a, #1b467e, #4d2f7c)",
+    },
+    cloudy: {
+      day: "linear-gradient(160deg, #3c4b5e, #6b7c8c, #9aa7b0)",
+      night: "linear-gradient(160deg, #0d1520, #1f2b38, #344452)",
+    },
+    fog: {
+      day: "linear-gradient(160deg, #6b7c8c, #a8b4bc, #dde2e4)",
+      night: "linear-gradient(160deg, #0f1620, #26313d, #4a5761)",
+    },
+    rain: {
+      day: "linear-gradient(160deg, #122f54, #1b467e, #245da8)",
+      night: "linear-gradient(160deg, #09172a, #122f54, #1b467e)",
+    },
+    snow: {
+      day: "linear-gradient(160deg, #245da8, #5790db, #81ace4)",
+      night: "linear-gradient(160deg, #122f54, #1b467e, #5790db)",
+    },
+    thunder: {
+      day: "linear-gradient(160deg, #1a1029, #331f53, #663fa6)",
+      night: "linear-gradient(160deg, #09172a, #1a1029, #4d2f7c)",
+    },
   },
-  cloudy: {
-    day: "linear-gradient(160deg, #3c4b5e, #6b7c8c, #9aa7b0)",
-    night: "linear-gradient(160deg, #0d1520, #1f2b38, #344452)",
-  },
-  fog: {
-    day: "linear-gradient(160deg, #6b7c8c, #a8b4bc, #dde2e4)",
-    night: "linear-gradient(160deg, #0f1620, #26313d, #4a5761)",
-  },
-  rain: {
-    day: "linear-gradient(160deg, #122f54, #1b467e, #245da8)",
-    night: "linear-gradient(160deg, #09172a, #122f54, #1b467e)",
-  },
-  snow: {
-    day: "linear-gradient(160deg, #245da8, #5790db, #81ace4)",
-    night: "linear-gradient(160deg, #122f54, #1b467e, #5790db)",
-  },
-  thunder: {
-    day: "linear-gradient(160deg, #1a1029, #331f53, #663fa6)",
-    night: "linear-gradient(160deg, #09172a, #1a1029, #4d2f7c)",
+  // "Enchanted dusk garden" gradients (twilight lilac, sage moss, antique
+  // gold) for each condition.
+  fairycore: {
+    clear: {
+      day: "linear-gradient(160deg, #7d67a8, #b8a4d4, #d4af7a)",
+      night: "linear-gradient(160deg, #1c1a2e, #2e2447, #433566)",
+    },
+    cloudy: {
+      day: "linear-gradient(160deg, #433566, #5b4a85, #9c86bf)",
+      night: "linear-gradient(160deg, #1c1a2e, #2e2447, #433566)",
+    },
+    fog: {
+      day: "linear-gradient(160deg, #598568, #8ba888, #bccfb8)",
+      night: "linear-gradient(160deg, #1c1a2e, #2c4334, #433566)",
+    },
+    rain: {
+      day: "linear-gradient(160deg, #2c4334, #433566, #5b4a85)",
+      night: "linear-gradient(160deg, #1c1a2e, #16211a, #2e2447)",
+    },
+    snow: {
+      day: "linear-gradient(160deg, #7d67a8, #9c86bf, #d4c4e6)",
+      night: "linear-gradient(160deg, #1c1a2e, #2e2447, #7d67a8)",
+    },
+    thunder: {
+      day: "linear-gradient(160deg, #16211a, #2e2447, #6c5527)",
+      night: "linear-gradient(160deg, #1c1a2e, #16211a, #362a13)",
+    },
   },
 };
 
@@ -422,8 +455,9 @@ function getCondition(weatherCode: number): Condition {
 export function getWeatherBackground(
   weatherCode: number,
   isDay: number,
+  themeName: ThemeName = DEFAULT_THEME_NAME,
 ): string {
-  const { day, night } = BACKGROUNDS[getCondition(weatherCode)];
+  const { day, night } = BACKGROUNDS[themeName][getCondition(weatherCode)];
   return isDay ? day : night;
 }
 
@@ -445,4 +479,11 @@ export function getWeatherTextTone(
   const cfg = LIGHT_TEXT_CONDITIONS[getCondition(weatherCode)];
   const needsDarkText = isDay ? cfg?.day : cfg?.night;
   return needsDarkText ? "dark" : "light";
+}
+
+// Fallback gradient shown while weather data is still loading.
+export function getFallbackBackground(
+  themeName: ThemeName = DEFAULT_THEME_NAME,
+): string {
+  return BACKGROUNDS[themeName].cloudy.day;
 }

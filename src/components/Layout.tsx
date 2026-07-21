@@ -1,12 +1,31 @@
-import { CalendarIcon, SunIcon, TimeIcon, ViewIcon } from "@chakra-ui/icons";
+import {
+  CalendarIcon,
+  SettingsIcon,
+  SunIcon,
+  TimeIcon,
+  ViewIcon,
+} from "@chakra-ui/icons";
 import type { ComponentWithAs, IconProps } from "@chakra-ui/react";
-import { Box, Button, Flex, Icon, Stack, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Flex,
+  Icon,
+  Stack,
+  Text,
+  useTheme,
+  VStack,
+} from "@chakra-ui/react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
+import { useFairycoreDayMode } from "../theme/fairycoreDayMode";
 import CurrentWeather from "./CurrentWeather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
 import RadarMap from "./RadarMap";
+import Sparkles from "./Sparkles";
+import Themes from "./Themes";
 
 interface TabItem {
   label: string;
@@ -35,15 +54,33 @@ const tabs: TabItem[] = [
     icon: ViewIcon,
     panel: <RadarMap />,
   },
+  {
+    label: "Themes",
+    icon: SettingsIcon,
+    panel: <Themes />,
+  },
 ];
+
+const MotionBox = motion(Box);
 
 const Layout = () => {
   const [active, setActive] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
+  const shouldReduceMotion = useReducedMotion();
+  const { colors } = useTheme();
+  const dayMode = useFairycoreDayMode();
 
   useEffect(() => {
     contentRef.current?.scrollTo(0, 0);
   }, [active]);
+
+  // Fairycore gets a brighter "dusk garden" page background during the
+  // day. Starting with lilac (bridging the Hero/ComfortCard's purple-gold
+  // gradient) before easing into blush and antique gold keeps the page
+  // from clashing with the purple showcase cards up top.
+  const dayBackground = dayMode.isFairycoreDay
+    ? `linear-gradient(160deg, ${colors.brand.ajPurpleLvls["300"]}, ${colors.brand.ajPinkLvls["300"]}, ${colors.brand.ajCheezLvls["300"]})`
+    : undefined;
 
   return (
     <Flex
@@ -51,6 +88,17 @@ const Layout = () => {
       height="100dvh"
       overflow="hidden"
     >
+      {dayBackground && (
+        <Box
+          position="fixed"
+          inset={0}
+          zIndex={-2}
+          pointerEvents="none"
+          background={dayBackground}
+        />
+      )}
+      <Sparkles />
+
       {/* Desktop: left sidebar */}
       <VStack
         as="nav"
@@ -63,6 +111,7 @@ const Layout = () => {
         height="100dvh"
         minW="12rem"
         p={4}
+        bg={dayMode.surfaceBg ?? "brand.ajBlueLvls.200"}
         borderRightWidth="1px"
         borderColor="whiteAlpha.200"
       >
@@ -75,7 +124,13 @@ const Layout = () => {
             onClick={() => setActive(index)}
             aria-current={active === index ? "page" : undefined}
             bg={active === index ? "whiteAlpha.200" : undefined}
-            color={active === index ? "brand.ajCheez" : undefined}
+            color={
+              active === index
+                ? dayMode.accentColor
+                : dayMode.isFairycoreDay
+                  ? dayMode.textColor
+                  : undefined
+            }
           >
             {label}
           </Button>
@@ -91,7 +146,21 @@ const Layout = () => {
         px={{ base: 4, md: 8 }}
         pb={{ base: "5.5rem", md: 0 }}
       >
-        {tabs[active].panel}
+        <AnimatePresence mode="wait" initial={false}>
+          <MotionBox
+            key={active}
+            height="100%"
+            initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={shouldReduceMotion ? undefined : { opacity: 0, y: -8 }}
+            transition={{
+              duration: shouldReduceMotion ? 0 : 0.2,
+              ease: "easeOut",
+            }}
+          >
+            {tabs[active].panel}
+          </MotionBox>
+        </AnimatePresence>
       </Box>
 
       {/* Mobile: pinned bottom bar */}
@@ -104,7 +173,7 @@ const Layout = () => {
         right={0}
         zIndex={10}
         justify="space-around"
-        bg="brand.ajBlueLvls.200"
+        bg={dayMode.surfaceBg ?? "brand.ajBlueLvls.200"}
         borderTopWidth="1px"
         borderColor="whiteAlpha.200"
         pt={2}
@@ -117,7 +186,13 @@ const Layout = () => {
             flex="1"
             onClick={() => setActive(index)}
             aria-current={active === index ? "page" : undefined}
-            color={active === index ? "brand.ajCheez" : "whiteAlpha.800"}
+            color={
+              active === index
+                ? dayMode.accentColor
+                : dayMode.isFairycoreDay
+                  ? dayMode.textColor
+                  : "whiteAlpha.800"
+            }
           >
             <Stack spacing={1} align="center">
               <Icon as={icon} boxSize={5} />

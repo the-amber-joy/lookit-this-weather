@@ -3,7 +3,6 @@ import {
   Center,
   HStack,
   IconButton,
-  Spinner,
   Text,
 } from "@chakra-ui/react";
 import L from "leaflet";
@@ -12,6 +11,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 
 import { useWeatherContext } from "../context/WeatherContext";
+import ThemedSpinner from "./ThemedSpinner";
 
 // Public LibreWXR instance (https://librewxr.net) — a free, open-source,
 // Rain Viewer-compatible radar tile API. No API key required. Self-hosting is
@@ -133,7 +133,7 @@ const RadarMap = () => {
   if (isLoading) {
     return (
       <Center minH="40vh">
-        <Spinner size="xl" thickness="4px" color="brand.ajPurple" />
+        <ThemedSpinner />
       </Center>
     );
   }

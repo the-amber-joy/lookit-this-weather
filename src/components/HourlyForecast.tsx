@@ -4,7 +4,6 @@ import {
   Flex,
   Heading,
   HStack,
-  Spinner,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -18,7 +17,9 @@ import {
   getStaticWeatherIcon,
   getStaticWindIcon,
 } from "../api/weatherIcon";
+import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
+import ThemedSpinner from "./ThemedSpinner";
 
 const HourRow = ({
   point,
@@ -115,11 +116,13 @@ const HourRow = ({
 
 const HourlyForecast = () => {
   const { weather, isLoading, error } = useWeatherContext();
+  const { themeName } = useThemeName();
+  const isFairycore = themeName === "fairycore";
 
   if (isLoading) {
     return (
       <Center minH="40vh">
-        <Spinner size="xl" thickness="4px" color="brand.ajPurple" />
+        <ThemedSpinner />
       </Center>
     );
   }
@@ -149,9 +152,11 @@ const HourlyForecast = () => {
             position="sticky"
             top={0}
             zIndex={1}
-            bg="brand.ajBlueLvls.100"
+            bg={isFairycore ? "brand.ajPurpleLvls.500" : "brand.ajBlueLvls.100"}
+            color={isFairycore ? "brand.ajBlueLvls.100" : "brand.ajCheez"}
+            borderRadius={isFairycore ? "lg" : undefined}
+            px={isFairycore ? 4 : undefined}
             py={2}
-            color="brand.ajCheez"
           >
             {day.label}
           </Heading>

@@ -1,6 +1,9 @@
 import { ColorModeScript } from "@chakra-ui/react";
 import "@fontsource/comfortaa/400.css";
 import "@fontsource/comfortaa/700.css";
+import "@fontsource/cormorant-garamond/500.css";
+import "@fontsource/cormorant-garamond/600.css";
+import "@fontsource/cormorant-garamond/700.css";
 import React from "react";
 import ReactDOM from "react-dom/client";
 

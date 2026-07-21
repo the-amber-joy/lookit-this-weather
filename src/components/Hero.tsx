@@ -13,35 +13,61 @@ import dayjs from "dayjs";
 
 import {
   dewPointIcon,
+  getFallbackBackground,
   getWeatherBackground,
   getWeatherIcon,
   getWeatherTextTone,
 } from "../api/weatherIcon";
+import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
+import { useFairycoreDayMode } from "../theme/fairycoreDayMode";
+import { getOrganicCardStyle } from "../theme/organicCard";
 
 const Hero = () => {
   const { location, weather, error } = useWeatherContext();
   const { colors } = useTheme();
+  const { themeName } = useThemeName();
+  const dayMode = useFairycoreDayMode();
 
   const icon = weather
     ? getWeatherIcon(weather.current.weather_code, weather.current.is_day)
     : null;
 
   const background = weather
-    ? getWeatherBackground(weather.current.weather_code, weather.current.is_day)
-    : "linear-gradient(160deg, #1b467e, #245da8, #5790db)";
+    ? getWeatherBackground(
+        weather.current.weather_code,
+        weather.current.is_day,
+        themeName,
+      )
+    : getFallbackBackground(themeName);
+
+  const cardStyle = getOrganicCardStyle(
+    themeName,
+    colors.brand,
+    background,
+    "1rem",
+  );
 
   const isDarkText =
+    !dayMode.isFairycoreDay &&
     !!weather &&
     getWeatherTextTone(weather.current.weather_code, weather.current.is_day) ===
       "dark";
-  const textColor = isDarkText ? colors.brand.ajBlueLvls["200"] : colors.white;
-  const textShadowColor = isDarkText
-    ? colors.whiteAlpha["800"]
-    : colors.brand.ajBlueLvls["200"];
-  const mutedTextColor = isDarkText
-    ? colors.brand.ajBlueLvls["300"]
-    : colors.whiteAlpha["900"];
+  const textColor = dayMode.isFairycoreDay
+    ? dayMode.textColor
+    : isDarkText
+      ? colors.brand.ajBlueLvls["200"]
+      : colors.white;
+  const textShadowColor = dayMode.isFairycoreDay
+    ? dayMode.textShadow
+    : isDarkText
+      ? colors.whiteAlpha["800"]
+      : colors.brand.ajBlueLvls["200"];
+  const mutedTextColor = dayMode.isFairycoreDay
+    ? dayMode.subTextColor
+    : isDarkText
+      ? colors.brand.ajBlueLvls["300"]
+      : colors.whiteAlpha["900"];
 
   const temperature = weather
     ? `${Math.round(weather.current.temperature_2m)}${weather.current_units.temperature_2m}`
@@ -67,10 +93,11 @@ const Hero = () => {
         w={{ md: "100%" }}
         minW={{ base: "auto", md: "12rem" }}
         textAlign="center"
-        background={background}
+        background={cardStyle.background}
+        border={cardStyle.border}
         transition="background 0.6s ease"
-        borderRadius="1rem"
-        shadow="lg"
+        borderRadius={cardStyle.borderRadius}
+        shadow="card"
         px={{ base: 6, md: 8 }}
         py={{ base: 4, md: 6 }}
       >

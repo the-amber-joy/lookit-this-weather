@@ -1,4 +1,36 @@
-const brand = {
+// Brand color palettes, one per theme. Key names are kept stable
+// (ajBlue/ajPurple/etc.) across palettes so component references
+// don't need to change when the active theme changes.
+import { ThemeName } from "./themeNames";
+
+export type ColorLevels = Record<
+  100 | 200 | 300 | 400 | 500 | 600 | 700 | 800 | 900,
+  string
+>;
+
+export interface BrandPalette {
+  ajBlue: string;
+  ajPurple: string;
+  ajMagenta: string;
+  ajPink: string;
+  ajOrange: string;
+  ajCheez: string;
+  ajYellow: string;
+  ajLtGreen: string;
+  ajDkGreen: string;
+  ajBlueLvls: ColorLevels;
+  ajPurpleLvls: ColorLevels;
+  ajMagentaLvls: ColorLevels;
+  ajPinkLvls: ColorLevels;
+  ajOrangeLvls: ColorLevels;
+  ajCheezLvls: ColorLevels;
+  ajYellowLvls: ColorLevels;
+  ajLtGreenLvls: ColorLevels;
+  ajDkGreenLvls: ColorLevels;
+}
+
+// The original blue-and-gold palette.
+const defaultBrand: BrandPalette = {
   ajBlue: "#2c73d2",
   ajPurple: "#845ec2",
   ajMagenta: "#d65db1",
@@ -110,4 +142,123 @@ const brand = {
   },
 };
 
-export default brand;
+// "Enchanted dusk garden" fairycore palette: twilight indigo, dusty lilac,
+// moss/sage green, blush rose, and antique gold.
+const fairycoreBrand: BrandPalette = {
+  ajBlue: "#7d67a8",
+  ajPurple: "#b8a4d4",
+  ajMagenta: "#c98ca0",
+  ajPink: "#e8b4bc",
+  ajOrange: "#e2a76f",
+  ajCheez: "#d4af7a",
+  ajYellow: "#f2e2b6",
+  ajLtGreen: "#8ba888",
+  ajDkGreen: "#3f6b52",
+
+  ajBlueLvls: {
+    100: "#1c1a2e",
+    200: "#2e2447",
+    300: "#433566",
+    400: "#5b4a85",
+    500: "#7d67a8",
+    600: "#9c86bf",
+    700: "#b8a4d4",
+    800: "#d4c4e6",
+    900: "#ede4f5",
+  },
+  ajPurpleLvls: {
+    100: "#221731",
+    200: "#442f63",
+    300: "#674694",
+    400: "#8b6ab9",
+    500: "#b8a4d4",
+    600: "#c7b7dd",
+    700: "#d5c9e6",
+    800: "#e4dcef",
+    900: "#f2eef7",
+  },
+  ajMagentaLvls: {
+    100: "#2c1620",
+    200: "#582c40",
+    300: "#844260",
+    400: "#b05880",
+    500: "#c98ca0",
+    600: "#d5a3b3",
+    700: "#e0bac6",
+    800: "#ecd1da",
+    900: "#f7e8ed",
+  },
+  ajPinkLvls: {
+    100: "#331a1f",
+    200: "#66333d",
+    300: "#994d5c",
+    400: "#cc667a",
+    500: "#e8b4bc",
+    600: "#ecc3ca",
+    700: "#f1d2d7",
+    800: "#f6e1e5",
+    900: "#faf0f2",
+  },
+  ajOrangeLvls: {
+    100: "#2f1d0e",
+    200: "#5e3a1c",
+    300: "#8e572a",
+    400: "#bd7438",
+    500: "#e2a76f",
+    600: "#e8ba8c",
+    700: "#eeccaa",
+    800: "#f4ddc7",
+    900: "#f9eee3",
+  },
+  ajCheezLvls: {
+    100: "#362a13",
+    200: "#6c5527",
+    300: "#a37f3a",
+    400: "#c29c5c",
+    500: "#d4af7a",
+    600: "#ddc094",
+    700: "#e6d1af",
+    800: "#eee2ca",
+    900: "#f7f0e4",
+  },
+  ajYellowLvls: {
+    100: "#3a3320",
+    200: "#736640",
+    300: "#ad9960",
+    400: "#d1bd8b",
+    500: "#f2e2b6",
+    600: "#f5e9c7",
+    700: "#f8efd8",
+    800: "#faf5e9",
+    900: "#fdfaf4",
+  },
+  ajLtGreenLvls: {
+    100: "#16211a",
+    200: "#2c4334",
+    300: "#43644e",
+    400: "#598568",
+    500: "#8ba888",
+    600: "#a3bc9f",
+    700: "#bccfb8",
+    800: "#d5e2d2",
+    900: "#edf1ec",
+  },
+  ajDkGreenLvls: {
+    100: "#0c1510",
+    200: "#182920",
+    300: "#253e30",
+    400: "#31533f",
+    500: "#3f6b52",
+    600: "#599774",
+    700: "#80b497",
+    800: "#adcebb",
+    900: "#d8e8df",
+  },
+};
+
+export const brandPalettes: Record<ThemeName, BrandPalette> = {
+  default: defaultBrand,
+  fairycore: fairycoreBrand,
+};
+
+export default brandPalettes;
