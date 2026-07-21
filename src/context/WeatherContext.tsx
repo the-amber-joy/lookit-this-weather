@@ -47,6 +47,12 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
         getWeather(nextLocation),
         getAirQuality(nextLocation).catch(() => null),
       ]);
+      // TEMP MOCK (design preview): uncomment to force specific conditions
+      // instead of using the real forecast. Set weather_code to any WMO code
+      // (e.g. 0/1 clear, 2/3 cloudy, 45/48 fog, 61+ rain, 71+ snow, 95+ thunder)
+      // and is_day to 1 (day) or 0 (night).
+      // nextWeather.current.weather_code = 45;
+      // nextWeather.current.is_day = 1;
       setLocation(nextLocation);
       setWeather(nextWeather);
       setAirQuality(nextAirQuality);

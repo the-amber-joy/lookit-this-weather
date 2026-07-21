@@ -15,6 +15,7 @@ import {
   dewPointIcon,
   getWeatherBackground,
   getWeatherIcon,
+  getWeatherTextTone,
 } from "../api/weatherIcon";
 import { useWeatherContext } from "../context/WeatherContext";
 
@@ -29,6 +30,18 @@ const Hero = () => {
   const background = weather
     ? getWeatherBackground(weather.current.weather_code, weather.current.is_day)
     : "linear-gradient(160deg, #1b467e, #245da8, #5790db)";
+
+  const isDarkText =
+    !!weather &&
+    getWeatherTextTone(weather.current.weather_code, weather.current.is_day) ===
+      "dark";
+  const textColor = isDarkText ? colors.brand.ajBlueLvls["200"] : colors.white;
+  const textShadowColor = isDarkText
+    ? colors.whiteAlpha["800"]
+    : colors.brand.ajBlueLvls["200"];
+  const mutedTextColor = isDarkText
+    ? colors.brand.ajBlueLvls["300"]
+    : colors.whiteAlpha["900"];
 
   const temperature = weather
     ? `${Math.round(weather.current.temperature_2m)}${weather.current_units.temperature_2m}`
@@ -72,27 +85,27 @@ const Hero = () => {
             />
           )}
           <Heading
-            color={colors.white}
-            textShadow={`2px 2px ${colors.brand.ajBlueLvls["200"]}`}
+            color={textColor}
+            textShadow={`2px 2px ${textShadowColor}`}
             fontSize={{ base: "xl", md: "2rem" }}
           >
             {heading}
           </Heading>
           <Heading
-            color={colors.white}
-            textShadow={`2px 2px ${colors.brand.ajBlueLvls["200"]}`}
+            color={textColor}
+            textShadow={`2px 2px ${textShadowColor}`}
             fontSize={{ base: "5xl", md: "6xl" }}
             lineHeight="1.1"
           >
             {temperature}
           </Heading>
           {icon && (
-            <Text color={colors.white} fontSize={{ base: "md", md: "lg" }}>
+            <Text color={textColor} fontSize={{ base: "md", md: "lg" }}>
               {icon.label}
             </Text>
           )}
           {dewPoint && (
-            <HStack justify="center" spacing={1} color={colors.white}>
+            <HStack justify="center" spacing={1} color={textColor}>
               <Box
                 aria-hidden
                 boxSize={{ base: "1.5rem", md: "1.75rem" }}
@@ -104,16 +117,13 @@ const Hero = () => {
               <Text
                 fontSize={{ base: "md", md: "xl" }}
                 fontWeight="bold"
-                textShadow={`1px 1px ${colors.brand.ajBlueLvls["200"]}`}
+                textShadow={`1px 1px ${textShadowColor}`}
               >
                 Dew point {dewPoint}
               </Text>
             </HStack>
           )}
-          <Text
-            color={colors.whiteAlpha["900"]}
-            fontSize={{ base: "sm", md: "md" }}
-          >
+          <Text color={mutedTextColor} fontSize={{ base: "sm", md: "md" }}>
             {updatedAt()}
           </Text>
         </Stack>

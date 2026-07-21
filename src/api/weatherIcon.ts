@@ -385,16 +385,16 @@ type Condition = "clear" | "cloudy" | "fog" | "rain" | "snow" | "thunder";
 // split into day and night so the card background reflects the weather.
 const BACKGROUNDS: Record<Condition, { day: string; night: string }> = {
   clear: {
-    day: "linear-gradient(160deg, #245da8, #2c73d2, #ffaf1b)",
+    day: "linear-gradient(160deg, #245da8 0%, #5790db 70%, #abc8ed 100%)",
     night: "linear-gradient(160deg, #09172a, #1b467e, #4d2f7c)",
   },
   cloudy: {
-    day: "linear-gradient(160deg, #1b467e, #245da8, #5790db)",
-    night: "linear-gradient(160deg, #09172a, #122f54, #1b467e)",
+    day: "linear-gradient(160deg, #3c4b5e, #6b7c8c, #9aa7b0)",
+    night: "linear-gradient(160deg, #0d1520, #1f2b38, #344452)",
   },
   fog: {
-    day: "linear-gradient(160deg, #245da8, #5790db, #81ace4)",
-    night: "linear-gradient(160deg, #09172a, #122f54, #245da8)",
+    day: "linear-gradient(160deg, #6b7c8c, #a8b4bc, #dde2e4)",
+    night: "linear-gradient(160deg, #0f1620, #26313d, #4a5761)",
   },
   rain: {
     day: "linear-gradient(160deg, #122f54, #1b467e, #245da8)",
@@ -425,4 +425,24 @@ export function getWeatherBackground(
 ): string {
   const { day, night } = BACKGROUNDS[getCondition(weatherCode)];
   return isDay ? day : night;
+}
+
+// Conditions whose background is light enough that white text loses contrast;
+// these should use dark text instead.
+const LIGHT_TEXT_CONDITIONS: Partial<
+  Record<Condition, { day?: boolean; night?: boolean }>
+> = {
+  fog: { day: true },
+};
+
+export type TextTone = "light" | "dark";
+
+/** Whether Hero/ComfortCard text should render light (white) or dark for this condition. */
+export function getWeatherTextTone(
+  weatherCode: number,
+  isDay: number,
+): TextTone {
+  const cfg = LIGHT_TEXT_CONDITIONS[getCondition(weatherCode)];
+  const needsDarkText = isDay ? cfg?.day : cfg?.night;
+  return needsDarkText ? "dark" : "light";
 }
