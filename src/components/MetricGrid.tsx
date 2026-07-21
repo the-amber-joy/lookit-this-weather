@@ -4,7 +4,7 @@ import { getDailyForecast } from "../api/getDailyForecast";
 import { getPrecipitationTiming } from "../api/getHourlyForecast";
 import {
   formatWindUnit,
-  getAqiCategory,
+  getHighestAirQuality,
   getWindDirection,
 } from "../api/weatherHelpers";
 import {
@@ -48,23 +48,27 @@ const MetricGrid = () => {
       ? `, ${precipVerb} now`
       : `, ${precipVerb} at ${precipTiming.time}`;
 
+  const highestAirQuality = airQuality
+    ? getHighestAirQuality(airQuality)
+    : null;
+
   const metrics = weather
     ? [
         {
           label: "Wind",
           value: `${getWindDirection(weather.current.wind_direction_10m)} ${Math.round(weather.current.wind_speed_10m)} ${formatWindUnit(weather.current_units.wind_speed_10m)}`,
-          detail: `Gusting ${Math.round(weather.current.wind_gusts_10m)} ${formatWindUnit(weather.current_units.wind_gusts_10m)}`,
+          detail: `Gust ${Math.round(weather.current.wind_gusts_10m)} ${formatWindUnit(weather.current_units.wind_gusts_10m)}`,
           icon: getWindSpeedIcon(weather.current.wind_speed_10m),
           windDirectionDegrees: weather.current.wind_direction_10m,
         },
-        ...(airQuality
+        ...(highestAirQuality
           ? [
               {
                 label: "Air Quality",
-                value: `${Math.round(airQuality.current.us_aqi)} AQI`,
-                detail: getAqiCategory(airQuality.current.us_aqi).label,
+                value: `AQI ${Math.round(highestAirQuality.aqi)}`,
+                detail: `${highestAirQuality.category.label} (${highestAirQuality.pollutant})`,
                 icon: airQualityIcon,
-                accentColor: getAqiCategory(airQuality.current.us_aqi).color,
+                accentColor: highestAirQuality.category.color,
               },
             ]
           : []),

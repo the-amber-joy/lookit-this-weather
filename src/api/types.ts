@@ -69,11 +69,20 @@ export interface WeatherResponse {
   timezone_abbreviation: string;
 }
 
-export interface CurrentAirQuality {
-  time: string;
-  us_aqi: number;
+export interface AirQualityObservation {
+  dateObserved: string;
+  hourObserved: string;
+  localTimeZone: string;
+  reportingAreaName: string;
+  siteID: string | null;
+  siteName: string | null;
+  parameterName: string;
+  nowcastAQI: number;
+  aqiCategoryName: string;
+  reportingAgency: string;
+  lookupBehavior?: string;
+  consideredMonitors?: string;
+  lookupBoundary?: string | null;
 }
 
-export interface AirQualityResponse {
-  current: CurrentAirQuality;
-}
+export type AirQualityResponse = AirQualityObservation[];

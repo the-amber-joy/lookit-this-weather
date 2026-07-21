@@ -1,25 +1,24 @@
 import { AirQualityResponse, Location } from "./types";
 
+const AQI_PROXY_URL =
+  "https://lookit-this-weather-aqi-proxy.the-amber-joy.workers.dev";
+
 export async function getAirQuality(
   location: Location,
 ): Promise<AirQualityResponse> {
   const parameters = new URLSearchParams({
     latitude: String(location.latitude),
     longitude: String(location.longitude),
-    current: "us_aqi",
-    timezone: "auto",
   });
 
-  const response = await fetch(
-    `https://air-quality-api.open-meteo.com/v1/air-quality?${parameters}`,
-  );
+  const response = await fetch(`${AQI_PROXY_URL}/?${parameters}`);
 
   if (!response.ok) {
     throw new Error("Air quality data could not be loaded.");
   }
 
   const data: AirQualityResponse = await response.json();
-  if (!data.current) {
+  if (!data.length) {
     throw new Error("Current air quality data is unavailable.");
   }
 

@@ -1,3 +1,5 @@
+import { AirQualityObservation } from "./types";
+
 export function getPrecipitationType(
   probability: number,
   weatherCode: number,
@@ -51,4 +53,38 @@ export function getAqiCategory(aqi: number): AqiCategory {
   if (aqi <= 200) return { label: "Unhealthy", color: "#cc0033" };
   if (aqi <= 300) return { label: "Very unhealthy", color: "#9933cc" };
   return { label: "Hazardous", color: "#7e0023" };
+}
+
+/** Normalize AirNow's parameterName values (e.g. "OZONE") into display-friendly labels. */
+export function getPollutantLabel(parameterName: string): string {
+  const labels: Record<string, string> = {
+    "PM2.5": "PM2.5",
+    PM10: "PM10",
+    OZONE: "Ozone",
+    O3: "Ozone",
+  };
+  return labels[parameterName.toUpperCase()] ?? parameterName;
+}
+
+export interface HighestAirQuality {
+  aqi: number;
+  pollutant: string;
+  category: AqiCategory;
+}
+
+/** Picks the observation with the highest AQI value across all reported pollutants. */
+export function getHighestAirQuality(
+  observations: AirQualityObservation[],
+): HighestAirQuality | null {
+  if (!observations.length) return null;
+
+  const highest = observations.reduce((max, observation) =>
+    observation.nowcastAQI > max.nowcastAQI ? observation : max,
+  );
+
+  return {
+    aqi: highest.nowcastAQI,
+    pollutant: getPollutantLabel(highest.parameterName),
+    category: getAqiCategory(highest.nowcastAQI),
+  };
 }

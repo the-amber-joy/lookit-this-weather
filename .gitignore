@@ -12,6 +12,9 @@ node_modules
 .pnp
 .pnp.js
 
+# Cloudflare Workers local dev cache
+.wrangler
+
 # Build output
 dist
 dist-ssr
