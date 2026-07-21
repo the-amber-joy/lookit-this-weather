@@ -111,6 +111,7 @@ const Layout = () => {
         height="100dvh"
         minW="12rem"
         p={4}
+        bg={dayMode.surfaceBg ?? "brand.ajBlueLvls.200"}
         borderRightWidth="1px"
         borderColor="whiteAlpha.200"
       >
