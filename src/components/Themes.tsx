@@ -40,9 +40,6 @@ const Themes = () => {
                     <CheckCircleIcon color="brand.ajCheez" boxSize={5} />
                   )}
                 </Stack>
-                <Text opacity={0.7} fontSize="sm">
-                  {option.description}
-                </Text>
               </Stack>
             </Box>
           );

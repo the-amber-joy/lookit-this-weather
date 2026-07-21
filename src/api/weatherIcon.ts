@@ -61,7 +61,6 @@ import rainMono from "@meteocons/svg/monochrome/rain.svg?raw";
 import sleetMono from "@meteocons/svg/monochrome/sleet.svg?raw";
 import snowMono from "@meteocons/svg/monochrome/snow.svg?raw";
 
-import { DEFAULT_THEME_NAME, ThemeName } from "../theme/themeNames";
 import thermometerWaterMono from "@meteocons/svg/monochrome/thermometer-water.svg?raw";
 import thunderstormsMono from "@meteocons/svg/monochrome/thunderstorms.svg?raw";
 import umbrellaClosed from "@meteocons/svg/monochrome/umbrella-closed.svg?raw";
@@ -78,6 +77,7 @@ import beaufort6 from "@meteocons/svg/monochrome/wind-beaufort-6.svg?raw";
 import beaufort7 from "@meteocons/svg/monochrome/wind-beaufort-7.svg?raw";
 import beaufort8 from "@meteocons/svg/monochrome/wind-beaufort-8.svg?raw";
 import beaufort9 from "@meteocons/svg/monochrome/wind-beaufort-9.svg?raw";
+import { DEFAULT_THEME_NAME, ThemeName } from "../theme/themeNames";
 
 // The monochrome icons are hardcoded to black; swap to currentColor so they
 // inherit the surrounding text color when inlined.
@@ -466,4 +466,3 @@ export function getFallbackBackground(
 ): string {
   return BACKGROUNDS[themeName].cloudy.day;
 }
-

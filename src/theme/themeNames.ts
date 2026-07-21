@@ -10,19 +10,16 @@ export const THEME_STORAGE_KEY = "lookit-this-weather:theme";
 export interface ThemeOption {
   name: ThemeName;
   label: string;
-  description: string;
 }
 
 export const THEME_OPTIONS: ThemeOption[] = [
   {
     name: "default",
     label: "Default",
-    description: "The original blue and gold look.",
   },
   {
     name: "fairycore",
     label: "Fairycore",
-    description: "Twilight lilac, sage moss, and antique gold.",
   },
 ];
 

@@ -262,4 +262,3 @@ export const brandPalettes: Record<ThemeName, BrandPalette> = {
 };
 
 export default brandPalettes;
-

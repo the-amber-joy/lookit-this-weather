@@ -32,9 +32,8 @@ function getInitialThemeName(): ThemeName {
 }
 
 export const ThemeNameProvider = ({ children }: { children: ReactNode }) => {
-  const [themeName, setThemeNameState] = useState<ThemeName>(
-    getInitialThemeName,
-  );
+  const [themeName, setThemeNameState] =
+    useState<ThemeName>(getInitialThemeName);
 
   const setThemeName = useCallback((next: ThemeName) => {
     setThemeNameState(next);

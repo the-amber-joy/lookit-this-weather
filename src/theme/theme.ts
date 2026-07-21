@@ -24,7 +24,11 @@ const cardShadows: Record<ThemeName, string> = {
   fairycore: `0 0 6px ${fairycoreGlowColor}40, 0 4px 10px rgba(28, 26, 46, 0.4)`,
 };
 
-function buildTheme(brand: BrandPalette, headingFont: string, cardShadow: string) {
+function buildTheme(
+  brand: BrandPalette,
+  headingFont: string,
+  cardShadow: string,
+) {
   return extendTheme({
     config,
     fonts: {
@@ -74,7 +78,11 @@ function buildTheme(brand: BrandPalette, headingFont: string, cardShadow: string
 }
 
 export const themesByName: Record<ThemeName, ReturnType<typeof buildTheme>> = {
-  default: buildTheme(brandPalettes.default, headingFonts.default, cardShadows.default),
+  default: buildTheme(
+    brandPalettes.default,
+    headingFonts.default,
+    cardShadows.default,
+  ),
   fairycore: buildTheme(
     brandPalettes.fairycore,
     headingFonts.fairycore,
@@ -82,10 +90,8 @@ export const themesByName: Record<ThemeName, ReturnType<typeof buildTheme>> = {
   ),
 };
 
-
 export function getTheme(themeName: ThemeName) {
   return themesByName[themeName];
 }
 
 export default themesByName.fairycore;
-
