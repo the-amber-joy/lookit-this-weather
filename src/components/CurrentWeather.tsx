@@ -9,7 +9,6 @@ const CurrentWeather = () => (
   <Flex
     h={{ base: "100%", md: "auto" }}
     minH="100%"
-    overflow={{ base: "hidden", md: "visible" }}
     paddingY={{ base: 3, md: 8 }}
     direction="column"
     align="center"

@@ -95,7 +95,8 @@ const Layout = () => {
     <Flex
       direction={{ base: "column", md: "row" }}
       height="100dvh"
-      overflow="hidden"
+      overflowY="hidden"
+      overflowX="visible"
     >
       {dayBackground && (
         <Box
