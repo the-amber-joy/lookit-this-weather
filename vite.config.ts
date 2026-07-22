@@ -30,6 +30,7 @@ export default defineConfig({
     buildInfo(),
     VitePWA({
       registerType: "autoUpdate",
+      injectRegister: false,
       includeAssets: [
         "favicon.ico",
         "favicon-16x16.png",
