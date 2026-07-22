@@ -33,7 +33,7 @@ async function reverseGeocode(
   longitude: number,
 ): Promise<string> {
   const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${latitude}&longitude=${longitude}&localityLanguage=en`;
-  const response = await fetch(url);
+  const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
   if (!response.ok) throw new Error("Reverse geocoding failed.");
 
   const data: ReverseGeocodeResponse = await response.json();

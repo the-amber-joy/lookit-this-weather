@@ -11,7 +11,9 @@ export async function getAirQuality(
     longitude: String(location.longitude),
   });
 
-  const response = await fetch(`${AQI_PROXY_URL}/?${parameters}`);
+  const response = await fetch(`${AQI_PROXY_URL}/?${parameters}`, {
+    signal: AbortSignal.timeout(10000),
+  });
 
   if (!response.ok) {
     throw new Error("Air quality data could not be loaded.");

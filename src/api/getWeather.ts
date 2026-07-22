@@ -18,6 +18,7 @@ export async function getWeather(location: Location): Promise<WeatherResponse> {
 
   const response = await fetch(
     `https://api.open-meteo.com/v1/forecast?${parameters}`,
+    { signal: AbortSignal.timeout(10000) },
   );
 
   if (!response.ok) {

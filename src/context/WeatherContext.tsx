@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -35,8 +36,12 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState("");
+  const isRefreshing = useRef(false);
 
   const refresh = useCallback(async () => {
+    if (isRefreshing.current) return;
+    isRefreshing.current = true;
+
     setIsLoading(true);
     setError(null);
     setStatus("Loading current conditions...");
@@ -68,15 +73,42 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
       setError(err instanceof Error ? err.message : "Something went wrong.");
     } finally {
       setIsLoading(false);
+      isRefreshing.current = false;
     }
   }, []);
 
   useEffect(() => {
-    refresh();
+    const REFRESH_INTERVAL = 10 * 60 * 1000; // 10 minutes
+    let lastRefresh = Date.now();
 
-    const REFRESH_INTERVAL = 15 * 60 * 1000; // 15 minutes
-    const intervalId = setInterval(refresh, REFRESH_INTERVAL);
-    return () => clearInterval(intervalId);
+    const doRefresh = () => {
+      lastRefresh = Date.now();
+      refresh();
+    };
+
+    doRefresh();
+
+    const intervalId = setInterval(doRefresh, REFRESH_INTERVAL);
+
+    // Android (and other mobile) browsers throttle or fully suspend
+    // setInterval timers while a PWA is backgrounded/screen-locked, so the
+    // interval alone can't be trusted to fire every 10 minutes. Catch up as
+    // soon as the app becomes visible again.
+    const handleVisibilityChange = () => {
+      if (
+        document.visibilityState === "visible" &&
+        Date.now() - lastRefresh >= REFRESH_INTERVAL
+      ) {
+        doRefresh();
+      }
+    };
+
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
   }, [refresh]);
 
   useEffect(() => {
