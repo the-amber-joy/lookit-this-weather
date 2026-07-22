@@ -11,6 +11,7 @@ import {
   Button,
   Flex,
   Icon,
+  Image,
   Stack,
   Text,
   useTheme,
@@ -19,6 +20,9 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { ReactNode, useEffect, useRef, useState } from "react";
 
+import butterfly from "../assets/butterfly.png";
+import firefly from "../assets/firefly.png";
+import { useThemeName } from "../context/ThemeNameContext";
 import { useFairycoreDayMode } from "../theme/fairycoreDayMode";
 import CurrentWeather from "./CurrentWeather";
 import DailyForecast from "./DailyForecast";
@@ -62,6 +66,7 @@ const tabs: TabItem[] = [
 ];
 
 const MotionBox = motion(Box);
+const MotionImage = motion(Image);
 
 const Layout = () => {
   const [active, setActive] = useState(0);
@@ -69,6 +74,10 @@ const Layout = () => {
   const shouldReduceMotion = useReducedMotion();
   const { colors } = useTheme();
   const dayMode = useFairycoreDayMode();
+  const { themeName } = useThemeName();
+  const isFairycoreNight = themeName === "fairycore" && !dayMode.isFairycoreDay;
+  const isFairycoreDayActive =
+    themeName === "fairycore" && dayMode.isFairycoreDay;
 
   useEffect(() => {
     contentRef.current?.scrollTo(0, 0);
@@ -118,6 +127,7 @@ const Layout = () => {
         {tabs.map(({ label, icon }, index) => (
           <Button
             key={label}
+            position="relative"
             variant="ghost"
             justifyContent="flex-start"
             leftIcon={<Icon as={icon} />}
@@ -132,6 +142,42 @@ const Layout = () => {
                   : undefined
             }
           >
+            {isFairycoreNight && active === index && (
+              <MotionImage
+                layoutId="firefly-desktop"
+                transition={
+                  shouldReduceMotion
+                    ? { duration: 0 }
+                    : { type: "spring", stiffness: 300, damping: 24 }
+                }
+                src={firefly}
+                alt=""
+                aria-hidden
+                boxSize="3.5rem"
+                position="absolute"
+                top="-1.5rem"
+                left="-1.5rem"
+                pointerEvents="none"
+              />
+            )}
+            {isFairycoreDayActive && active === index && (
+              <MotionImage
+                layoutId="butterfly-desktop"
+                transition={
+                  shouldReduceMotion
+                    ? { duration: 0 }
+                    : { type: "spring", stiffness: 300, damping: 24 }
+                }
+                src={butterfly}
+                alt=""
+                aria-hidden
+                boxSize="3.5rem"
+                position="absolute"
+                top="-1.5rem"
+                right="-1.5rem"
+                pointerEvents="none"
+              />
+            )}
             {label}
           </Button>
         ))}
@@ -183,6 +229,7 @@ const Layout = () => {
           <Box
             key={label}
             as="button"
+            position="relative"
             flex="1"
             onClick={() => setActive(index)}
             aria-current={active === index ? "page" : undefined}
@@ -194,6 +241,42 @@ const Layout = () => {
                   : "whiteAlpha.800"
             }
           >
+            {isFairycoreNight && active === index && (
+              <MotionImage
+                layoutId="firefly-mobile"
+                transition={
+                  shouldReduceMotion
+                    ? { duration: 0 }
+                    : { type: "spring", stiffness: 300, damping: 24 }
+                }
+                src={firefly}
+                alt=""
+                aria-hidden
+                boxSize="3.5rem"
+                position="absolute"
+                top="-1.25rem"
+                left="-0.25rem"
+                pointerEvents="none"
+              />
+            )}
+            {isFairycoreDayActive && active === index && (
+              <MotionImage
+                layoutId="butterfly-mobile"
+                transition={
+                  shouldReduceMotion
+                    ? { duration: 0 }
+                    : { type: "spring", stiffness: 300, damping: 24 }
+                }
+                src={butterfly}
+                alt=""
+                aria-hidden
+                boxSize="2rem"
+                position="absolute"
+                top="-0.75rem"
+                right="0.25rem"
+                pointerEvents="none"
+              />
+            )}
             <Stack spacing={1} align="center">
               <Icon as={icon} boxSize={5} />
               <Text fontSize="xs">{label}</Text>

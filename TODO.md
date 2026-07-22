@@ -1,10 +1,5 @@
 # TODO
 
-## ⚠️ Before merging `fairycore`
-
-- [ ] Remove the temporary daytime mock in `src/context/WeatherContext.tsx`
-      (search for `TEMP MOCK`) — it forces `is_day = 1` for design preview.
-
 ## Higher-effort design ideas (reserved for later)
 
 - [ ] Corner flourish / vine SVG accents on cards
@@ -20,4 +15,4 @@
 
 ## Notes
 
-- Consider adding Fairycore (Dynamic), Fairycore (Day), Fairycore (Night) themes
+- 
