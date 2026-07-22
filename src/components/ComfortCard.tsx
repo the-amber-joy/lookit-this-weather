@@ -1,7 +1,8 @@
-import { Heading, Stack, Text, useTheme } from "@chakra-ui/react";
+import { Heading, Image, Stack, Text, useTheme } from "@chakra-ui/react";
 
 import { getComfort } from "../api/comfort";
 import { getWeatherBackground, getWeatherTextTone } from "../api/weatherIcon";
+import flowerVine from "../assets/flower-vine.png";
 import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
 import { useFairycoreDayMode } from "../theme/fairycoreDayMode";
@@ -63,6 +64,7 @@ const ComfortCard = () => {
     <Stack
       spacing={{ base: 0, md: 1 }}
       textAlign="center"
+      position="relative"
       background={cardStyle.background}
       border={cardStyle.border}
       transition="background 0.6s ease"
@@ -72,6 +74,22 @@ const ComfortCard = () => {
       py={{ base: 4, md: 8 }}
       w="100%"
     >
+      {themeName === "fairycore" && (
+        <Image
+          src={flowerVine}
+          alt=""
+          aria-hidden
+          draggable={false}
+          pointerEvents="none"
+          position="absolute"
+          top="50%"
+          right={{ base: "-1.5rem", md: "-2.5rem" }}
+          transform="translateY(-50%)"
+          h={{ base: "10rem", md: "16rem" }}
+          w="auto"
+          zIndex={1}
+        />
+      )}
       <Text
         color={mutedTextColor}
         textTransform="uppercase"
