@@ -132,6 +132,7 @@ const Layout = () => {
           bg={dayMode.surfaceBg ?? "brand.ajBlueLvls.200"}
           borderRightWidth="1px"
           borderColor="whiteAlpha.200"
+          boxShadow="4px 0 12px rgba(0, 0, 0, 0.15)"
         >
           {tabs.map(({ label, icon }, index) => (
             <Button
@@ -263,6 +264,7 @@ const Layout = () => {
           bg={dayMode.surfaceBg ?? "brand.ajBlueLvls.200"}
           borderTopWidth="1px"
           borderColor="whiteAlpha.200"
+          boxShadow="0 -4px 12px rgba(0, 0, 0, 0.15)"
           pt={2}
           pb="calc(env(safe-area-inset-bottom) + 0.5rem)"
         >

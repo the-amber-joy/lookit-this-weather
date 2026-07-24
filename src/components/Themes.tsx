@@ -1,5 +1,4 @@
 import {
-  CheckIcon,
   ChevronDownIcon,
   MoonIcon,
   PhoneIcon,
@@ -13,9 +12,9 @@ import {
   Icon,
   Menu,
   MenuButton,
-  MenuItem,
+  MenuItemOption,
   MenuList,
-  Select,
+  MenuOptionGroup,
   Stack,
   Text,
 } from "@chakra-ui/react";
@@ -52,25 +51,7 @@ const Themes = () => {
         <Heading size="lg">Theme</Heading>
       </Stack>
 
-      <Select
-        display={{ base: "block", md: "none" }}
-        value={themeName}
-        onChange={(event) => setThemeName(event.target.value as ThemeName)}
-        borderWidth="2px"
-        borderColor="whiteAlpha.200"
-        borderRadius="1rem"
-        bg="whiteAlpha.100"
-        color={dayMode.isDay ? dayMode.textColor : undefined}
-        maxW="16rem"
-      >
-        {THEME_OPTIONS.map((option) => (
-          <option key={option.name} value={option.name}>
-            {option.label}
-          </option>
-        ))}
-      </Select>
-
-      <Box display={{ base: "none", md: "block" }}>
+      <Box>
         <Menu matchWidth autoSelect={false}>
           <MenuButton
             as={Button}
@@ -92,23 +73,26 @@ const Themes = () => {
             overflow="hidden"
             color="white"
           >
-            {THEME_OPTIONS.map((option) => {
-              const isActive = option.name === themeName;
+            <MenuOptionGroup
+              type="radio"
+              value={themeName}
+              onChange={(value) => setThemeName(value as ThemeName)}
+            >
+              {THEME_OPTIONS.map((option) => {
+                const isActive = option.name === themeName;
 
-              return (
-                <MenuItem
-                  key={option.name}
-                  onClick={() => setThemeName(option.name)}
-                  bg={isActive ? "whiteAlpha.200" : undefined}
-                  fontWeight={isActive ? "bold" : undefined}
-                  icon={
-                    isActive ? <CheckIcon boxSize={3} /> : <Box boxSize={3} />
-                  }
-                >
-                  {option.label}
-                </MenuItem>
-              );
-            })}
+                return (
+                  <MenuItemOption
+                    key={option.name}
+                    value={option.name}
+                    bg={isActive ? "whiteAlpha.200" : undefined}
+                    fontWeight={isActive ? "bold" : undefined}
+                  >
+                    {option.label}
+                  </MenuItemOption>
+                );
+              })}
+            </MenuOptionGroup>
           </MenuList>
         </Menu>
       </Box>
@@ -118,27 +102,7 @@ const Themes = () => {
           <Heading size="md">Mode</Heading>
         </Stack>
 
-        <Select
-          display={{ base: "block", md: "none" }}
-          value={dayModePreference}
-          onChange={(event) =>
-            setDayModePreference(event.target.value as DayModePreference)
-          }
-          borderWidth="2px"
-          borderColor="whiteAlpha.200"
-          borderRadius="1rem"
-          bg="whiteAlpha.100"
-          color={dayMode.isDay ? dayMode.textColor : undefined}
-          maxW="16rem"
-        >
-          {DAY_MODE_PREFERENCE_OPTIONS.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </Select>
-
-        <Box display={{ base: "none", md: "block" }}>
+        <Box>
           <Menu matchWidth autoSelect={false}>
             <MenuButton
               as={Button}
@@ -172,33 +136,34 @@ const Themes = () => {
               overflow="hidden"
               color="white"
             >
-              {DAY_MODE_PREFERENCE_OPTIONS.map((option) => {
-                const isActive = option.value === dayModePreference;
+              <MenuOptionGroup
+                type="radio"
+                value={dayModePreference}
+                onChange={(value) =>
+                  setDayModePreference(value as DayModePreference)
+                }
+              >
+                {DAY_MODE_PREFERENCE_OPTIONS.map((option) => {
+                  const isActive = option.value === dayModePreference;
 
-                return (
-                  <MenuItem
-                    key={option.value}
-                    bg={isActive ? "whiteAlpha.200" : undefined}
-                    fontWeight={isActive ? "bold" : undefined}
-                    icon={
-                      <Icon
-                        as={DAY_MODE_PREFERENCE_ICONS[option.value]}
-                        boxSize={4}
-                      />
-                    }
-                    onClick={() => setDayModePreference(option.value)}
-                  >
-                    <Stack
-                      direction="row"
-                      align="center"
-                      justify="space-between"
+                  return (
+                    <MenuItemOption
+                      key={option.value}
+                      value={option.value}
+                      bg={isActive ? "whiteAlpha.200" : undefined}
+                      fontWeight={isActive ? "bold" : undefined}
                     >
-                      <Text>{option.label}</Text>
-                      {isActive && <CheckIcon boxSize={3} />}
-                    </Stack>
-                  </MenuItem>
-                );
-              })}
+                      <Stack direction="row" align="center" spacing={2}>
+                        <Icon
+                          as={DAY_MODE_PREFERENCE_ICONS[option.value]}
+                          boxSize={4}
+                        />
+                        <Text>{option.label}</Text>
+                      </Stack>
+                    </MenuItemOption>
+                  );
+                })}
+              </MenuOptionGroup>
             </MenuList>
           </Menu>
         </Box>
