@@ -10,6 +10,7 @@ import { Box, Heading, Icon, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 import { useDayModePreference } from "../context/DayModePreferenceContext";
 import { useThemeName } from "../context/ThemeNameContext";
 import { DAY_MODE_PREFERENCE_OPTIONS } from "../theme/dayModePreference";
+import { useDayMode } from "../theme/fairycoreDayMode";
 import { THEME_OPTIONS } from "../theme/themeNames";
 
 const DAY_MODE_PREFERENCE_ICONS = {
@@ -22,9 +23,15 @@ const DAY_MODE_PREFERENCE_ICONS = {
 const Themes = () => {
   const { themeName, setThemeName } = useThemeName();
   const { dayModePreference, setDayModePreference } = useDayModePreference();
+  const dayMode = useDayMode();
 
   return (
-    <Stack spacing={6} paddingY={{ base: 8, md: 12 }} maxW="40rem">
+    <Stack
+      spacing={6}
+      paddingY={{ base: 8, md: 12 }}
+      maxW="40rem"
+      color={dayMode.isDay ? dayMode.textColor : undefined}
+    >
       <Stack spacing={1}>
         <Heading size="lg">Themes</Heading>
       </Stack>

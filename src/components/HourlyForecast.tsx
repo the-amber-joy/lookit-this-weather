@@ -132,7 +132,12 @@ const HourlyForecast = () => {
   if (error) {
     return (
       <Center minH="40vh">
-        <Text opacity={0.7}>{error}</Text>
+        <Text
+          opacity={0.7}
+          color={dayMode.isDay ? dayMode.textColor : undefined}
+        >
+          {error}
+        </Text>
       </Center>
     );
   }
@@ -146,7 +151,13 @@ const HourlyForecast = () => {
   };
 
   return (
-    <Stack spacing={6} maxW="40rem" mx="auto" py={{ base: 4, md: 8 }}>
+    <Stack
+      spacing={6}
+      maxW="40rem"
+      mx="auto"
+      py={{ base: 4, md: 8 }}
+      color={dayMode.isDay ? dayMode.textColor : undefined}
+    >
       {days.map((day) => (
         <Stack key={day.label} spacing={0}>
           <Heading

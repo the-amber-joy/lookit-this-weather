@@ -41,22 +41,22 @@ const ComfortCard = () => {
     getWeatherTextTone(weather.current.weather_code, weather.current.is_day) ===
       "dark";
   const textColor = dayMode.isDay
-    ? dayMode.textColor
+    ? dayMode.showcaseTextColor
     : isDarkText
       ? colors.brand.ajBlueLvls["200"]
       : colors.white;
   const textShadowColor = dayMode.isDay
-    ? dayMode.textShadow
+    ? dayMode.showcaseTextShadow
     : isDarkText
       ? colors.blackAlpha["400"]
       : colors.brand.ajBlueLvls["200"];
   const mutedTextColor = dayMode.isDay
-    ? dayMode.subTextColor
+    ? dayMode.showcaseSubTextColor
     : isDarkText
       ? colors.brand.ajBlueLvls["300"]
       : colors.whiteAlpha["800"];
   const blurbTextColor = dayMode.isDay
-    ? dayMode.subTextColor
+    ? dayMode.showcaseSubTextColor
     : isDarkText
       ? colors.brand.ajBlueLvls["300"]
       : colors.whiteAlpha["900"];

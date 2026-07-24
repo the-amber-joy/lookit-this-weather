@@ -7,7 +7,8 @@ import { useSystemPrefersDark } from "./systemColorScheme";
 
 export interface DayMode {
   isDay: boolean;
-  /** Primary heading/label text color for showcase cards (Hero, ComfortCard). */
+  /** Primary heading/label text color for nav, MetricCard, and other chrome
+   * sitting on top of surfaceBg/pageBackground. */
   textColor: string;
   /** Shadow color paired with textColor for contrast against the card's gradient. */
   textShadow: string;
@@ -21,6 +22,15 @@ export interface DayMode {
   /** Fixed full-page background gradient shown behind everything during the
    * day. Undefined keeps the existing static (night) body background. */
   pageBackground: string | undefined;
+  /** Heading/temperature text color for the Hero and ComfortCard showcase
+   * cards specifically. These sit on their own weather-gradient background
+   * (which ranges from mid to very light tones), not surfaceBg/pageBackground,
+   * so they're kept separate from textColor. */
+  showcaseTextColor: string;
+  /** Shadow color paired with showcaseTextColor. */
+  showcaseTextShadow: string;
+  /** Secondary/quieter text color for the showcase cards. */
+  showcaseSubTextColor: string;
 }
 
 /**
@@ -55,21 +65,32 @@ export function useDayMode(): DayMode {
       surfaceBg: undefined,
       accentColor: "brand.ajCheez",
       pageBackground: undefined,
+      // Unused by Hero/ComfortCard at night (they compute their own
+      // per-condition tone), but kept consistent with the chrome colors.
+      showcaseTextColor: colors.white,
+      showcaseTextShadow: colors.brand.ajBlueLvls["200"],
+      showcaseSubTextColor: colors.whiteAlpha["900"],
     };
   }
 
   if (themeName === "fairycore") {
     return {
       isDay,
-      textColor: colors.brand.ajBlueLvls["200"],
+      // Light text (rather than dark) so it stays legible and on-brand
+      // against the purple/pink/gold pastel page gradient below, paired
+      // with a dark shadow for contrast against the lighter parts of it.
+      textColor: colors.white,
       textShadow: colors.blackAlpha["400"],
-      subTextColor: colors.brand.ajBlueLvls["100"],
+      subTextColor: colors.whiteAlpha["900"],
       surfaceBg: colors.brand.ajPurpleLvls["600"],
       accentColor: "brand.ajPinkLvls.200",
       // Starting with lilac (bridging the Hero/ComfortCard's purple-gold
       // gradient) before easing into blush and antique gold keeps the page
       // from clashing with the purple showcase cards up top.
       pageBackground: `linear-gradient(160deg, ${colors.brand.ajPurpleLvls["300"]}, ${colors.brand.ajPinkLvls["300"]}, ${colors.brand.ajCheezLvls["300"]})`,
+      showcaseTextColor: colors.brand.ajBlueLvls["200"],
+      showcaseTextShadow: colors.blackAlpha["400"],
+      showcaseSubTextColor: colors.brand.ajBlueLvls["100"],
     };
   }
 
@@ -84,6 +105,15 @@ export function useDayMode(): DayMode {
     subTextColor: colors.brand.ajBlueLvls["300"],
     surfaceBg: colors.brand.ajBlueLvls["800"],
     accentColor: colors.brand.ajBlueLvls["400"],
-    pageBackground: `linear-gradient(160deg, ${colors.brand.ajBlueLvls["400"]}, ${colors.brand.ajBlueLvls["600"]}, ${colors.brand.ajBlueLvls["800"]})`,
+    // A warm-gold-into-sky-blue gradient, distinct from the Hero/ComfortCard's
+    // own weather-condition gradient (which for clear skies is built from
+    // these same blue levels) so the page doesn't read as an enlarged copy
+    // of the showcase cards.
+    pageBackground: `linear-gradient(160deg, ${colors.brand.ajCheezLvls["700"]}, ${colors.brand.ajBlueLvls["700"]}, ${colors.brand.ajBlueLvls["900"]})`,
+    // White showcase text with a strong dark shadow reads well across the
+    // Hero/ComfortCard gradient's full range, from medium to very light blue.
+    showcaseTextColor: colors.white,
+    showcaseTextShadow: colors.blackAlpha["700"],
+    showcaseSubTextColor: colors.whiteAlpha["900"],
   };
 }

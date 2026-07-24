@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { MapContainer, TileLayer, useMap } from "react-leaflet";
 
 import { useWeatherContext } from "../context/WeatherContext";
+import { useDayMode } from "../theme/fairycoreDayMode";
 import ThemedSpinner from "./ThemedSpinner";
 
 // Public LibreWXR instance (https://librewxr.net) — a free, open-source,
@@ -78,6 +79,7 @@ const RadarTileLayer = ({
 
 const RadarMap = () => {
   const { location, isLoading, error } = useWeatherContext();
+  const dayMode = useDayMode();
   const [apiData, setApiData] = useState<WeatherMapsResponse | null>(null);
   const [position, setPosition] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
@@ -135,7 +137,12 @@ const RadarMap = () => {
   if (error || !location) {
     return (
       <Center minH="40vh">
-        <Text opacity={0.7}>{error || "Location unavailable."}</Text>
+        <Text
+          opacity={0.7}
+          color={dayMode.isDay ? dayMode.textColor : undefined}
+        >
+          {error || "Location unavailable."}
+        </Text>
       </Center>
     );
   }
@@ -154,6 +161,7 @@ const RadarMap = () => {
       maxW={{ base: "none", md: "50rem" }}
       mx="auto"
       py={{ base: 4, md: 8 }}
+      color={dayMode.isDay ? dayMode.textColor : undefined}
     >
       <Box
         position="relative"
