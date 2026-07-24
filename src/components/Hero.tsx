@@ -22,9 +22,11 @@ import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
 import { useDayMode } from "../theme/fairycoreDayMode";
 import { getOrganicCardStyle } from "../theme/organicCard";
+import LocationSearchButton from "./LocationSearchButton";
 
 const Hero = () => {
-  const { location, weather, error, refresh } = useWeatherContext();
+  const { location, weather, error, isLoading, status, refresh } =
+    useWeatherContext();
   const { colors } = useTheme();
   const { themeName } = useThemeName();
   const dayMode = useDayMode();
@@ -79,11 +81,15 @@ const Hero = () => {
 
   const heading = error
     ? "Weather unavailable"
-    : (location?.name ?? "Loading location...");
+    : (location?.name ??
+      (isLoading ? "Loading location..." : "No location selected"));
 
   const updatedAt = () => {
-    if (!weather) return "Getting current conditions...";
-    return `Updated ${dayjs(weather.current.time).format("h:mm A")} ${weather.timezone_abbreviation}`;
+    if (weather) {
+      return `Updated ${dayjs(weather.current.time).format("h:mm A")} ${weather.timezone_abbreviation}`;
+    }
+    if (isLoading) return "Getting current conditions...";
+    return status || "Search for a location above.";
   };
 
   return (
@@ -97,9 +103,11 @@ const Hero = () => {
         transition="background 0.6s ease"
         borderRadius={cardStyle.borderRadius}
         shadow="card"
+        position="relative"
         px={{ base: 6, md: 8 }}
         py={{ base: 4, md: 6 }}
       >
+        <LocationSearchButton color={textColor} />
         <Stack spacing={{ base: 1, md: 1 }}>
           {icon && (
             <Image

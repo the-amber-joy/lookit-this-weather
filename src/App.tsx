@@ -3,6 +3,7 @@ import { useMemo } from "react";
 
 import Layout from "./components/Layout";
 import { DayModePreferenceProvider } from "./context/DayModePreferenceContext";
+import { LocationPreferenceProvider } from "./context/LocationPreferenceContext";
 import { ThemeNameProvider, useThemeName } from "./context/ThemeNameContext";
 import { WeatherProvider } from "./context/WeatherContext";
 import { getTheme } from "./theme/theme";
@@ -23,7 +24,9 @@ const ThemedApp = () => {
 const App = () => (
   <ThemeNameProvider>
     <DayModePreferenceProvider>
-      <ThemedApp />
+      <LocationPreferenceProvider>
+        <ThemedApp />
+      </LocationPreferenceProvider>
     </DayModePreferenceProvider>
   </ThemeNameProvider>
 );

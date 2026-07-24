@@ -1,11 +1,5 @@
 import { Location } from "./types";
 
-export const HOME_LOCATION: Location = {
-  latitude: 45.00982,
-  longitude: -93.47993,
-  name: "Home",
-};
-
 function getCurrentPosition(): Promise<GeolocationPosition> {
   return new Promise((resolve, reject) => {
     if (!navigator.geolocation) {
@@ -47,19 +41,15 @@ async function reverseGeocode(
 }
 
 export async function getLocation(): Promise<Location> {
+  const position = await getCurrentPosition();
+  const { latitude, longitude } = position.coords;
+
+  let name = "Current location";
   try {
-    const position = await getCurrentPosition();
-    const { latitude, longitude } = position.coords;
-
-    let name = "Current location";
-    try {
-      name = await reverseGeocode(latitude, longitude);
-    } catch {
-      // Keep the fallback name if reverse geocoding fails.
-    }
-
-    return { latitude, longitude, name };
+    name = await reverseGeocode(latitude, longitude);
   } catch {
-    return HOME_LOCATION;
+    // Keep the fallback name if reverse geocoding fails.
   }
+
+  return { latitude, longitude, name };
 }

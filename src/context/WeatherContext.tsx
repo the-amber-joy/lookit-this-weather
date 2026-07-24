@@ -11,9 +11,10 @@ import {
 
 import { setWeatherFavicon } from "../api/favicon";
 import { getAirQuality } from "../api/getAirQuality";
-import { getLocation, HOME_LOCATION } from "../api/getLocation";
+import { getLocation } from "../api/getLocation";
 import { getWeather } from "../api/getWeather";
 import { AirQualityResponse, Location, WeatherResponse } from "../api/types";
+import { useLocationPreference } from "./LocationPreferenceContext";
 
 interface WeatherContextValue {
   location: Location | null;
@@ -30,6 +31,13 @@ const WeatherContext = createContext<WeatherContextValue | undefined>(
 );
 
 export const WeatherProvider = ({ children }: { children: ReactNode }) => {
+  const {
+    mode,
+    manualLocation,
+    lastResolvedLocation,
+    setLastResolvedLocation,
+    openSearch,
+  } = useLocationPreference();
   const [location, setLocation] = useState<Location | null>(null);
   const [weather, setWeather] = useState<WeatherResponse | null>(null);
   const [airQuality, setAirQuality] = useState<AirQualityResponse | null>(null);
@@ -47,7 +55,28 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
     setStatus("Loading current conditions...");
 
     try {
-      const nextLocation = await getLocation();
+      let nextLocation: Location | null = null;
+      let usedFallback = false;
+
+      if (mode === "manual" && manualLocation) {
+        nextLocation = manualLocation;
+      } else {
+        try {
+          nextLocation = await getLocation();
+        } catch {
+          nextLocation = lastResolvedLocation;
+          usedFallback = true;
+        }
+      }
+
+      if (!nextLocation) {
+        setWeather(null);
+        setAirQuality(null);
+        setStatus("Search for a location to see the forecast.");
+        openSearch();
+        return;
+      }
+
       const [nextWeather, nextAirQuality] = await Promise.all([
         getWeather(nextLocation),
         getAirQuality(nextLocation).catch(() => null),
@@ -61,9 +90,10 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
       setLocation(nextLocation);
       setWeather(nextWeather);
       setAirQuality(nextAirQuality);
+      setLastResolvedLocation(nextLocation);
       setStatus(
-        nextLocation === HOME_LOCATION
-          ? "Using Home because location is unavailable."
+        usedFallback
+          ? "Showing your last known location because your current location is unavailable."
           : "",
       );
     } catch (err) {
@@ -75,7 +105,13 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
       setIsLoading(false);
       isRefreshing.current = false;
     }
-  }, []);
+  }, [
+    mode,
+    manualLocation,
+    lastResolvedLocation,
+    setLastResolvedLocation,
+    openSearch,
+  ]);
 
   useEffect(() => {
     const REFRESH_INTERVAL = 15 * 60 * 1000; // 15 minutes, matching Open-Meteo's forecast update cadence
