@@ -51,21 +51,23 @@ const Hero = () => {
   );
 
   const isDarkText =
-    !dayMode.isDay &&
     !!weather &&
-    getWeatherTextTone(weather.current.weather_code, weather.current.is_day) ===
-      "dark";
-  const textColor = dayMode.isDay
+    getWeatherTextTone(
+      weather.current.weather_code,
+      weather.current.is_day,
+      themeName,
+    ) === "dark";
+  const textColor = !weather
     ? dayMode.showcaseTextColor
     : isDarkText
       ? colors.brand.ajBlueLvls["200"]
       : colors.white;
-  const textShadowColor = dayMode.isDay
+  const textShadowColor = !weather
     ? dayMode.showcaseTextShadow
     : isDarkText
       ? colors.blackAlpha["400"]
       : colors.brand.ajBlueLvls["200"];
-  const mutedTextColor = dayMode.isDay
+  const mutedTextColor = !weather
     ? dayMode.showcaseSubTextColor
     : isDarkText
       ? colors.brand.ajBlueLvls["300"]

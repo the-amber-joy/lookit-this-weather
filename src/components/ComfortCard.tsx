@@ -6,14 +6,12 @@ import flowerVine from "../assets/flower-vine.png";
 import grapeVine from "../assets/grape-vine.png";
 import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
-import { useDayMode } from "../theme/fairycoreDayMode";
 import { getOrganicCardStyle } from "../theme/organicCard";
 
 const ComfortCard = () => {
   const { weather } = useWeatherContext();
   const { colors } = useTheme();
   const { themeName } = useThemeName();
-  const dayMode = useDayMode();
 
   if (!weather) return null;
 
@@ -37,29 +35,21 @@ const ComfortCard = () => {
   );
 
   const isDarkText =
-    !dayMode.isDay &&
-    getWeatherTextTone(weather.current.weather_code, weather.current.is_day) ===
-      "dark";
-  const textColor = dayMode.isDay
-    ? dayMode.showcaseTextColor
-    : isDarkText
-      ? colors.brand.ajBlueLvls["200"]
-      : colors.white;
-  const textShadowColor = dayMode.isDay
-    ? dayMode.showcaseTextShadow
-    : isDarkText
-      ? colors.blackAlpha["400"]
-      : colors.brand.ajBlueLvls["200"];
-  const mutedTextColor = dayMode.isDay
-    ? dayMode.showcaseSubTextColor
-    : isDarkText
-      ? colors.brand.ajBlueLvls["300"]
-      : colors.whiteAlpha["800"];
-  const blurbTextColor = dayMode.isDay
-    ? dayMode.showcaseSubTextColor
-    : isDarkText
-      ? colors.brand.ajBlueLvls["300"]
-      : colors.whiteAlpha["900"];
+    getWeatherTextTone(
+      weather.current.weather_code,
+      weather.current.is_day,
+      themeName,
+    ) === "dark";
+  const textColor = isDarkText ? colors.brand.ajBlueLvls["200"] : colors.white;
+  const textShadowColor = isDarkText
+    ? colors.blackAlpha["400"]
+    : colors.brand.ajBlueLvls["200"];
+  const mutedTextColor = isDarkText
+    ? colors.brand.ajBlueLvls["300"]
+    : colors.whiteAlpha["800"];
+  const blurbTextColor = isDarkText
+    ? colors.brand.ajBlueLvls["300"]
+    : colors.whiteAlpha["900"];
 
   return (
     <Stack

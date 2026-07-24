@@ -29,7 +29,24 @@ export function subscribeToUpdateAvailable(listener: Listener): () => void {
   return () => listeners.delete(listener);
 }
 
-/** Triggers the waiting service worker to take over and reload the page. */
+/**
+ * Triggers the waiting service worker to take over and reloads the page.
+ *
+ * vite-plugin-pwa's registered update function ignores the `reloadPage`
+ * argument it accepts -- it only reloads via an internal `controllerchange`
+ * listener gated on its own "isUpdate" bookkeeping, which doesn't reliably
+ * fire in every browser (observed: it silently no-ops in Firefox, so the new
+ * service worker takes over but the page never refreshes). Reload directly
+ * on `controllerchange` instead of depending on that internal flag.
+ */
 export function applyUpdate() {
+  if ("serviceWorker" in navigator) {
+    let reloaded = false;
+    navigator.serviceWorker.addEventListener("controllerchange", () => {
+      if (reloaded) return;
+      reloaded = true;
+      window.location.reload();
+    });
+  }
   void applyUpdateFn?.(true);
 }

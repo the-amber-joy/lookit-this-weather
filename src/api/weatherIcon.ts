@@ -461,24 +461,57 @@ export function getWeatherBackground(
   return isDay ? day : night;
 }
 
-// Conditions whose background is light enough that white text loses contrast;
-// these should use dark text instead.
-const LIGHT_TEXT_CONDITIONS: Partial<
-  Record<Condition, { day?: boolean; night?: boolean }>
-> = {
-  fog: { day: true },
-};
+// Relative luminance (0-255 scale) of a hex color, using the standard
+// perceptual weighting. Used to decide whether a gradient reads as light or
+// dark overall, so Hero/ComfortCard text tone always matches what's actually
+// rendered instead of relying on a manually maintained list of conditions.
+function hexLuminance(hex: string): number {
+  const normalized =
+    hex.length === 4
+      ? hex
+          .slice(1)
+          .split("")
+          .map((char) => char + char)
+          .join("")
+      : hex.slice(1);
+  const r = parseInt(normalized.slice(0, 2), 16);
+  const g = parseInt(normalized.slice(2, 4), 16);
+  const b = parseInt(normalized.slice(4, 6), 16);
+  return 0.299 * r + 0.587 * g + 0.114 * b;
+}
+
+// Above this average luminance (0-255 scale), a gradient reads as light
+// enough that it needs dark text; at or below it, light/white text is used.
+// Tuned so it correctly separates every existing theme/condition gradient's
+// average luminance rather than using an exact perceptual midpoint.
+const DARK_TEXT_LUMINANCE_THRESHOLD = 148;
+
+function getGradientLuminance(gradient: string): number {
+  const hexColors = gradient.match(/#[0-9a-fA-F]{3,6}/g) ?? [];
+  if (hexColors.length === 0) return 0;
+  const total = hexColors.reduce((sum, hex) => sum + hexLuminance(hex), 0);
+  return total / hexColors.length;
+}
 
 export type TextTone = "light" | "dark";
 
-/** Whether Hero/ComfortCard text should render light (white) or dark for this condition. */
+/**
+ * Whether Hero/ComfortCard text should render light (white) or dark for this
+ * condition/theme. Derived from the actual gradient's luminance (rather than
+ * a hand-maintained per-condition list) so it stays correct regardless of
+ * theme, weather condition, or day/night state -- e.g. some conditions'
+ * "day" gradients (thunder, rain, cloudy) are still dark enough to need
+ * light text, even though most day gradients need dark text.
+ */
 export function getWeatherTextTone(
   weatherCode: number,
   isDay: number,
+  themeName: ThemeName = DEFAULT_THEME_NAME,
 ): TextTone {
-  const cfg = LIGHT_TEXT_CONDITIONS[getCondition(weatherCode)];
-  const needsDarkText = isDay ? cfg?.day : cfg?.night;
-  return needsDarkText ? "dark" : "light";
+  const background = getWeatherBackground(weatherCode, isDay, themeName);
+  return getGradientLuminance(background) > DARK_TEXT_LUMINANCE_THRESHOLD
+    ? "dark"
+    : "light";
 }
 
 // Fallback gradient shown while weather data is still loading.
