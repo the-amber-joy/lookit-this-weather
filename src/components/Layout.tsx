@@ -1,5 +1,6 @@
 import {
   CalendarIcon,
+  RepeatIcon,
   SettingsIcon,
   SunIcon,
   TimeIcon,
@@ -12,6 +13,7 @@ import {
   Flex,
   Icon,
   Image,
+  Spinner,
   Stack,
   Text,
   VStack,
@@ -22,6 +24,10 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import butterfly from "../assets/butterfly.png";
 import firefly from "../assets/firefly.png";
 import { useThemeName } from "../context/ThemeNameContext";
+import {
+  PULL_TRIGGER_DISTANCE,
+  usePullToRefresh,
+} from "../hooks/usePullToRefresh";
 import { useDayMode } from "../theme/fairycoreDayMode";
 import CurrentWeather from "./CurrentWeather";
 import DailyForecast from "./DailyForecast";
@@ -79,6 +85,7 @@ const Layout = () => {
   const contentRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
   const dayMode = useDayMode();
+  const { pullDistance, refreshing } = usePullToRefresh(contentRef);
   const { themeName } = useThemeName();
   const isFairycoreNight = themeName === "fairycore" && !dayMode.isDay;
   const isFairycoreDayActive = themeName === "fairycore" && dayMode.isDay;
@@ -188,12 +195,44 @@ const Layout = () => {
         {/* Content */}
         <Box
           ref={contentRef}
+          position="relative"
           flex="1"
           minH={0}
           overflowY="auto"
           px={{ base: 4, md: 8 }}
           pb={{ base: "calc(6rem + env(safe-area-inset-bottom))", md: 0 }}
         >
+          <Flex
+            position="absolute"
+            top="-2.5rem"
+            left={0}
+            right={0}
+            height="2.5rem"
+            justify="center"
+            align="center"
+            pointerEvents="none"
+            opacity={refreshing || pullDistance > 0 ? 1 : 0}
+            color={dayMode.isDay ? dayMode.textColor : "whiteAlpha.900"}
+            transform={`translateY(${refreshing ? 40 : pullDistance}px)`}
+            transition={
+              pullDistance === 0 && !refreshing
+                ? "transform 0.2s ease"
+                : undefined
+            }
+          >
+            {refreshing ? (
+              <Spinner size="sm" />
+            ) : (
+              <Icon
+                as={RepeatIcon}
+                boxSize={5}
+                transform={`rotate(${Math.min(
+                  (pullDistance / PULL_TRIGGER_DISTANCE) * 180,
+                  180,
+                )}deg)`}
+              />
+            )}
+          </Flex>
           <AnimatePresence mode="wait" initial={false}>
             <MotionBox
               key={active}
