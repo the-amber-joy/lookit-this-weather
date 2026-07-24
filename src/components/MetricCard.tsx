@@ -11,7 +11,7 @@ import {
   useColorModeValue,
 } from "@chakra-ui/react";
 
-import { useFairycoreDayMode } from "../theme/fairycoreDayMode";
+import { useDayMode } from "../theme/fairycoreDayMode";
 
 interface MetricCardProps {
   label: string;
@@ -33,17 +33,15 @@ const MetricCard = ({
   accentColor,
 }: MetricCardProps) => {
   const defaultIconColor = useColorModeValue("gray.800", "whiteAlpha.900");
-  const dayMode = useFairycoreDayMode();
+  const dayMode = useDayMode();
 
   // Fairycore's default dark navy card surface reads great against the
   // twilight-indigo night background, but clashes with the brighter
   // rose/moss daytime page background, so swap in a pastel surface (and
   // dark text/icons for contrast) then.
   const cardBg = dayMode.surfaceBg;
-  const iconColor = dayMode.isFairycoreDay
-    ? dayMode.textColor
-    : defaultIconColor;
-  const textColor = dayMode.isFairycoreDay ? dayMode.textColor : undefined;
+  const iconColor = dayMode.isDay ? dayMode.textColor : defaultIconColor;
+  const textColor = dayMode.isDay ? dayMode.textColor : undefined;
 
   return (
     <Card shadow="card" borderRadius="1rem" h="100%" bg={cardBg}>

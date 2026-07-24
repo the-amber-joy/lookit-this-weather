@@ -20,14 +20,14 @@ import {
 } from "../api/weatherIcon";
 import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
-import { useFairycoreDayMode } from "../theme/fairycoreDayMode";
+import { useDayMode } from "../theme/fairycoreDayMode";
 import { getOrganicCardStyle } from "../theme/organicCard";
 
 const Hero = () => {
   const { location, weather, error } = useWeatherContext();
   const { colors } = useTheme();
   const { themeName } = useThemeName();
-  const dayMode = useFairycoreDayMode();
+  const dayMode = useDayMode();
 
   const icon = weather
     ? getWeatherIcon(weather.current.weather_code, weather.current.is_day)
@@ -49,21 +49,21 @@ const Hero = () => {
   );
 
   const isDarkText =
-    !dayMode.isFairycoreDay &&
+    !dayMode.isDay &&
     !!weather &&
     getWeatherTextTone(weather.current.weather_code, weather.current.is_day) ===
       "dark";
-  const textColor = dayMode.isFairycoreDay
+  const textColor = dayMode.isDay
     ? dayMode.textColor
     : isDarkText
       ? colors.brand.ajBlueLvls["200"]
       : colors.white;
-  const textShadowColor = dayMode.isFairycoreDay
+  const textShadowColor = dayMode.isDay
     ? dayMode.textShadow
     : isDarkText
-      ? colors.whiteAlpha["800"]
+      ? colors.blackAlpha["400"]
       : colors.brand.ajBlueLvls["200"];
-  const mutedTextColor = dayMode.isFairycoreDay
+  const mutedTextColor = dayMode.isDay
     ? dayMode.subTextColor
     : isDarkText
       ? colors.brand.ajBlueLvls["300"]

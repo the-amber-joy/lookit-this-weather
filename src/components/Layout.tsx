@@ -14,7 +14,6 @@ import {
   Image,
   Stack,
   Text,
-  useTheme,
   VStack,
 } from "@chakra-ui/react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -23,7 +22,7 @@ import { ReactNode, useEffect, useRef, useState } from "react";
 import butterfly from "../assets/butterfly.png";
 import firefly from "../assets/firefly.png";
 import { useThemeName } from "../context/ThemeNameContext";
-import { useFairycoreDayMode } from "../theme/fairycoreDayMode";
+import { useDayMode } from "../theme/fairycoreDayMode";
 import CurrentWeather from "./CurrentWeather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
@@ -78,24 +77,16 @@ const Layout = () => {
   const [active, setActive] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
-  const { colors } = useTheme();
-  const dayMode = useFairycoreDayMode();
+  const dayMode = useDayMode();
   const { themeName } = useThemeName();
-  const isFairycoreNight = themeName === "fairycore" && !dayMode.isFairycoreDay;
-  const isFairycoreDayActive =
-    themeName === "fairycore" && dayMode.isFairycoreDay;
+  const isFairycoreNight = themeName === "fairycore" && !dayMode.isDay;
+  const isFairycoreDayActive = themeName === "fairycore" && dayMode.isDay;
 
   useEffect(() => {
     contentRef.current?.scrollTo(0, 0);
   }, [active]);
 
-  // Fairycore gets a brighter "dusk garden" page background during the
-  // day. Starting with lilac (bridging the Hero/ComfortCard's purple-gold
-  // gradient) before easing into blush and antique gold keeps the page
-  // from clashing with the purple showcase cards up top.
-  const dayBackground = dayMode.isFairycoreDay
-    ? `linear-gradient(160deg, ${colors.brand.ajPurpleLvls["300"]}, ${colors.brand.ajPinkLvls["300"]}, ${colors.brand.ajCheezLvls["300"]})`
-    : undefined;
+  const dayBackground = dayMode.pageBackground;
 
   return (
     <Flex
@@ -144,7 +135,7 @@ const Layout = () => {
             color={
               active === index
                 ? dayMode.accentColor
-                : dayMode.isFairycoreDay
+                : dayMode.isDay
                   ? dayMode.textColor
                   : undefined
             }
@@ -243,7 +234,7 @@ const Layout = () => {
             color={
               active === index
                 ? dayMode.accentColor
-                : dayMode.isFairycoreDay
+                : dayMode.isDay
                   ? dayMode.textColor
                   : "whiteAlpha.800"
             }

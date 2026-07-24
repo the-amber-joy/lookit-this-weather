@@ -19,6 +19,7 @@ import {
 } from "../api/weatherIcon";
 import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
+import { useDayMode } from "../theme/fairycoreDayMode";
 import ThemedSpinner from "./ThemedSpinner";
 
 const HourRow = ({
@@ -117,6 +118,7 @@ const HourRow = ({
 const HourlyForecast = () => {
   const { weather, isLoading, error } = useWeatherContext();
   const { themeName } = useThemeName();
+  const dayMode = useDayMode();
   const isFairycore = themeName === "fairycore";
 
   if (isLoading) {
@@ -152,10 +154,20 @@ const HourlyForecast = () => {
             position="sticky"
             top={0}
             zIndex={1}
-            bg={isFairycore ? "brand.ajPurpleLvls.500" : "brand.ajBlueLvls.100"}
-            color={isFairycore ? "brand.ajBlueLvls.100" : "brand.ajCheez"}
+            bg={
+              isFairycore
+                ? "brand.ajPurpleLvls.500"
+                : (dayMode.surfaceBg ?? "brand.ajBlueLvls.100")
+            }
+            color={
+              isFairycore
+                ? "brand.ajBlueLvls.100"
+                : dayMode.isDay
+                  ? dayMode.textColor
+                  : "brand.ajCheez"
+            }
             borderRadius={isFairycore ? "lg" : undefined}
-            px={isFairycore ? 4 : undefined}
+            px={4}
             py={2}
           >
             {day.label}

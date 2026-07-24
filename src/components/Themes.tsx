@@ -1,17 +1,81 @@
-import { CheckCircleIcon } from "@chakra-ui/icons";
-import { Box, Heading, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import {
+  CheckCircleIcon,
+  MoonIcon,
+  RepeatClockIcon,
+  SunIcon,
+} from "@chakra-ui/icons";
+import { Box, Heading, Icon, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 
+import { useDayModePreference } from "../context/DayModePreferenceContext";
 import { useThemeName } from "../context/ThemeNameContext";
+import { DAY_MODE_PREFERENCE_OPTIONS } from "../theme/dayModePreference";
 import { THEME_OPTIONS } from "../theme/themeNames";
+
+const DAY_MODE_PREFERENCE_ICONS = {
+  dynamic: RepeatClockIcon,
+  day: SunIcon,
+  night: MoonIcon,
+};
 
 const Themes = () => {
   const { themeName, setThemeName } = useThemeName();
+  const { dayModePreference, setDayModePreference } = useDayModePreference();
 
   return (
     <Stack spacing={6} paddingY={{ base: 8, md: 12 }} maxW="40rem">
       <Stack spacing={1}>
         <Heading size="lg">Themes</Heading>
-        <Text opacity={0.7}>Choose how the app looks.</Text>
+        <Text opacity={0.85}>Choose how the app looks.</Text>
+      </Stack>
+
+      <Stack spacing={3}>
+        <Stack spacing={1}>
+          <Heading size="md">Appearance</Heading>
+          <Text opacity={0.85} fontSize="sm">
+            Choose whether the app looks like day or night.
+          </Text>
+        </Stack>
+
+        <SimpleGrid columns={{ base: 1, sm: 3 }} spacing={4}>
+          {DAY_MODE_PREFERENCE_OPTIONS.map((option) => {
+            const isActive = option.value === dayModePreference;
+
+            return (
+              <Box
+                key={option.value}
+                as="button"
+                onClick={() => setDayModePreference(option.value)}
+                textAlign="left"
+                borderWidth="2px"
+                borderColor={isActive ? "brand.ajCheez" : "whiteAlpha.200"}
+                borderRadius="1rem"
+                bg="whiteAlpha.100"
+                px={5}
+                py={4}
+                transition="border-color 0.2s ease"
+                aria-pressed={isActive}
+              >
+                <Stack spacing={1}>
+                  <Stack direction="row" align="center" justify="space-between">
+                    <Stack direction="row" align="center" spacing={2}>
+                      <Icon
+                        as={DAY_MODE_PREFERENCE_ICONS[option.value]}
+                        boxSize={4}
+                      />
+                      <Heading size="sm">{option.label}</Heading>
+                    </Stack>
+                    {isActive && (
+                      <CheckCircleIcon color="brand.ajCheez" boxSize={4} />
+                    )}
+                  </Stack>
+                  <Text fontSize="xs" opacity={0.85}>
+                    {option.description}
+                  </Text>
+                </Stack>
+              </Box>
+            );
+          })}
+        </SimpleGrid>
       </Stack>
 
       <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={4}>
