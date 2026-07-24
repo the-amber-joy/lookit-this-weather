@@ -10,16 +10,19 @@ import { registerSW } from "virtual:pwa-register";
 
 import App from "./App";
 import "./index.css";
+import { markUpdateAvailable, registerUpdateHandler } from "./pwaUpdate";
 import theme from "./theme/theme";
 
 // The browser's built-in service worker update check only runs roughly once
 // every 24 hours per registration, so a PWA left open/reopened without a
 // true reload can serve a stale cached build for a long time. Registering
-// manually lets us poll for updates far more often; registerType
-// "autoUpdate" (see vite.config.ts) then reloads the page automatically
-// once a new service worker takes over.
+// manually lets us poll for updates far more often. registerType "prompt"
+// (see vite.config.ts) means a new service worker installs but waits rather
+// than taking over automatically; onNeedRefresh surfaces an UpdateBanner so
+// the user can choose when to reload, instead of the app updating (and
+// potentially interrupting an in-flight fetch) silently underneath them.
 const UPDATE_CHECK_INTERVAL = 30 * 60 * 1000; // 30 minutes
-registerSW({
+const updateSW = registerSW({
   immediate: true,
   onRegisteredSW(_swUrl, registration) {
     if (!registration) return;
@@ -36,7 +39,12 @@ registerSW({
       }
     });
   },
+  onNeedRefresh() {
+    markUpdateAvailable();
+  },
 });
+
+registerUpdateHandler(updateSW);
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>

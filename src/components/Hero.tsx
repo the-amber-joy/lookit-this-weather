@@ -24,7 +24,7 @@ import { useDayMode } from "../theme/fairycoreDayMode";
 import { getOrganicCardStyle } from "../theme/organicCard";
 
 const Hero = () => {
-  const { location, weather, error } = useWeatherContext();
+  const { location, weather, error, refresh } = useWeatherContext();
   const { colors } = useTheme();
   const { themeName } = useThemeName();
   const dayMode = useDayMode();
@@ -82,7 +82,6 @@ const Hero = () => {
     : (location?.name ?? "Loading location...");
 
   const updatedAt = () => {
-    if (error) return "Please try again.";
     if (!weather) return "Getting current conditions...";
     return `Updated ${dayjs(weather.current.time).format("h:mm A")} ${weather.timezone_abbreviation}`;
   };
@@ -151,7 +150,19 @@ const Hero = () => {
             </HStack>
           )}
           <Text color={mutedTextColor} fontSize={{ base: "sm", md: "md" }}>
-            {updatedAt()}
+            {error ? (
+              <Text
+                as="button"
+                onClick={refresh}
+                textDecoration="underline"
+                cursor="pointer"
+                _hover={{ opacity: 0.8 }}
+              >
+                Please try again.
+              </Text>
+            ) : (
+              updatedAt()
+            )}
           </Text>
         </Stack>
       </Center>

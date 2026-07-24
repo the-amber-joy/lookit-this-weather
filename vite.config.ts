@@ -29,7 +29,7 @@ export default defineConfig({
     react(),
     buildInfo(),
     VitePWA({
-      registerType: "autoUpdate",
+      registerType: "prompt",
       injectRegister: false,
       includeAssets: [
         "favicon.ico",

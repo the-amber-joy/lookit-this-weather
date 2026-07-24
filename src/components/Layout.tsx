@@ -29,6 +29,7 @@ import HourlyForecast from "./HourlyForecast";
 import RadarMap from "./RadarMap";
 import Sparkles from "./Sparkles";
 import Themes from "./Themes";
+import UpdateBanner from "./UpdateBanner";
 
 interface TabItem {
   label: string;
@@ -89,22 +90,25 @@ const Layout = () => {
   const dayBackground = dayMode.pageBackground;
 
   return (
-    <Flex
-      direction={{ base: "column", md: "row" }}
-      height="100dvh"
-      overflowY="hidden"
-      overflowX="visible"
-    >
-      {dayBackground && (
-        <Box
-          position="fixed"
-          inset={0}
-          zIndex={-2}
-          pointerEvents="none"
-          background={dayBackground}
-        />
-      )}
-      <Sparkles />
+    <Flex direction="column" height="100dvh">
+      <UpdateBanner />
+      <Flex
+        flex="1"
+        minH={0}
+        direction={{ base: "column", md: "row" }}
+        overflowY="hidden"
+        overflowX="visible"
+      >
+        {dayBackground && (
+          <Box
+            position="fixed"
+            inset={0}
+            zIndex={-2}
+            pointerEvents="none"
+            background={dayBackground}
+          />
+        )}
+        <Sparkles />
 
       {/* Desktop: left sidebar */}
       <VStack
@@ -281,6 +285,7 @@ const Layout = () => {
             </Stack>
           </Box>
         ))}
+      </Flex>
       </Flex>
     </Flex>
   );
