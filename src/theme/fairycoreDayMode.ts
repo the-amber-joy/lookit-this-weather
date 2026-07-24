@@ -17,6 +17,11 @@ export interface DayMode {
   /** Background for neutral surfaces (MetricCard, nav bar). Undefined keeps
    * the existing default/night styling untouched. */
   surfaceBg: string | undefined;
+  /** Text/icon color for MetricCard specifically, which renders directly on
+   * surfaceBg rather than pageBackground. Fairycore's surfaceBg is a light
+   * pastel purple, so it needs dark text here even though textColor (used
+   * elsewhere against the darker pageBackground) is light. */
+  cardTextColor: string;
   /** Accent color (Chakra color token) for active nav items etc. */
   accentColor: string;
   /** Fixed full-page background gradient shown behind everything during the
@@ -63,6 +68,7 @@ export function useDayMode(): DayMode {
       textShadow: colors.brand.ajBlueLvls["200"],
       subTextColor: colors.whiteAlpha["900"],
       surfaceBg: undefined,
+      cardTextColor: colors.white,
       accentColor: "brand.ajCheez",
       pageBackground: undefined,
       // Unused by Hero/ComfortCard at night (they compute their own
@@ -83,6 +89,10 @@ export function useDayMode(): DayMode {
       textShadow: colors.blackAlpha["400"],
       subTextColor: colors.whiteAlpha["900"],
       surfaceBg: colors.brand.ajPurpleLvls["600"],
+      // Dark, unlike textColor above: MetricCard sits on this light pastel
+      // purple surface, not the page gradient, so it needs dark text for
+      // contrast rather than the light text used elsewhere.
+      cardTextColor: colors.brand.ajPurpleLvls["200"],
       accentColor: "brand.ajPinkLvls.200",
       // Starting with lilac (bridging the Hero/ComfortCard's purple-gold
       // gradient) before easing into blush and antique gold keeps the page
@@ -104,6 +114,7 @@ export function useDayMode(): DayMode {
     textShadow: colors.blackAlpha["400"],
     subTextColor: colors.brand.ajBlueLvls["300"],
     surfaceBg: colors.brand.ajBlueLvls["800"],
+    cardTextColor: colors.brand.ajBlueLvls["200"],
     accentColor: colors.brand.ajBlueLvls["400"],
     // A warm-gold-into-sky-blue gradient, distinct from the Hero/ComfortCard's
     // own weather-condition gradient (which for clear skies is built from

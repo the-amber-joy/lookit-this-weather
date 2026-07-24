@@ -40,8 +40,8 @@ const MetricCard = ({
   // rose/moss daytime page background, so swap in a pastel surface (and
   // dark text/icons for contrast) then.
   const cardBg = dayMode.surfaceBg;
-  const iconColor = dayMode.isDay ? dayMode.textColor : defaultIconColor;
-  const textColor = dayMode.isDay ? dayMode.textColor : undefined;
+  const iconColor = dayMode.isDay ? dayMode.cardTextColor : defaultIconColor;
+  const textColor = dayMode.isDay ? dayMode.cardTextColor : undefined;
 
   return (
     <Card shadow="card" borderRadius="1rem" h="100%" bg={cardBg}>
