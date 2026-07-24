@@ -1,8 +1,9 @@
 import {
   CheckCircleIcon,
   MoonIcon,
-  RepeatClockIcon,
+  PhoneIcon,
   SunIcon,
+  TimeIcon,
 } from "@chakra-ui/icons";
 import { Box, Heading, Icon, SimpleGrid, Stack, Text } from "@chakra-ui/react";
 
@@ -12,7 +13,8 @@ import { DAY_MODE_PREFERENCE_OPTIONS } from "../theme/dayModePreference";
 import { THEME_OPTIONS } from "../theme/themeNames";
 
 const DAY_MODE_PREFERENCE_ICONS = {
-  dynamic: RepeatClockIcon,
+  time: TimeIcon,
+  system: PhoneIcon,
   day: SunIcon,
   night: MoonIcon,
 };
@@ -25,18 +27,46 @@ const Themes = () => {
     <Stack spacing={6} paddingY={{ base: 8, md: 12 }} maxW="40rem">
       <Stack spacing={1}>
         <Heading size="lg">Themes</Heading>
-        <Text opacity={0.85}>Choose how the app looks.</Text>
       </Stack>
+
+      <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={4}>
+        {THEME_OPTIONS.map((option) => {
+          const isActive = option.name === themeName;
+
+          return (
+            <Box
+              key={option.name}
+              as="button"
+              onClick={() => setThemeName(option.name)}
+              textAlign="left"
+              borderWidth="2px"
+              borderColor={isActive ? "brand.ajCheez" : "whiteAlpha.200"}
+              borderRadius="1rem"
+              bg="whiteAlpha.100"
+              px={5}
+              py={4}
+              transition="border-color 0.2s ease"
+              aria-pressed={isActive}
+            >
+              <Stack spacing={1}>
+                <Stack direction="row" align="center" justify="space-between">
+                  <Heading size="md">{option.label}</Heading>
+                  {isActive && (
+                    <CheckCircleIcon color="brand.ajCheez" boxSize={5} />
+                  )}
+                </Stack>
+              </Stack>
+            </Box>
+          );
+        })}
+      </SimpleGrid>
 
       <Stack spacing={3}>
         <Stack spacing={1}>
-          <Heading size="md">Appearance</Heading>
-          <Text opacity={0.85} fontSize="sm">
-            Choose whether the app looks like day or night.
-          </Text>
+          <Heading size="md">Mode</Heading>
         </Stack>
 
-        <SimpleGrid columns={{ base: 1, sm: 3 }} spacing={4}>
+        <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={4}>
           {DAY_MODE_PREFERENCE_OPTIONS.map((option) => {
             const isActive = option.value === dayModePreference;
 
@@ -77,38 +107,6 @@ const Themes = () => {
           })}
         </SimpleGrid>
       </Stack>
-
-      <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={4}>
-        {THEME_OPTIONS.map((option) => {
-          const isActive = option.name === themeName;
-
-          return (
-            <Box
-              key={option.name}
-              as="button"
-              onClick={() => setThemeName(option.name)}
-              textAlign="left"
-              borderWidth="2px"
-              borderColor={isActive ? "brand.ajCheez" : "whiteAlpha.200"}
-              borderRadius="1rem"
-              bg="whiteAlpha.100"
-              px={5}
-              py={4}
-              transition="border-color 0.2s ease"
-              aria-pressed={isActive}
-            >
-              <Stack spacing={1}>
-                <Stack direction="row" align="center" justify="space-between">
-                  <Heading size="md">{option.label}</Heading>
-                  {isActive && (
-                    <CheckCircleIcon color="brand.ajCheez" boxSize={5} />
-                  )}
-                </Stack>
-              </Stack>
-            </Box>
-          );
-        })}
-      </SimpleGrid>
     </Stack>
   );
 };

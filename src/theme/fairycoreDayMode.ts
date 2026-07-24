@@ -3,6 +3,7 @@ import { useTheme } from "@chakra-ui/react";
 import { useDayModePreference } from "../context/DayModePreferenceContext";
 import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
+import { useSystemPrefersDark } from "./systemColorScheme";
 
 export interface DayMode {
   isDay: boolean;
@@ -27,19 +28,23 @@ export interface DayMode {
  * contrast; their nighttime look (deep tones, white text) is handled
  * entirely by the static theme. This hook centralizes that swap so Hero,
  * ComfortCard, MetricCard, and Layout stay in sync. Whether "day" actually
- * means it's daytime, or is forced on/off, is controlled by the user's
- * day-mode preference (dynamic/day/night).
+ * means it's daytime, or is forced on/off, or follows the device's light/
+ * dark setting, is controlled by the user's day-mode preference
+ * (time/system/day/night).
  */
 export function useDayMode(): DayMode {
   const { colors } = useTheme();
   const { themeName } = useThemeName();
   const { weather } = useWeatherContext();
   const { dayModePreference } = useDayModePreference();
+  const systemPrefersDark = useSystemPrefersDark();
 
   const isDay =
-    dayModePreference === "dynamic"
+    dayModePreference === "time"
       ? weather?.current.is_day === 1
-      : dayModePreference === "day";
+      : dayModePreference === "system"
+        ? !systemPrefersDark
+        : dayModePreference === "day";
 
   if (!isDay) {
     return {
