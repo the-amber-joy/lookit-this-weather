@@ -78,7 +78,7 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   useEffect(() => {
-    const REFRESH_INTERVAL = 10 * 60 * 1000; // 10 minutes
+    const REFRESH_INTERVAL = 15 * 60 * 1000; // 15 minutes, matching Open-Meteo's forecast update cadence
     let lastRefresh = Date.now();
 
     const doRefresh = () => {
@@ -92,7 +92,7 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
 
     // Android (and other mobile) browsers throttle or fully suspend
     // setInterval timers while a PWA is backgrounded/screen-locked, so the
-    // interval alone can't be trusted to fire every 10 minutes. Catch up as
+    // interval alone can't be trusted to fire every 15 minutes. Catch up as
     // soon as the app becomes visible again.
     const handleVisibilityChange = () => {
       if (
