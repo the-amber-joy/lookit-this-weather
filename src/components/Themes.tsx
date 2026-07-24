@@ -1,11 +1,21 @@
 import {
-  CheckCircleIcon,
+  ChevronDownIcon,
   MoonIcon,
   PhoneIcon,
   SunIcon,
   TimeIcon,
 } from "@chakra-ui/icons";
-import { Box, Heading, Icon, SimpleGrid, Stack, Text } from "@chakra-ui/react";
+import {
+  Button,
+  Heading,
+  Icon,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Stack,
+  Text,
+} from "@chakra-ui/react";
 
 import { useDayModePreference } from "../context/DayModePreferenceContext";
 import { useThemeName } from "../context/ThemeNameContext";
@@ -33,86 +43,102 @@ const Themes = () => {
       color={dayMode.isDay ? dayMode.textColor : undefined}
     >
       <Stack spacing={1}>
-        <Heading size="lg">Themes</Heading>
+        <Heading size="lg">Theme</Heading>
       </Stack>
 
-      <SimpleGrid columns={{ base: 1, sm: 2 }} spacing={4}>
-        {THEME_OPTIONS.map((option) => {
-          const isActive = option.name === themeName;
-
-          return (
-            <Box
+      <Menu matchWidth>
+        <MenuButton
+          as={Button}
+          rightIcon={<ChevronDownIcon />}
+          borderWidth="2px"
+          borderColor="whiteAlpha.200"
+          borderRadius="1rem"
+          bg="whiteAlpha.100"
+          color={dayMode.isDay ? dayMode.textColor : undefined}
+          fontWeight="normal"
+          textAlign="left"
+          maxW="16rem"
+        >
+          {THEME_OPTIONS.find((option) => option.name === themeName)?.label}
+        </MenuButton>
+        <MenuList
+          minW="16rem"
+          borderRadius="1rem"
+          overflow="hidden"
+          color="white"
+        >
+          {THEME_OPTIONS.map((option) => (
+            <MenuItem
               key={option.name}
-              as="button"
               onClick={() => setThemeName(option.name)}
-              textAlign="left"
-              borderWidth="2px"
-              borderColor={isActive ? "brand.ajCheez" : "whiteAlpha.200"}
-              borderRadius="1rem"
-              bg="whiteAlpha.100"
-              px={5}
-              py={4}
-              transition="border-color 0.2s ease"
-              aria-pressed={isActive}
             >
-              <Stack spacing={1}>
-                <Stack direction="row" align="center" justify="space-between">
-                  <Heading size="md">{option.label}</Heading>
-                  {isActive && (
-                    <CheckCircleIcon color="brand.ajCheez" boxSize={5} />
-                  )}
-                </Stack>
-              </Stack>
-            </Box>
-          );
-        })}
-      </SimpleGrid>
+              {option.label}
+            </MenuItem>
+          ))}
+        </MenuList>
+      </Menu>
 
       <Stack spacing={3}>
         <Stack spacing={1}>
           <Heading size="md">Mode</Heading>
         </Stack>
 
-        <SimpleGrid columns={{ base: 1, sm: 2, md: 4 }} spacing={4}>
-          {DAY_MODE_PREFERENCE_OPTIONS.map((option) => {
-            const isActive = option.value === dayModePreference;
-
-            return (
-              <Box
+        <Menu matchWidth>
+          <MenuButton
+            as={Button}
+            rightIcon={<ChevronDownIcon />}
+            borderWidth="2px"
+            borderColor="whiteAlpha.200"
+            borderRadius="1rem"
+            bg="whiteAlpha.100"
+            color={dayMode.isDay ? dayMode.textColor : undefined}
+            fontWeight="normal"
+            textAlign="left"
+            maxW="16rem"
+          >
+            <Stack direction="row" align="center" spacing={2}>
+              <Icon
+                as={DAY_MODE_PREFERENCE_ICONS[dayModePreference]}
+                boxSize={4}
+              />
+              <Text>
+                {
+                  DAY_MODE_PREFERENCE_OPTIONS.find(
+                    (option) => option.value === dayModePreference,
+                  )?.label
+                }
+              </Text>
+            </Stack>
+          </MenuButton>
+          <MenuList
+            minW="16rem"
+            borderRadius="1rem"
+            overflow="hidden"
+            color="white"
+          >
+            {DAY_MODE_PREFERENCE_OPTIONS.map((option) => (
+              <MenuItem
                 key={option.value}
-                as="button"
+                icon={
+                  <Icon
+                    as={DAY_MODE_PREFERENCE_ICONS[option.value]}
+                    boxSize={4}
+                  />
+                }
                 onClick={() => setDayModePreference(option.value)}
-                textAlign="left"
-                borderWidth="2px"
-                borderColor={isActive ? "brand.ajCheez" : "whiteAlpha.200"}
-                borderRadius="1rem"
-                bg="whiteAlpha.100"
-                px={5}
-                py={4}
-                transition="border-color 0.2s ease"
-                aria-pressed={isActive}
               >
-                <Stack spacing={1}>
-                  <Stack direction="row" align="center" justify="space-between">
-                    <Stack direction="row" align="center" spacing={2}>
-                      <Icon
-                        as={DAY_MODE_PREFERENCE_ICONS[option.value]}
-                        boxSize={4}
-                      />
-                      <Heading size="sm">{option.label}</Heading>
-                    </Stack>
-                    {isActive && (
-                      <CheckCircleIcon color="brand.ajCheez" boxSize={4} />
-                    )}
-                  </Stack>
-                  <Text fontSize="xs" opacity={0.85}>
-                    {option.description}
-                  </Text>
-                </Stack>
-              </Box>
-            );
-          })}
-        </SimpleGrid>
+                {option.label}
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
+        <Text fontSize="xs" opacity={0.85}>
+          {
+            DAY_MODE_PREFERENCE_OPTIONS.find(
+              (option) => option.value === dayModePreference,
+            )?.description
+          }
+        </Text>
       </Stack>
     </Stack>
   );

@@ -177,7 +177,7 @@ const HourlyForecast = () => {
                   ? dayMode.textColor
                   : "brand.ajCheez"
             }
-            borderRadius={isFairycore ? "lg" : undefined}
+            borderRadius={isFairycore ? "lg" : "md"}
             px={4}
             py={2}
           >
