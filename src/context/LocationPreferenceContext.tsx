@@ -154,15 +154,26 @@ export const LocationPreferenceProvider = ({
   }, []);
 
   const setLastResolvedLocation = useCallback((location: Location) => {
-    setLastResolvedLocationState(location);
-    try {
-      localStorage.setItem(
-        LAST_RESOLVED_LOCATION_STORAGE_KEY,
-        JSON.stringify(location),
-      );
-    } catch {
-      // Ignore storage failures (e.g. private browsing).
-    }
+    setLastResolvedLocationState((prev) => {
+      // getLocation() returns a new object on every call even when the
+      // coordinates haven't changed. Bail out on an equivalent location so
+      // this doesn't produce a new reference each refresh -- WeatherContext's
+      // refresh() depends on lastResolvedLocation, and a new reference there
+      // re-triggers its refresh-scheduling effect, causing an infinite
+      // refetch loop (seen as rapid flickering between the loading state
+      // and content).
+      if (prev && isSameLocation(prev, location)) return prev;
+
+      try {
+        localStorage.setItem(
+          LAST_RESOLVED_LOCATION_STORAGE_KEY,
+          JSON.stringify(location),
+        );
+      } catch {
+        // Ignore storage failures (e.g. private browsing).
+      }
+      return location;
+    });
   }, []);
 
   const openSearch = useCallback(() => setIsSearchOpen(true), []);
