@@ -26,6 +26,11 @@ interface LocationPreferenceContextValue {
   manualLocation: Location | null;
   lastResolvedLocation: Location | null;
   recentLocations: Location[];
+  // Bumped every time selectCurrentLocation() is called, even if mode is
+  // already "current" (e.g. retrying after granting location permission).
+  // WeatherContext depends on this so a retry always triggers a fresh
+  // refresh, instead of being a no-op because mode's value didn't change.
+  currentLocationRequestId: number;
   selectLocation: (location: Location) => void;
   selectCurrentLocation: () => void;
   removeRecentLocation: (location: Location) => void;
@@ -96,6 +101,7 @@ export const LocationPreferenceProvider = ({
   const [lastResolvedLocation, setLastResolvedLocationState] =
     useState<Location | null>(getInitialLastResolvedLocation);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
+  const [currentLocationRequestId, setCurrentLocationRequestId] = useState(0);
 
   const selectLocation = useCallback((location: Location) => {
     setMode("manual");
@@ -129,6 +135,10 @@ export const LocationPreferenceProvider = ({
 
   const selectCurrentLocation = useCallback(() => {
     setMode("current");
+    // Always bump this, even if mode is already "current", so retrying (e.g.
+    // after granting location permission) reliably triggers a fresh refresh
+    // instead of being a no-op because mode's value didn't change.
+    setCurrentLocationRequestId((id) => id + 1);
     try {
       localStorage.setItem(LOCATION_MODE_STORAGE_KEY, "current");
     } catch {
@@ -186,6 +196,7 @@ export const LocationPreferenceProvider = ({
         manualLocation,
         lastResolvedLocation,
         recentLocations,
+        currentLocationRequestId,
         selectLocation,
         selectCurrentLocation,
         removeRecentLocation,

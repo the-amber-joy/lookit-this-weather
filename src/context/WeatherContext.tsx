@@ -37,6 +37,7 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
     lastResolvedLocation,
     setLastResolvedLocation,
     openSearch,
+    currentLocationRequestId,
   } = useLocationPreference();
   const [location, setLocation] = useState<Location | null>(null);
   const [weather, setWeather] = useState<WeatherResponse | null>(null);
@@ -111,6 +112,12 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
     lastResolvedLocation,
     setLastResolvedLocation,
     openSearch,
+    // Not read in the body, but selectCurrentLocation() bumps this even when
+    // mode is already "current" (e.g. retrying after granting location
+    // permission), so it needs to be a dependency to force a fresh refresh
+    // in that case -- otherwise refresh()'s identity wouldn't change and the
+    // scheduling effect below wouldn't retrigger it.
+    currentLocationRequestId,
   ]);
 
   useEffect(() => {

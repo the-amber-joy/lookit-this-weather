@@ -120,6 +120,10 @@ const LocationSearchButton = ({ color }: LocationSearchButtonProps) => {
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 autoFocus
+                autoComplete="off"
+                data-1p-ignore
+                data-lpignore="true"
+                data-bwignore
               />
 
               <Button variant="outline" onClick={handleUseCurrentLocation}>
