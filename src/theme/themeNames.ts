@@ -3,7 +3,7 @@
 // them without creating circular imports.
 export type ThemeName = "default" | "fairycore";
 
-export const DEFAULT_THEME_NAME: ThemeName = "fairycore";
+export const DEFAULT_THEME_NAME: ThemeName = "default";
 
 export const THEME_STORAGE_KEY = "lookit-this-weather:theme";
 

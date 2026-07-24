@@ -35,6 +35,11 @@ interface TabItem {
   label: string;
   icon: ComponentWithAs<"svg", IconProps>;
   panel: ReactNode;
+  // Whether the tab's panel needs to fill the available height (e.g. the
+  // radar map, which needs concrete pixel dimensions). Other tabs size to
+  // their natural content height so the surrounding scroll area/padding
+  // calculations behave correctly.
+  fillHeight?: boolean;
 }
 
 const tabs: TabItem[] = [
@@ -57,6 +62,7 @@ const tabs: TabItem[] = [
     label: "Radar",
     icon: ViewIcon,
     panel: <RadarMap />,
+    fillHeight: true,
   },
   {
     label: "Themes",
@@ -191,12 +197,12 @@ const Layout = () => {
         minH={0}
         overflowY="auto"
         px={{ base: 4, md: 8 }}
-        pb={{ base: "5.5rem", md: 0 }}
+        pb={{ base: "calc(6rem + env(safe-area-inset-bottom))", md: 0 }}
       >
         <AnimatePresence mode="wait" initial={false}>
           <MotionBox
             key={active}
-            height="100%"
+            height={tabs[active].fillHeight ? "100%" : "auto"}
             initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             exit={shouldReduceMotion ? undefined : { opacity: 0, y: -8 }}

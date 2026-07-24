@@ -26,6 +26,15 @@ registerSW({
     setInterval(() => {
       registration.update();
     }, UPDATE_CHECK_INTERVAL);
+
+    // Also check immediately whenever the app regains focus (e.g. reopened
+    // from the home screen or switched back to), instead of waiting for the
+    // next 30-minute tick, similar to the weather refresh catch-up logic.
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        registration.update();
+      }
+    });
   },
 });
 

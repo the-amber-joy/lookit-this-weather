@@ -7,8 +7,6 @@ import MetricGrid from "./MetricGrid";
 
 const CurrentWeather = () => (
   <Flex
-    h={{ base: "100%", md: "auto" }}
-    minH="100%"
     paddingY={{ base: 3, md: 8 }}
     direction="column"
     align="center"
