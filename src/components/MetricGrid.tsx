@@ -3,7 +3,7 @@ import { Alert, AlertIcon, Box, Center, Flex } from "@chakra-ui/react";
 import { getDailyForecast } from "../api/getDailyForecast";
 import {
   getPrecipitationTiming,
-  getRemainingPrecipitationProbability,
+  getRemainingPrecipitation,
 } from "../api/getHourlyForecast";
 import {
   formatWindUnit,
@@ -52,10 +52,9 @@ const MetricGrid = () => {
       ? `, ${precipVerb} now`
       : `, ${precipVerb} at ${precipTiming.time}`;
 
+  const remainingPrecipitation = getRemainingPrecipitation(weather ?? null);
   const remainingPrecipitationProbability =
-    getRemainingPrecipitationProbability(weather ?? null) ??
-    today?.precipitationProbability ??
-    0;
+    remainingPrecipitation?.probability ?? today?.precipitationProbability ?? 0;
 
   const highestAirQuality = airQuality
     ? getHighestAirQuality(airQuality)
@@ -88,8 +87,8 @@ const MetricGrid = () => {
                 value: `Hi ${Math.round(today.temperatureMax)}${weather.daily_units.temperature_2m_max} / Lo ${Math.round(today.temperatureMin)}${weather.daily_units.temperature_2m_min}`,
                 detail: `${Math.round(remainingPrecipitationProbability)}${weather.daily_units.precipitation_probability_max} chance of rain${precipTimingSuffix}`,
                 icon: getPrecipitationIcon(
-                  today.precipitationProbability,
-                  today.weatherCode,
+                  remainingPrecipitationProbability,
+                  remainingPrecipitation?.weatherCode ?? today.weatherCode,
                 ),
               },
             ]

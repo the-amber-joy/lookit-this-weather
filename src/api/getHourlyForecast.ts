@@ -102,17 +102,30 @@ export function getPrecipitationTiming(
 
 /**
  * Highest precipitation chance among today's remaining hours (from now
- * through end of day). Unlike the daily forecast's max, this excludes hours
- * that have already passed, so it stays consistent with
- * `getPrecipitationTiming`. Returns null if there's no hourly data.
+ * through end of day), along with the weather code for that specific hour
+ * so an icon based on it stays consistent with the probability. Unlike the
+ * daily forecast's max, this excludes hours that have already passed, so it
+ * stays consistent with `getPrecipitationTiming`. Returns null if there's no
+ * hourly data.
  */
-export function getRemainingPrecipitationProbability(
+export interface RemainingPrecipitation {
+  probability: number;
+  weatherCode: number;
+}
+
+export function getRemainingPrecipitation(
   weather: WeatherResponse | null,
-): number | null {
+): RemainingPrecipitation | null {
   if (!weather?.hourly) return null;
 
   const today = getHourlyForecast(weather).find((day) => day.label === "Today");
   if (!today || today.hours.length === 0) return null;
 
-  return Math.max(...today.hours.map((hour) => hour.precipitationProbability));
+  const peak = today.hours.reduce((max, hour) =>
+    hour.precipitationProbability > max.precipitationProbability ? hour : max,
+  );
+  return {
+    probability: peak.precipitationProbability,
+    weatherCode: peak.weatherCode,
+  };
 }
