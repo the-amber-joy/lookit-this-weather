@@ -16,7 +16,7 @@ describe("getComfort", () => {
     [80, 66, "Warm & Sticky"],
     [80, 72, "Hot & Heavy"],
     [90, 40, "Dry Heat"],
-    [90, 62, "Hot"],
+    [90, 58, "Hot"],
     [90, 72, "Oppressive"],
     [98, 40, "Scorching"],
     [98, 72, "Dangerously Hot"],

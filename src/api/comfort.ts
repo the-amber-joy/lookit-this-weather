@@ -13,19 +13,32 @@ interface ComfortBand {
 
 // Dew point (°F) is the best proxy for how the air actually feels.
 type Humidity =
-  "dry" | "comfortable" | "humid" | "muggy" | "sticky" | "oppressive";
+  | "dry"
+  | "comfortable"
+  | "pleasant"
+  | "sticky"
+  | "humid"
+  | "oppressive"
+  | "miserable";
 
 function getHumidity(dewPoint: number): Humidity {
-  if (dewPoint >= 75) return "oppressive";
-  if (dewPoint >= 70) return "sticky";
-  if (dewPoint >= 65) return "muggy";
-  if (dewPoint >= 60) return "humid";
+  if (dewPoint >= 76) return "miserable";
+  if (dewPoint >= 71) return "oppressive";
+  if (dewPoint >= 66) return "humid";
+  if (dewPoint >= 61) return "sticky";
+  if (dewPoint >= 56) return "pleasant";
   if (dewPoint >= 50) return "comfortable";
   return "dry";
 }
 
-const isSticky = (h: Humidity) =>
-  h === "muggy" || h === "sticky" || h === "oppressive";
+// Notably humid enough to affect how a temperature feels (dew point 61+).
+const isHumid = (h: Humidity) =>
+  h === "sticky" || h === "humid" || h === "oppressive" || h === "miserable";
+
+// The more severe half of the humid range (dew point 71+), vs. the merely
+// "moderate" sticky/humid tiers just above the isHumid cutoff.
+const isSeverelyHumid = (h: Humidity) =>
+  h === "oppressive" || h === "miserable";
 
 function getBand(temperature: number, humidity: Humidity): ComfortBand {
   // Bitterly cold
@@ -87,7 +100,7 @@ function getBand(temperature: number, humidity: Humidity): ComfortBand {
 
   // Pleasant sweet spot
   if (temperature < 75) {
-    if (!isSticky(humidity)) {
+    if (!isHumid(humidity)) {
       return {
         label: "Chef's Kiss",
         blurbs: [
@@ -97,7 +110,7 @@ function getBand(temperature: number, humidity: Humidity): ComfortBand {
         ],
       };
     }
-    return humidity === "muggy"
+    return !isSeverelyHumid(humidity)
       ? {
           label: "Warm & Muggy",
           blurbs: [
@@ -118,7 +131,7 @@ function getBand(temperature: number, humidity: Humidity): ComfortBand {
 
   // Warm
   if (temperature < 85) {
-    if (!isSticky(humidity)) {
+    if (!isHumid(humidity)) {
       return {
         label: "Warm & Comfy",
         blurbs: [
@@ -128,7 +141,7 @@ function getBand(temperature: number, humidity: Humidity): ComfortBand {
         ],
       };
     }
-    if (humidity === "muggy") {
+    if (!isSeverelyHumid(humidity)) {
       return {
         label: "Warm & Sticky",
         blurbs: [
@@ -160,7 +173,7 @@ function getBand(temperature: number, humidity: Humidity): ComfortBand {
         ],
       };
     }
-    if (!isSticky(humidity)) {
+    if (!isHumid(humidity)) {
       return {
         label: "Hot",
         blurbs: [

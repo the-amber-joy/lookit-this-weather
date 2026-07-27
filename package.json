@@ -12,7 +12,8 @@
     "preview": "vite preview",
     "test": "vitest run",
     "test:watch": "vitest",
-    "coverage": "vitest run --coverage"
+    "coverage": "vitest run --coverage",
+    "prepare": "husky"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.0",
@@ -41,6 +42,7 @@
     "eslint": "^8.57.1",
     "eslint-plugin-react-hooks": "^4.6.2",
     "eslint-plugin-react-refresh": "^0.4.26",
+    "husky": "^9.1.7",
     "prettier": "^3.0.1",
     "typescript": "^5.9.3",
     "vite": "^7.1.5",
