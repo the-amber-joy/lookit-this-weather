@@ -119,7 +119,6 @@ const LocationSearchButton = ({ color }: LocationSearchButtonProps) => {
                 placeholder="City name or zip code"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                autoFocus
                 autoComplete="off"
                 type="search"
               />
