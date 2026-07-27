@@ -86,6 +86,11 @@ const Hero = () => {
     : (location?.name ??
       (isLoading ? "Loading location..." : "No location selected"));
 
+  // Don't show the search icon while we're still resolving the initial
+  // location -- there's nothing to search "instead of" yet, and it avoids
+  // implying the user can interrupt/change it mid-resolve.
+  const isLoadingLocation = !location && isLoading;
+
   const updatedAt = () => {
     if (weather) {
       return `Updated ${dayjs(weather.current.time).format("h:mm A")} ${weather.timezone_abbreviation}`;
@@ -109,7 +114,7 @@ const Hero = () => {
         px={{ base: 6, md: 8 }}
         py={{ base: 4, md: 6 }}
       >
-        <LocationSearchButton color={textColor} />
+        {!isLoadingLocation && <LocationSearchButton color={textColor} />}
         <Stack spacing={{ base: 1, md: 1 }}>
           {icon && (
             <Image
