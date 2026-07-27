@@ -117,11 +117,22 @@ const PRECIPITATION_ICONS = {
   thunder: toCurrentColor(thunderstormsMono),
 };
 
+// At or below this chance of precipitation, it's not worth calling out with
+// a rain/snow/etc. icon -- show the same "none" icon as a 0% chance.
+const PRECIPITATION_ICON_NONE_THRESHOLD = 20;
+
 export function getPrecipitationIcon(
   probability: number,
   weatherCode: number,
 ): string {
-  if (probability === 0 || weatherCode < 51) return PRECIPITATION_ICONS.none;
+  // Note: weatherCode is only used to pick which *kind* of precipitation
+  // icon to show. It's the dominant condition for the whole day/hour (e.g.
+  // "partly cloudy"), which can legitimately co-occur with a real, nonzero
+  // rain probability -- so it must not be used to force the "none" icon.
+  // A low-enough probability isn't worth calling out with a rain icon either.
+  if (probability <= PRECIPITATION_ICON_NONE_THRESHOLD) {
+    return PRECIPITATION_ICONS.none;
+  }
   if ([95, 96, 99].includes(weatherCode)) return PRECIPITATION_ICONS.thunder;
   if ([56, 57, 66, 67].includes(weatherCode)) return PRECIPITATION_ICONS.sleet;
   if ([71, 73, 75, 77, 85, 86].includes(weatherCode)) {

@@ -7,8 +7,20 @@ describe("getPrecipitationIcon", () => {
     expect(getPrecipitationIcon(0, 61)).toBe(getPrecipitationIcon(0, 95));
   });
 
-  it("returns the 'none' icon for codes below the precipitation threshold", () => {
-    expect(getPrecipitationIcon(80, 2)).toBe(getPrecipitationIcon(0, 61));
+  it("returns the 'none' icon for a non-precipitation code only when probability is low", () => {
+    expect(getPrecipitationIcon(0, 2)).toBe(getPrecipitationIcon(0, 61));
+  });
+
+  it("returns the 'none' icon for probabilities at or below the 20% threshold", () => {
+    expect(getPrecipitationIcon(20, 61)).toBe(getPrecipitationIcon(0, 61));
+    expect(getPrecipitationIcon(21, 61)).not.toBe(getPrecipitationIcon(0, 61));
+  });
+
+  it("still shows a rain icon for a 'partly cloudy' code with a nonzero chance of rain", () => {
+    // A day/hour's summary weatherCode (e.g. "partly cloudy") can legitimately
+    // co-occur with a real chance of rain -- it must not force the "none" icon.
+    expect(getPrecipitationIcon(47, 2)).not.toBe(getPrecipitationIcon(0, 61));
+    expect(getPrecipitationIcon(47, 2)).toBe(getPrecipitationIcon(47, 61));
   });
 
   it("distinguishes thunder, sleet, snow, drizzle, and rain codes", () => {
