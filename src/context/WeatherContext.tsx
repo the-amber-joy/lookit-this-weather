@@ -36,6 +36,7 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
     manualLocation,
     lastResolvedLocation,
     setLastResolvedLocation,
+    addRecentLocation,
     openSearch,
     currentLocationRequestId,
   } = useLocationPreference();
@@ -64,6 +65,9 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
       } else {
         try {
           nextLocation = await getLocation();
+          // A genuine fresh geolocation resolve (not the cached fallback
+          // below), so save it alongside manually-searched locations.
+          if (nextLocation) addRecentLocation(nextLocation);
         } catch {
           nextLocation = lastResolvedLocation;
           usedFallback = true;
@@ -111,6 +115,7 @@ export const WeatherProvider = ({ children }: { children: ReactNode }) => {
     manualLocation,
     lastResolvedLocation,
     setLastResolvedLocation,
+    addRecentLocation,
     openSearch,
     // Not read in the body, but selectCurrentLocation() bumps this even when
     // mode is already "current" (e.g. retrying after granting location

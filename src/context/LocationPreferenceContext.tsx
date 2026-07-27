@@ -33,6 +33,7 @@ interface LocationPreferenceContextValue {
   currentLocationRequestId: number;
   selectLocation: (location: Location) => void;
   selectCurrentLocation: () => void;
+  addRecentLocation: (location: Location) => void;
   removeRecentLocation: (location: Location) => void;
   setLastResolvedLocation: (location: Location) => void;
   isSearchOpen: boolean;
@@ -103,9 +104,7 @@ export const LocationPreferenceProvider = ({
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [currentLocationRequestId, setCurrentLocationRequestId] = useState(0);
 
-  const selectLocation = useCallback((location: Location) => {
-    setMode("manual");
-    setManualLocation(location);
+  const addRecentLocation = useCallback((location: Location) => {
     setRecentLocations((prev) => {
       const next = [
         location,
@@ -121,17 +120,26 @@ export const LocationPreferenceProvider = ({
       }
       return next;
     });
-
-    try {
-      localStorage.setItem(LOCATION_MODE_STORAGE_KEY, "manual");
-      localStorage.setItem(
-        MANUAL_LOCATION_STORAGE_KEY,
-        JSON.stringify(location),
-      );
-    } catch {
-      // Ignore storage failures (e.g. private browsing).
-    }
   }, []);
+
+  const selectLocation = useCallback(
+    (location: Location) => {
+      setMode("manual");
+      setManualLocation(location);
+      addRecentLocation(location);
+
+      try {
+        localStorage.setItem(LOCATION_MODE_STORAGE_KEY, "manual");
+        localStorage.setItem(
+          MANUAL_LOCATION_STORAGE_KEY,
+          JSON.stringify(location),
+        );
+      } catch {
+        // Ignore storage failures (e.g. private browsing).
+      }
+    },
+    [addRecentLocation],
+  );
 
   const selectCurrentLocation = useCallback(() => {
     setMode("current");
@@ -199,6 +207,7 @@ export const LocationPreferenceProvider = ({
         currentLocationRequestId,
         selectLocation,
         selectCurrentLocation,
+        addRecentLocation,
         removeRecentLocation,
         setLastResolvedLocation,
         isSearchOpen,
