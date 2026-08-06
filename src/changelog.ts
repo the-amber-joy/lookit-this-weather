@@ -12,9 +12,18 @@ export interface ChangelogEntry {
 // whenever a user-facing change ships.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.1.2",
+    date: "2026-08-06",
+    notes: [
+      "Fixed duplicate entries in recent locations when browser location drifts slightly.",
+    ],
+  },
+  {
     version: "1.1.1",
     date: "2026-08-06",
-    notes: ["Fixed the Synthwave horizon grid not reaching the horizon line on some devices."],
+    notes: [
+      "Fixed the Synthwave horizon grid not reaching the horizon line on some devices.",
+    ],
   },
   {
     version: "1.1.0",

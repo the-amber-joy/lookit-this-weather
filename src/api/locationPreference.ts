@@ -36,5 +36,11 @@ export function isLocationArray(value: unknown): value is Location[] {
 }
 
 export function isSameLocation(a: Location, b: Location): boolean {
-  return a.latitude === b.latitude && a.longitude === b.longitude;
+  // Browser geolocation can return slightly different coordinates between
+  // requests (GPS drift) that still reverse-geocode to the same city, so
+  // treat a matching name as a duplicate too, not just exact lat/lng.
+  return (
+    (a.latitude === b.latitude && a.longitude === b.longitude) ||
+    a.name.toLowerCase() === b.name.toLowerCase()
+  );
 }
