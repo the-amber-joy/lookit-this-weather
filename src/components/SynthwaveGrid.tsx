@@ -27,16 +27,20 @@ export default function SynthwaveGrid() {
         bottom={0}
         // At rotateX(80deg), the plane's far edge reaches the container top
         // once its (pre-transform) height is >= 1/cos(80deg) (~576%) of the
-        // container. Going that far compresses the pattern so much near the
-        // vanishing point that it renders as doubled/aliased lines, so this
-        // deliberately stays short of full reach and leaves the small
-        // residual gap to the glow/horizon line below.
-        height="400%"
+        // container. We overshoot that so the pattern fully covers the top
+        // edge, then mask out the far portion (which gets compressed into
+        // moire/aliased lines near the vanishing point) with a fade so it
+        // blends into a haze instead of showing artifacts or a hard cutoff.
+        height="700%"
         sx={{
           transformOrigin: "50% 100%",
           transform: "rotateX(80deg)",
           backgroundImage: `repeating-linear-gradient(to top, transparent 0, transparent 62px, ${gridColor} 62px, ${gridColor} 64px), repeating-linear-gradient(to right, transparent 0, transparent 126px, ${gridColor} 126px, ${gridColor} 128px)`,
           filter: `drop-shadow(0 0 2px ${gridColor}) drop-shadow(0 0 6px ${gridColor}99)`,
+          maskImage:
+            "linear-gradient(to top, black 0%, black 78%, transparent 92%)",
+          WebkitMaskImage:
+            "linear-gradient(to top, black 0%, black 78%, transparent 92%)",
         }}
       />
       {/* Soft glow bloom, blended additively so it brightens the grid near
