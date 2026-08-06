@@ -11,17 +11,20 @@ const config: ThemeConfig = {
 const headingFonts: Record<ThemeName, string> = {
   default: `Comfortaa, sans-serif`,
   fairycore: `"Cormorant Garamond", serif`,
+  synthwave: `Righteous, sans-serif`,
 };
 
 const fairycoreGlowColor = brandPalettes.fairycore.ajPurple;
 
 // Card shadows: default theme keeps a standard drop shadow, fairycore gets
 // a subtle color glow to match the whimsical palette (kept small so it
-// doesn't get clipped by tight layout margins).
+// doesn't get clipped by tight layout margins), and synthwave gets a
+// two-tone neon glow (magenta + cyan) to match its retro-synthwave look.
 const cardShadows: Record<ThemeName, string> = {
   default:
     "0 20px 25px -5px rgba(0, 0, 0, 0.4), 0 8px 10px -6px rgba(0, 0, 0, 0.4)",
   fairycore: `0 0 6px ${fairycoreGlowColor}40, 0 4px 10px rgba(28, 26, 46, 0.4)`,
+  synthwave: `0 0 8px ${brandPalettes.synthwave.ajMagenta}80, 0 0 16px ${brandPalettes.synthwave.ajBlue}40`,
 };
 
 function buildTheme(
@@ -48,7 +51,7 @@ function buildTheme(
           overscrollBehavior: "none",
         },
         body: {
-          bg: brand.ajBlueLvls["100"],
+          bg: brand.ajBlueLvls[100],
           overflow: "hidden",
         },
       },
@@ -87,6 +90,11 @@ export const themesByName: Record<ThemeName, ReturnType<typeof buildTheme>> = {
     brandPalettes.fairycore,
     headingFonts.fairycore,
     cardShadows.fairycore,
+  ),
+  synthwave: buildTheme(
+    brandPalettes.synthwave,
+    headingFonts.synthwave,
+    cardShadows.synthwave,
   ),
 };
 

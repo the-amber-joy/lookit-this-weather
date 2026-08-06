@@ -1,20 +1,20 @@
 // User-facing override for whether the app should look like "day" or
 // "night", independent of the selected theme. Kept in its own module (no
 // dependencies) alongside themeNames.ts.
-export type DayModePreference = "time" | "system" | "day" | "night";
+export type ModePreference = "time" | "system" | "day" | "night";
 
-export const DEFAULT_DAY_MODE_PREFERENCE: DayModePreference = "time";
+export const DEFAULT_MODE_PREFERENCE: ModePreference = "time";
 
-export const DAY_MODE_PREFERENCE_STORAGE_KEY =
+export const MODE_PREFERENCE_STORAGE_KEY =
   "lookit-this-weather:day-mode-preference";
 
-export interface DayModePreferenceOption {
-  value: DayModePreference;
+export interface ModePreferenceOption {
+  value: ModePreference;
   label: string;
   description: string;
 }
 
-export const DAY_MODE_PREFERENCE_OPTIONS: DayModePreferenceOption[] = [
+export const MODE_PREFERENCE_OPTIONS: ModePreferenceOption[] = [
   {
     value: "time",
     label: "Time of Day",
@@ -37,9 +37,9 @@ export const DAY_MODE_PREFERENCE_OPTIONS: DayModePreferenceOption[] = [
   },
 ];
 
-export function isDayModePreference(
+export function isModePreference(
   value: string | null,
-): value is DayModePreference {
+): value is ModePreference {
   return (
     value === "time" ||
     value === "system" ||

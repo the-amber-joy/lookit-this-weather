@@ -40,16 +40,16 @@ const ComfortCard = () => {
       weather.current.is_day,
       themeName,
     ) === "dark";
-  const textColor = isDarkText ? colors.brand.ajBlueLvls["200"] : colors.white;
+  const textColor = isDarkText ? colors.brand.ajBlueLvls[200] : colors.white;
   const textShadowColor = isDarkText
-    ? colors.blackAlpha["400"]
-    : colors.brand.ajBlueLvls["200"];
+    ? colors.blackAlpha[400]
+    : colors.brand.ajBlueLvls[200];
   const mutedTextColor = isDarkText
-    ? colors.brand.ajBlueLvls["300"]
-    : colors.whiteAlpha["800"];
+    ? colors.brand.ajBlueLvls[300]
+    : colors.whiteAlpha[800];
   const blurbTextColor = isDarkText
-    ? colors.brand.ajBlueLvls["300"]
-    : colors.whiteAlpha["900"];
+    ? colors.brand.ajBlueLvls[300]
+    : colors.whiteAlpha[900];
 
   return (
     <Stack

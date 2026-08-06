@@ -19,7 +19,7 @@ import {
 } from "../api/weatherIcon";
 import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
-import { useDayMode } from "../theme/fairycoreDayMode";
+import { useMode } from "../theme/themedMode";
 import ThemedSpinner from "./ThemedSpinner";
 
 const HourRow = ({
@@ -118,7 +118,7 @@ const HourRow = ({
 const HourlyForecast = () => {
   const { weather, isLoading, error } = useWeatherContext();
   const { themeName } = useThemeName();
-  const dayMode = useDayMode();
+  const mode = useMode();
   const isFairycore = themeName === "fairycore";
 
   if (isLoading) {
@@ -134,7 +134,7 @@ const HourlyForecast = () => {
       <Center minH="40vh">
         <Text
           opacity={0.7}
-          color={dayMode.isDay ? dayMode.textColor : undefined}
+          color={mode.isDay ? mode.textColor : undefined}
         >
           {error}
         </Text>
@@ -156,7 +156,7 @@ const HourlyForecast = () => {
       maxW="40rem"
       mx="auto"
       py={{ base: 4, md: 8 }}
-      color={dayMode.isDay ? dayMode.textColor : undefined}
+      color={mode.isDay ? mode.textColor : undefined}
     >
       {days.map((day) => (
         <Stack key={day.label} spacing={0}>
@@ -168,13 +168,13 @@ const HourlyForecast = () => {
             bg={
               isFairycore
                 ? "brand.ajPurpleLvls.500"
-                : (dayMode.surfaceBg ?? "brand.ajBlueLvls.100")
+                : (mode.surfaceBg ?? "brand.ajBlueLvls.100")
             }
             color={
               isFairycore
                 ? "brand.ajBlueLvls.100"
-                : dayMode.isDay
-                  ? dayMode.textColor
+                : mode.isDay
+                  ? mode.textColor
                   : "brand.ajCheez"
             }
             borderRadius={isFairycore ? "lg" : "md"}

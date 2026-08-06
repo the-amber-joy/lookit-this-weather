@@ -28,12 +28,13 @@ import {
   PULL_TRIGGER_DISTANCE,
   usePullToRefresh,
 } from "../hooks/usePullToRefresh";
-import { useDayMode } from "../theme/fairycoreDayMode";
+import { useMode } from "../theme/themedMode";
 import CurrentWeather from "./CurrentWeather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
 import RadarMap from "./RadarMap";
 import Sparkles from "./Sparkles";
+import SynthwaveGrid from "./SynthwaveGrid";
 import Themes from "./Themes";
 import UpdateBanner from "./UpdateBanner";
 
@@ -84,17 +85,17 @@ const Layout = () => {
   const [active, setActive] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
-  const dayMode = useDayMode();
+  const mode = useMode();
   const { pullDistance, refreshing } = usePullToRefresh(contentRef);
   const { themeName } = useThemeName();
-  const isFairycoreNight = themeName === "fairycore" && !dayMode.isDay;
-  const isFairycoreDayActive = themeName === "fairycore" && dayMode.isDay;
+  const isFairycoreNight = themeName === "fairycore" && !mode.isDay;
+  const isFairycoreDayActive = themeName === "fairycore" && mode.isDay;
 
   useEffect(() => {
     contentRef.current?.scrollTo(0, 0);
   }, [active]);
 
-  const dayBackground = dayMode.pageBackground;
+  const pageBackground = mode.pageBackground;
 
   return (
     <Flex direction="column" height="100dvh">
@@ -106,15 +107,16 @@ const Layout = () => {
         overflowY="hidden"
         overflowX="visible"
       >
-        {dayBackground && (
+        {pageBackground && (
           <Box
             position="fixed"
             inset={0}
             zIndex={-2}
             pointerEvents="none"
-            background={dayBackground}
+            background={pageBackground}
           />
         )}
+        {themeName === "synthwave" && <SynthwaveGrid />}
         <Sparkles />
 
         {/* Desktop: left sidebar */}
@@ -129,7 +131,7 @@ const Layout = () => {
           height="100dvh"
           minW="12rem"
           p={4}
-          bg={dayMode.surfaceBg ?? "brand.ajBlueLvls.200"}
+          bg={mode.surfaceBg ?? "brand.ajBlueLvls.200"}
           borderRightWidth="1px"
           borderColor="whiteAlpha.200"
           boxShadow="4px 0 12px rgba(0, 0, 0, 0.15)"
@@ -146,9 +148,9 @@ const Layout = () => {
               bg={active === index ? "whiteAlpha.200" : undefined}
               color={
                 active === index
-                  ? dayMode.accentColor
-                  : dayMode.isDay
-                    ? dayMode.textColor
+                  ? mode.accentColor
+                  : mode.isDay
+                    ? mode.textColor
                     : undefined
               }
             >
@@ -213,7 +215,7 @@ const Layout = () => {
             align="center"
             pointerEvents="none"
             opacity={refreshing || pullDistance > 0 ? 1 : 0}
-            color={dayMode.isDay ? dayMode.textColor : "whiteAlpha.900"}
+            color={mode.isDay ? mode.textColor : "whiteAlpha.900"}
             transform={`translateY(${refreshing ? 40 : pullDistance}px)`}
             transition={
               pullDistance === 0 && !refreshing
@@ -261,7 +263,7 @@ const Layout = () => {
           right={0}
           zIndex={10}
           justify="space-around"
-          bg={dayMode.surfaceBg ?? "brand.ajBlueLvls.200"}
+          bg={mode.surfaceBg ?? "brand.ajBlueLvls.200"}
           borderTopWidth="1px"
           borderColor="whiteAlpha.200"
           boxShadow="0 -4px 12px rgba(0, 0, 0, 0.15)"
@@ -278,9 +280,9 @@ const Layout = () => {
               aria-current={active === index ? "page" : undefined}
               color={
                 active === index
-                  ? dayMode.accentColor
-                  : dayMode.isDay
-                    ? dayMode.textColor
+                  ? mode.accentColor
+                  : mode.isDay
+                    ? mode.textColor
                     : "whiteAlpha.800"
               }
             >

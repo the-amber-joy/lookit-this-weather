@@ -19,16 +19,16 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { useDayModePreference } from "../context/DayModePreferenceContext";
+import { useModePreference } from "../context/ModePreferenceContext";
 import { useThemeName } from "../context/ThemeNameContext";
 import {
-  DAY_MODE_PREFERENCE_OPTIONS,
-  type DayModePreference,
-} from "../theme/dayModePreference";
-import { useDayMode } from "../theme/fairycoreDayMode";
+  MODE_PREFERENCE_OPTIONS,
+  type ModePreference,
+} from "../theme/modePreference";
+import { useMode } from "../theme/themedMode";
 import { THEME_OPTIONS, type ThemeName } from "../theme/themeNames";
 
-const DAY_MODE_PREFERENCE_ICONS = {
+const MODE_PREFERENCE_ICONS = {
   time: TimeIcon,
   system: PhoneIcon,
   day: SunIcon,
@@ -37,15 +37,18 @@ const DAY_MODE_PREFERENCE_ICONS = {
 
 const Themes = () => {
   const { themeName, setThemeName } = useThemeName();
-  const { dayModePreference, setDayModePreference } = useDayModePreference();
-  const dayMode = useDayMode();
+  const {
+    modePreference: modePreference,
+    setModePreference: setModePreference,
+  } = useModePreference();
+  const mode = useMode();
 
   return (
     <Stack
       spacing={6}
       paddingY={{ base: 8, md: 12 }}
       maxW="40rem"
-      color={dayMode.isDay ? dayMode.textColor : undefined}
+      color={mode.isDay ? mode.textColor : undefined}
     >
       <Stack spacing={1}>
         <Heading size="lg">Theme</Heading>
@@ -60,7 +63,7 @@ const Themes = () => {
             borderColor="whiteAlpha.200"
             borderRadius="1rem"
             bg="whiteAlpha.100"
-            color={dayMode.isDay ? dayMode.textColor : undefined}
+            color={mode.isDay ? mode.textColor : undefined}
             fontWeight="normal"
             textAlign="left"
             maxW="16rem"
@@ -111,20 +114,20 @@ const Themes = () => {
               borderColor="whiteAlpha.200"
               borderRadius="1rem"
               bg="whiteAlpha.100"
-              color={dayMode.isDay ? dayMode.textColor : undefined}
+              color={mode.isDay ? mode.textColor : undefined}
               fontWeight="normal"
               textAlign="left"
               maxW="16rem"
             >
               <Stack direction="row" align="center" spacing={2}>
                 <Icon
-                  as={DAY_MODE_PREFERENCE_ICONS[dayModePreference]}
+                  as={MODE_PREFERENCE_ICONS[modePreference]}
                   boxSize={4}
                 />
                 <Text>
                   {
-                    DAY_MODE_PREFERENCE_OPTIONS.find(
-                      (option) => option.value === dayModePreference,
+                    MODE_PREFERENCE_OPTIONS.find(
+                      (option) => option.value === modePreference,
                     )?.label
                   }
                 </Text>
@@ -138,13 +141,13 @@ const Themes = () => {
             >
               <MenuOptionGroup
                 type="radio"
-                value={dayModePreference}
+                value={modePreference}
                 onChange={(value) =>
-                  setDayModePreference(value as DayModePreference)
+                  setModePreference(value as ModePreference)
                 }
               >
-                {DAY_MODE_PREFERENCE_OPTIONS.map((option) => {
-                  const isActive = option.value === dayModePreference;
+                {MODE_PREFERENCE_OPTIONS.map((option) => {
+                  const isActive = option.value === modePreference;
 
                   return (
                     <MenuItemOption
@@ -155,7 +158,7 @@ const Themes = () => {
                     >
                       <Stack direction="row" align="center" spacing={2}>
                         <Icon
-                          as={DAY_MODE_PREFERENCE_ICONS[option.value]}
+                          as={MODE_PREFERENCE_ICONS[option.value]}
                           boxSize={4}
                         />
                         <Text>{option.label}</Text>
@@ -169,8 +172,8 @@ const Themes = () => {
         </Box>
         <Text fontSize="xs" opacity={0.85}>
           {
-            DAY_MODE_PREFERENCE_OPTIONS.find(
-              (option) => option.value === dayModePreference,
+            MODE_PREFERENCE_OPTIONS.find(
+              (option) => option.value === modePreference,
             )?.description
           }
         </Text>

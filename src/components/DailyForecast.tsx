@@ -9,7 +9,7 @@ import {
   getStaticWindIcon,
 } from "../api/weatherIcon";
 import { useWeatherContext } from "../context/WeatherContext";
-import { useDayMode } from "../theme/fairycoreDayMode";
+import { useMode } from "../theme/themedMode";
 
 import ThemedSpinner from "./ThemedSpinner";
 
@@ -109,7 +109,7 @@ const DayRow = ({
 
 const DailyForecast = () => {
   const { weather, isLoading, error } = useWeatherContext();
-  const dayMode = useDayMode();
+  const mode = useMode();
 
   if (isLoading) {
     return (
@@ -124,7 +124,7 @@ const DailyForecast = () => {
       <Center minH="40vh">
         <Text
           opacity={0.7}
-          color={dayMode.isDay ? dayMode.textColor : undefined}
+          color={mode.isDay ? mode.textColor : undefined}
         >
           {error}
         </Text>
@@ -145,7 +145,7 @@ const DailyForecast = () => {
       maxW="40rem"
       mx="auto"
       py={{ base: 4, md: 8 }}
-      color={dayMode.isDay ? dayMode.textColor : undefined}
+      color={mode.isDay ? mode.textColor : undefined}
       divider={<Box borderBottomWidth="1px" borderColor="whiteAlpha.100" />}
     >
       {days.map(({ point, label }) => (

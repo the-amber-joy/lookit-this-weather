@@ -1,7 +1,7 @@
 // Shared theme identifiers, kept in their own module (no dependencies) so
 // both the Chakra theme builder and weather-icon gradients can reference
 // them without creating circular imports.
-export type ThemeName = "default" | "fairycore";
+export type ThemeName = "default" | "fairycore" | "synthwave";
 
 export const DEFAULT_THEME_NAME: ThemeName = "default";
 
@@ -21,8 +21,12 @@ export const THEME_OPTIONS: ThemeOption[] = [
     name: "fairycore",
     label: "Fairycore",
   },
+  {
+    name: "synthwave",
+    label: "Synthwave",
+  },
 ];
 
 export function isThemeName(value: string | null): value is ThemeName {
-  return value === "default" || value === "fairycore";
+  return value === "default" || value === "fairycore" || value === "synthwave";
 }

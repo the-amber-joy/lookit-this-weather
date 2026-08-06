@@ -452,6 +452,34 @@ const BACKGROUNDS: Record<ThemeName, ConditionBackgrounds> = {
       night: "linear-gradient(160deg, #1c1a2e, #16211a, #362a13)",
     },
   },
+  // "Retro sunset grid" gradients (hot magenta, electric cyan, sunset
+  // coral/gold) for each condition.
+  synthwave: {
+    clear: {
+      day: "linear-gradient(160deg, #ff2ea6 0%, #ff7849 60%, #ffcc66 100%)",
+      night: "linear-gradient(160deg, #071029, #2f1459, #57143e)",
+    },
+    cloudy: {
+      day: "linear-gradient(160deg, #47398a, #7c6bb0, #a89bd6)",
+      night: "linear-gradient(160deg, #14102b, #241b47, #3a2a63)",
+    },
+    fog: {
+      day: "linear-gradient(160deg, #7c6bb0, #a89bd6, #d6cdf0)",
+      night: "linear-gradient(160deg, #14102b, #2a2050, #453769)",
+    },
+    rain: {
+      day: "linear-gradient(160deg, #0e3450, #134d78, #0f9dc2)",
+      night: "linear-gradient(160deg, #071a29, #0e3450, #134d78)",
+    },
+    snow: {
+      day: "linear-gradient(160deg, #0f9dc2, #4de4ff, #8aeeff)",
+      night: "linear-gradient(160deg, #071a29, #134d78, #4de4ff)",
+    },
+    thunder: {
+      day: "linear-gradient(160deg, #180a2e, #471f85, #821f5d)",
+      night: "linear-gradient(160deg, #0a0e2e, #180a2e, #471f85)",
+    },
+  },
 };
 
 function getCondition(weatherCode: number): Condition {

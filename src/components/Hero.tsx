@@ -20,8 +20,8 @@ import {
 } from "../api/weatherIcon";
 import { useThemeName } from "../context/ThemeNameContext";
 import { useWeatherContext } from "../context/WeatherContext";
-import { useDayMode } from "../theme/fairycoreDayMode";
 import { getOrganicCardStyle } from "../theme/organicCard";
+import { useMode } from "../theme/themedMode";
 import LocationSearchButton from "./LocationSearchButton";
 
 const Hero = () => {
@@ -29,7 +29,7 @@ const Hero = () => {
     useWeatherContext();
   const { colors } = useTheme();
   const { themeName } = useThemeName();
-  const dayMode = useDayMode();
+  const mode = useMode();
 
   const icon = weather
     ? getWeatherIcon(weather.current.weather_code, weather.current.is_day)
@@ -58,20 +58,20 @@ const Hero = () => {
       themeName,
     ) === "dark";
   const textColor = !weather
-    ? dayMode.showcaseTextColor
+    ? mode.showcaseTextColor
     : isDarkText
-      ? colors.brand.ajBlueLvls["200"]
+      ? colors.brand.ajBlueLvls[200]
       : colors.white;
   const textShadowColor = !weather
-    ? dayMode.showcaseTextShadow
+    ? mode.showcaseTextShadow
     : isDarkText
-      ? colors.blackAlpha["400"]
-      : colors.brand.ajBlueLvls["200"];
+      ? colors.blackAlpha[400]
+      : colors.brand.ajBlueLvls[200];
   const mutedTextColor = !weather
-    ? dayMode.showcaseSubTextColor
+    ? mode.showcaseSubTextColor
     : isDarkText
-      ? colors.brand.ajBlueLvls["300"]
-      : colors.whiteAlpha["900"];
+      ? colors.brand.ajBlueLvls[300]
+      : colors.whiteAlpha[900];
 
   const temperature = weather
     ? `${Math.round(weather.current.temperature_2m)}${weather.current_units.temperature_2m}`

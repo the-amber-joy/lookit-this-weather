@@ -12,17 +12,31 @@ interface OrganicCardStyle {
 
 /**
  * Builds the background/border/radius for a "showcase" card (one with a
- * weather-gradient background). In the Fairycore theme this layers a thin
- * lilac-to-gold gradient border on top of the weather gradient and swaps in
- * an asymmetric corner radius; other themes get the plain gradient and the
- * given base radius.
+ * weather-gradient background). Fairycore layers a thin lilac-to-gold
+ * gradient border on top of the weather gradient and swaps in an asymmetric
+ * corner radius; synthwave layers a neon magenta-to-cyan gradient border but
+ * keeps the given base radius (square/retro rather than organic); other
+ * themes get the plain gradient and the given base radius.
  */
 export function getOrganicCardStyle(
   themeName: ThemeName,
-  brandColors: { ajPurple: string; ajCheez: string },
+  brandColors: {
+    ajPurple: string;
+    ajCheez: string;
+    ajMagenta: string;
+    ajBlue: string;
+  },
   background: string,
   baseRadius: string,
 ): OrganicCardStyle {
+  if (themeName === "synthwave") {
+    return {
+      background: `${background} padding-box, linear-gradient(135deg, ${brandColors.ajMagenta}, ${brandColors.ajBlue}) border-box`,
+      borderRadius: baseRadius,
+      border: "2px solid transparent",
+    };
+  }
+
   if (themeName !== "fairycore") {
     return { background, borderRadius: baseRadius };
   }
