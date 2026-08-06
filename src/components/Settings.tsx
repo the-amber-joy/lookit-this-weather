@@ -10,15 +10,26 @@ import {
   Button,
   Heading,
   Icon,
+  Link,
+  ListItem,
   Menu,
   MenuButton,
   MenuItemOption,
   MenuList,
   MenuOptionGroup,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
   Stack,
   Text,
+  UnorderedList,
+  useDisclosure,
 } from "@chakra-ui/react";
 
+import { APP_VERSION, CHANGELOG } from "../changelog";
 import { useModePreference } from "../context/ModePreferenceContext";
 import { useThemeName } from "../context/ThemeNameContext";
 import {
@@ -42,6 +53,7 @@ const Themes = () => {
     setModePreference: setModePreference,
   } = useModePreference();
   const mode = useMode();
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <Stack
@@ -120,10 +132,7 @@ const Themes = () => {
               maxW="16rem"
             >
               <Stack direction="row" align="center" spacing={2}>
-                <Icon
-                  as={MODE_PREFERENCE_ICONS[modePreference]}
-                  boxSize={4}
-                />
+                <Icon as={MODE_PREFERENCE_ICONS[modePreference]} boxSize={4} />
                 <Text>
                   {
                     MODE_PREFERENCE_OPTIONS.find(
@@ -142,9 +151,7 @@ const Themes = () => {
               <MenuOptionGroup
                 type="radio"
                 value={modePreference}
-                onChange={(value) =>
-                  setModePreference(value as ModePreference)
-                }
+                onChange={(value) => setModePreference(value as ModePreference)}
               >
                 {MODE_PREFERENCE_OPTIONS.map((option) => {
                   const isActive = option.value === modePreference;
@@ -178,6 +185,41 @@ const Themes = () => {
           }
         </Text>
       </Stack>
+
+      <Stack direction="row" align="center" spacing={2} fontSize="xs">
+        <Text opacity={0.7}> v{APP_VERSION}</Text>
+        <Text opacity={0.5}>&middot;</Text>
+        <Link onClick={onOpen} color={mode.isDay ? mode.textColor : undefined}>
+          What&apos;s new?
+        </Link>
+      </Stack>
+
+      <Modal isOpen={isOpen} onClose={onClose} scrollBehavior="inside">
+        <ModalOverlay />
+        <ModalContent mx={4} color="white">
+          <ModalHeader>What&apos;s new</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody pb={6}>
+            <Stack spacing={5}>
+              {CHANGELOG.map((entry) => (
+                <Box key={entry.version}>
+                  <Heading size="sm">
+                    v{entry.version}{" "}
+                    <Text as="span" fontWeight="normal" opacity={0.6}>
+                      &mdash; {entry.date}
+                    </Text>
+                  </Heading>
+                  <UnorderedList mt={2} spacing={1} fontSize="sm">
+                    {entry.notes.map((note) => (
+                      <ListItem key={note}>{note}</ListItem>
+                    ))}
+                  </UnorderedList>
+                </Box>
+              ))}
+            </Stack>
+          </ModalBody>
+        </ModalContent>
+      </Modal>
     </Stack>
   );
 };

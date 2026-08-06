@@ -35,7 +35,7 @@ import HourlyForecast from "./HourlyForecast";
 import RadarMap from "./RadarMap";
 import Sparkles from "./Sparkles";
 import SynthwaveGrid from "./SynthwaveGrid";
-import Themes from "./Themes";
+import Themes from "./Settings";
 import UpdateBanner from "./UpdateBanner";
 
 interface TabItem {
@@ -72,7 +72,7 @@ const tabs: TabItem[] = [
     fillHeight: true,
   },
   {
-    label: "Themes",
+    label: "Settings",
     icon: SettingsIcon,
     panel: <Themes />,
   },
