@@ -105,6 +105,7 @@ export default function SynthwaveGrid({ leftOffset = 0 }: SynthwaveGridProps) {
         width={`${SUN_RADIUS * 2}vw`}
         height={`${SUN_RADIUS}vw`}
         transform="translateX(-50%)"
+        filter={`drop-shadow(0 0 ${SUN_RADIUS * 0.3}vw ${sunColor})`}
       >
         {/* Its own square-scaled SVG (width/height both in vw) so the sun
             renders as a true circle, unaffected by the grid's
