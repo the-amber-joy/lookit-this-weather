@@ -12,6 +12,14 @@ export interface ChangelogEntry {
 // whenever a user-facing change ships.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.1.3",
+    date: "2026-08-06",
+    notes: [
+      "Fixed the Synthwave grid causing slowdowns on some phones.",
+      "The horizon line now lines up with the grid automatically on any screen size.",
+    ],
+  },
+  {
     version: "1.1.2",
     date: "2026-08-06",
     notes: [
