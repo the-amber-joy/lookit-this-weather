@@ -35,6 +35,7 @@ import HourlyForecast from "./HourlyForecast";
 import RadarMap from "./RadarMap";
 import Themes from "./Settings";
 import Sparkles from "./Sparkles";
+import Starz from "./Starz";
 import SynthwaveGrid from "./SynthwaveGrid";
 import UpdateBanner from "./UpdateBanner";
 
@@ -121,9 +122,14 @@ const Layout = () => {
           />
         )}
         {themeName === "synthwave" && (
+          <Starz leftOffset={{ base: 0, md: DESKTOP_SIDEBAR_WIDTH }} />
+        )}
+        {themeName === "synthwave" && (
           <SynthwaveGrid leftOffset={{ base: 0, md: DESKTOP_SIDEBAR_WIDTH }} />
         )}
-        <Sparkles leftOffset={{ base: 0, md: DESKTOP_SIDEBAR_WIDTH }} />
+        {themeName === "fairycore" && (
+          <Sparkles leftOffset={{ base: 0, md: DESKTOP_SIDEBAR_WIDTH }} />
+        )}
 
         {/* Desktop: left sidebar */}
         <VStack

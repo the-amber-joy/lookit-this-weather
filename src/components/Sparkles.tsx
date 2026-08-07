@@ -48,11 +48,8 @@ interface SparklesProps {
  * through the gaps between opaque cards/panels rather than on top of them.
  */
 const Sparkles = ({ count = 24, leftOffset = 0 }: SparklesProps) => {
-  const { themeName } = useThemeName();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const sparkles = useMemo(() => createSparkles(count), [count]);
-
-  if (themeName !== "fairycore") return null;
 
   return (
     <Box

@@ -11,6 +11,10 @@ import { useMode } from "../theme/themedMode";
 // Exported so a future sun/moon element can anchor to the same line.
 export const HORIZON_Y = 5;
 
+// The grid container's height as a percentage of the viewport.
+// Exported so Starz can size its sky region to end exactly at the horizon.
+export const GRID_HEIGHT_PERCENT = 35;
+
 const COLUMN_COUNT = 16;
 // Columns fan out past the 0-100 viewBox width so the spread still covers
 // the full container on very wide or very narrow viewports.
@@ -77,7 +81,7 @@ export default function SynthwaveGrid({ leftOffset = 0 }: SynthwaveGridProps) {
       left={leftOffset}
       right={0}
       bottom={0}
-      height="35%"
+      height={`${GRID_HEIGHT_PERCENT}%`}
       zIndex={-1}
       overflow="visible"
       pointerEvents="none"

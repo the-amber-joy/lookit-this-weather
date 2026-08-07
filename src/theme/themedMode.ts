@@ -121,7 +121,7 @@ export function useMode(): Mode {
       surfaceBg: colors.brand.ajMagentaLvls[600],
       cardTextColor: colors.brand.ajPurpleLvls[200],
       accentColor: colors.brand.ajPurpleLvls[300],
-      pageBackground: `linear-gradient(to bottom, ${colors.brand.ajPinkLvls[700]}, ${colors.brand.ajPurpleLvls[300]})`,
+      pageBackground: `linear-gradient(to bottom, ${colors.brand.ajYellowLvls[700]}, ${colors.brand.ajPurpleLvls[300]})`,
       showcaseTextColor: colors.brand.ajPurpleLvls[200],
       showcaseTextShadow: colors.blackAlpha[400],
       showcaseSubTextColor: colors.brand.ajPurpleLvls[300],
