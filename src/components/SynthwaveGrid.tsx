@@ -1,54 +1,47 @@
 import { Box, useTheme } from "@chakra-ui/react";
-import { useEffect, useRef, useState } from "react";
 
-// Geometry constants for the tilted plane below - kept in sync with the
-// `height`/`rotateX` values used in the JSX so the horizon-line calculation
-// below always matches what's actually rendered.
-const PLANE_HEIGHT_RATIO = 2; // height="200%"
-const ROTATE_DEG = 80;
-const PERSPECTIVE_PX = 300;
+// How far down the container (out of 100 viewBox units) the horizon sits.
+// Exported so a future sun/moon element can anchor to the same line - the
+// vanishing point is (50, HORIZON_Y).
+export const HORIZON_Y = 15;
 
-// Where the tilted plane's far edge actually lands on screen, as a fraction
-// of the container's height measured from its top. `perspective` is a fixed
-// px value while the container is sized relatively, so this depends on the
-// container's real rendered height (not just the plane's height ratio) -
-// see the derivation notes in TODO.md/commit history for the math.
-function calcHorizonTopPercent(containerHeightPx: number): number {
-  const theta = (ROTATE_DEG * Math.PI) / 180;
-  const numerator = (1 - PLANE_HEIGHT_RATIO * Math.cos(theta)) * PERSPECTIVE_PX;
-  const denominator =
-    PERSPECTIVE_PX + PLANE_HEIGHT_RATIO * containerHeightPx * Math.sin(theta);
-  return (numerator / denominator) * 100;
+const COLUMN_COUNT = 16;
+// Columns fan out past the 0-100 viewBox width so the spread still covers
+// the full container on very wide or very narrow viewports.
+const COLUMN_MIN_X = -100;
+const COLUMN_MAX_X = 300;
+
+const ROW_COUNT = 14;
+// Higher = rows bunch up more tightly near the horizon, mimicking
+// perspective foreshortening.
+const ROW_CURVE = 2.2;
+
+function getColumnEndpoints(): number[] {
+  return Array.from(
+    { length: COLUMN_COUNT + 1 },
+    (_, i) => COLUMN_MIN_X + (i / COLUMN_COUNT) * (COLUMN_MAX_X - COLUMN_MIN_X),
+  );
 }
 
-// CSS-only synthwave horizon grid: a 3D-rotated plane with two repeating
-// stripe layers, viewed through `perspective` so the "vertical" stripes
-// converge toward a vanishing point at the horizon, like the classic
-// retrowave floor grid.
+function getRowYPositions(): number[] {
+  return Array.from({ length: ROW_COUNT }, (_, i) => {
+    const t = (i + 1) / ROW_COUNT;
+    return HORIZON_Y + (100 - HORIZON_Y) * Math.pow(t, ROW_CURVE);
+  });
+}
+
+// SVG synthwave horizon grid: a real 2-point perspective grid (converging
+// verticals + power-curve-spaced horizontals) drawn in a fixed 0-100 viewBox,
+// so the horizon always lines up exactly with where the grid starts - no
+// CSS 3D transform/perspective math or per-device measuring required.
 export default function SynthwaveGrid() {
   const { colors } = useTheme();
   const gridColor = colors.brand.ajBlueLvls[500];
-  const containerRef = useRef<HTMLDivElement | null>(null);
-  const [horizonTop, setHorizonTop] = useState<number | null>(null);
-
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
-
-    const observer = new ResizeObserver(([entry]) => {
-      setHorizonTop(calcHorizonTopPercent(entry.contentRect.height));
-    });
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
-
-  // Fall back to the last manually-tuned value until the first measurement
-  // comes in, so there's no flash of an unpositioned horizon line.
-  const horizonTopStyle = `${horizonTop ?? 21}%`;
+  const columnEndpoints = getColumnEndpoints();
+  const rowYPositions = getRowYPositions();
 
   return (
     <Box
-      ref={containerRef}
       className="synthwave-grid"
       position="fixed"
       left={0}
@@ -58,50 +51,53 @@ export default function SynthwaveGrid() {
       zIndex={-1}
       overflow="hidden"
       pointerEvents="none"
-      sx={{ perspective: `${PERSPECTIVE_PX}px`, perspectiveOrigin: "50% 0%" }}
     >
-      <Box
-        position="absolute"
-        left="-250%"
-        right="-250%"
-        bottom={0}
-        // At rotateX(80deg), the plane's far edge reaches the container top
-        // once its (pre-transform) height is >= 1/cos(80deg) (~576%) of the
-        // container. A previous attempt overshot that (700%) plus a mask to
-        // hide the compressed far edge, but the huge painted area (clipped
-        // only *after* the filter/mask/3D transform pipeline runs) brought
-        // mobile GPUs to a crawl. Staying well under the threshold keeps
-        // this cheap; the horizon line/glow below sit at the same height
-        // the grid actually reaches, instead of at the container's edge.
-        height={`${PLANE_HEIGHT_RATIO * 100}%`}
-        sx={{
-          transformOrigin: "50% 100%",
-          transform: `rotateX(${ROTATE_DEG}deg)`,
-          backgroundImage: `repeating-linear-gradient(to top, transparent 0, transparent 62px, ${gridColor} 62px, ${gridColor} 64px), repeating-linear-gradient(to right, transparent 0, transparent 126px, ${gridColor} 126px, ${gridColor} 128px)`,
-          filter: `drop-shadow(0 0 2px ${gridColor}) drop-shadow(0 0 6px ${gridColor}99)`,
-        }}
-      />
-      {/* Soft glow bloom, blended additively so it brightens the grid near
-          the horizon rather than covering it. */}
-      <Box
-        position="absolute"
-        top={horizonTopStyle}
-        left={0}
-        right={0}
-        height="20%"
-        bg={`linear-gradient(to bottom, ${gridColor}55, transparent)`}
-        sx={{ mixBlendMode: "screen" }}
-      />
-      {/* Flat horizon line, full width, sitting above the tilted plane. */}
-      <Box
-        position="absolute"
-        top={horizonTopStyle}
-        left={0}
-        right={0}
-        height="1px"
-        bg={gridColor}
-        boxShadow={`0 0 2px ${gridColor}, 0 0 6px ${gridColor}99`}
-      />
+      <svg
+        width="100%"
+        height="100%"
+        viewBox="0 0 100 100"
+        preserveAspectRatio="none"
+        style={{ position: "absolute", inset: 0 }}
+      >
+        <defs>
+          <filter
+            id="synthwave-grid-glow"
+            x="-50%"
+            y="-50%"
+            width="200%"
+            height="200%"
+          >
+            <feGaussianBlur stdDeviation="1" result="blur" />
+            <feMerge>
+              <feMergeNode in="blur" />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+
+        <g
+          stroke={gridColor}
+          strokeWidth={0.25}
+          vectorEffect="non-scaling-stroke"
+          filter="url(#synthwave-grid-glow)"
+        >
+          {columnEndpoints.map((x) => (
+            <line key={x} x1={50} y1={HORIZON_Y} x2={x} y2={100} />
+          ))}
+          {rowYPositions.map((y) => (
+            <line key={y} x1={0} y1={y} x2={100} y2={y} />
+          ))}
+          {/* Horizon line - a future sun/moon element would sit right on
+              top of this, at the same HORIZON_Y. */}
+          <line
+            x1={0}
+            y1={HORIZON_Y}
+            x2={100}
+            y2={HORIZON_Y}
+            strokeWidth={0.5}
+          />
+        </g>
+      </svg>
     </Box>
   );
 }
