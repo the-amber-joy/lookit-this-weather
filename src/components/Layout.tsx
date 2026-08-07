@@ -33,9 +33,9 @@ import CurrentWeather from "./CurrentWeather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
 import RadarMap from "./RadarMap";
+import Themes from "./Settings";
 import Sparkles from "./Sparkles";
 import SynthwaveGrid from "./SynthwaveGrid";
-import Themes from "./Settings";
 import UpdateBanner from "./UpdateBanner";
 
 interface TabItem {
@@ -78,6 +78,10 @@ const tabs: TabItem[] = [
   },
 ];
 
+// Shared with SynthwaveGrid so its horizon/vanishing point centers on the
+// content column, not the full viewport, once the desktop sidebar appears.
+const DESKTOP_SIDEBAR_WIDTH = "12rem";
+
 const MotionBox = motion(Box);
 const MotionImage = motion(Image);
 
@@ -116,8 +120,10 @@ const Layout = () => {
             background={pageBackground}
           />
         )}
-        {themeName === "synthwave" && <SynthwaveGrid />}
-        <Sparkles />
+        {themeName === "synthwave" && (
+          <SynthwaveGrid leftOffset={{ base: 0, md: DESKTOP_SIDEBAR_WIDTH }} />
+        )}
+        <Sparkles leftOffset={{ base: 0, md: DESKTOP_SIDEBAR_WIDTH }} />
 
         {/* Desktop: left sidebar */}
         <VStack
@@ -129,7 +135,7 @@ const Layout = () => {
           top={0}
           alignSelf="flex-start"
           height="100dvh"
-          minW="12rem"
+          minW={DESKTOP_SIDEBAR_WIDTH}
           p={4}
           bg={mode.surfaceBg ?? "brand.ajBlueLvls.200"}
           borderRightWidth="1px"
