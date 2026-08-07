@@ -23,9 +23,13 @@ function buildInfo(): Plugin {
   };
 }
 
+// Lets CI build a copy for a subpath preview (e.g. /test/) without the
+// default "/" used for the production (main) deployment.
+const deployBase = process.env.DEPLOY_BASE || "/";
+
 // https://vitejs.dev/config/
 export default defineConfig({
-  base: "/",
+  base: deployBase,
   plugins: [
     react(),
     buildInfo(),
@@ -42,8 +46,8 @@ export default defineConfig({
         name: "Lookit This Weather",
         short_name: "Weather",
         description: "A simple current weather dashboard.",
-        start_url: "/",
-        scope: "/",
+        start_url: deployBase,
+        scope: deployBase,
         display: "standalone",
         theme_color: "#09172a",
         background_color: "#09172a",
