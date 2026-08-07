@@ -12,10 +12,13 @@ export interface ChangelogEntry {
 // whenever a user-facing change ships.
 export const CHANGELOG: ChangelogEntry[] = [
   {
-    version: "1.1.5-alpha",
+    version: "1.1.15",
     date: "2026-08-06",
     notes: [
       "Fixed the Synthwave grid leaving empty gaps in the bottom corners.",
+      "Updated the Synthwave sun color to a brighter orange.",
+      "Added a subtle glow behind the Synthwave sun/moon.",
+      "Added twinkling stars to the Synthwave night sky.",
     ],
   },
   {
