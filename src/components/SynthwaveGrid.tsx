@@ -6,21 +6,28 @@ import { Box, useTheme } from "@chakra-ui/react";
 export const HORIZON_Y = 15;
 
 const COLUMN_COUNT = 16;
-// Columns fan out past the 0-100 viewBox width so the spread still covers
-// the full container on very wide or very narrow viewports.
-const COLUMN_MIN_X = -100;
-const COLUMN_MAX_X = 300;
 
 const ROW_COUNT = 14;
 // Higher = rows bunch up more tightly near the horizon, mimicking
 // perspective foreshortening.
 const ROW_CURVE = 2.2;
 
-function getColumnEndpoints(): number[] {
-  return Array.from(
-    { length: COLUMN_COUNT + 1 },
-    (_, i) => COLUMN_MIN_X + (i / COLUMN_COUNT) * (COLUMN_MAX_X - COLUMN_MIN_X),
-  );
+// Column targets are spaced evenly along the visible frame's perimeter
+// (left edge, down to the bottom edge, up the right edge) rather than
+// along a fixed line at y=100. Anchoring wide-angle columns to a fixed
+// y left them exiting through the left/right edges partway up the
+// screen, clipped before reaching the bottom - leaving empty triangular
+// gaps in the bottom corners. Targeting the perimeter directly means
+// every column always reaches the edge of the visible area.
+function getColumnTargets(): { x: number; y: number }[] {
+  const edgeLength = 100 - HORIZON_Y;
+  const perimeter = edgeLength * 2 + 100;
+  return Array.from({ length: COLUMN_COUNT + 1 }, (_, i) => {
+    const s = (i / COLUMN_COUNT) * perimeter;
+    if (s <= edgeLength) return { x: 0, y: HORIZON_Y + s };
+    if (s <= edgeLength + 100) return { x: s - edgeLength, y: 100 };
+    return { x: 100, y: 100 - (s - edgeLength - 100) };
+  });
 }
 
 function getRowYPositions(): number[] {
@@ -37,7 +44,7 @@ function getRowYPositions(): number[] {
 export default function SynthwaveGrid() {
   const { colors } = useTheme();
   const gridColor = colors.brand.ajBlueLvls[500];
-  const columnEndpoints = getColumnEndpoints();
+  const columnTargets = getColumnTargets();
   const rowYPositions = getRowYPositions();
 
   return (
@@ -81,8 +88,8 @@ export default function SynthwaveGrid() {
           vectorEffect="non-scaling-stroke"
           filter="url(#synthwave-grid-glow)"
         >
-          {columnEndpoints.map((x) => (
-            <line key={x} x1={50} y1={HORIZON_Y} x2={x} y2={100} />
+          {columnTargets.map(({ x, y }) => (
+            <line key={`${x}-${y}`} x1={50} y1={HORIZON_Y} x2={x} y2={y} />
           ))}
           {rowYPositions.map((y) => (
             <line key={y} x1={0} y1={y} x2={100} y2={y} />
