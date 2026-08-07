@@ -2,8 +2,6 @@ import { Box, ResponsiveValue } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
 import { useMemo } from "react";
 
-import { useThemeName } from "../context/ThemeNameContext";
-
 const twinkle = keyframes`
   0%, 100% { opacity: 0; transform: scale(0.4); }
   50% { opacity: 1; transform: scale(1); }

@@ -132,10 +132,7 @@ const HourlyForecast = () => {
   if (error) {
     return (
       <Center minH="40vh">
-        <Text
-          opacity={0.7}
-          color={mode.isDay ? mode.textColor : undefined}
-        >
+        <Text opacity={0.7} color={mode.isDay ? mode.textColor : undefined}>
           {error}
         </Text>
       </Center>
