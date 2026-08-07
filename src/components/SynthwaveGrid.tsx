@@ -86,6 +86,18 @@ export default function SynthwaveGrid({ leftOffset = 0 }: SynthwaveGridProps) {
       overflow="visible"
       pointerEvents="none"
     >
+      {/* Horizon glow - full-width, sun-colored, fading upward into the sky.
+          Sits behind the sun and the grid's horizon line stroke. */}
+      <Box
+        position="absolute"
+        left={0}
+        right={0}
+        bottom={`${100 - HORIZON_Y}%`}
+        height={`${SUN_RADIUS * 0.2}vw`}
+        opacity={0.6}
+        bgGradient={`linear(to-t, ${sunColor}, transparent)`}
+      />
+
       <Box
         position="absolute"
         left="50%"
