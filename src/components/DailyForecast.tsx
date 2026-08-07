@@ -146,6 +146,7 @@ const DailyForecast = () => {
       mx="auto"
       py={{ base: 4, md: 8 }}
       color={mode.isDay ? mode.textColor : undefined}
+      textShadow={mode.isDay ? `1px 1px ${mode.textShadow}` : undefined}
       divider={<Box borderBottomWidth="1px" borderColor="whiteAlpha.100" />}
     >
       {days.map(({ point, label }) => (

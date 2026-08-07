@@ -157,6 +157,7 @@ const HourlyForecast = () => {
       mx="auto"
       py={{ base: 4, md: 8 }}
       color={mode.isDay ? mode.textColor : undefined}
+      textShadow={mode.isDay ? `1px 1px ${mode.textShadow}` : undefined}
     >
       {days.map((day) => (
         <Stack key={day.label} spacing={0}>
