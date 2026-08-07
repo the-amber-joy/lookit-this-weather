@@ -1,8 +1,8 @@
-name: Deploy to GitHub Pages
+name: Deploy test branch preview
 
 on:
   push:
-    branches: [main]
+    branches: [test]
   workflow_dispatch:
 
 permissions:
@@ -28,11 +28,13 @@ jobs:
 
       - name: Build
         run: npm run build
+        env:
+          DEPLOY_BASE: /test/
 
-      - name: Deploy to gh-pages (production root)
+      - name: Deploy to gh-pages (/test/ subpath)
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: dist
-          destination_dir: .
+          destination_dir: test
           keep_files: true
