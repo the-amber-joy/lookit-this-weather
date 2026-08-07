@@ -1,8 +1,6 @@
-import { Box } from "@chakra-ui/react";
+import { Box, ResponsiveValue } from "@chakra-ui/react";
 import { keyframes } from "@emotion/react";
 import { useMemo } from "react";
-
-import { useThemeName } from "../context/ThemeNameContext";
 
 const twinkle = keyframes`
   0%, 100% { opacity: 0; transform: scale(0.4); }
@@ -36,6 +34,10 @@ function createSparkles(count: number): Sparkle[] {
 
 interface SparklesProps {
   count?: number;
+  // How far the sparkle field's left edge sits from the viewport's left
+  // edge, e.g. to account for a desktop sidebar - so sparkles are scattered
+  // across the content column rather than the full window.
+  leftOffset?: ResponsiveValue<string | number>;
 }
 
 /**
@@ -43,18 +45,18 @@ interface SparklesProps {
  * Fixed behind the app's content (negative z-index) so it only peeks
  * through the gaps between opaque cards/panels rather than on top of them.
  */
-const Sparkles = ({ count = 24 }: SparklesProps) => {
-  const { themeName } = useThemeName();
+const Sparkles = ({ count = 24, leftOffset = 0 }: SparklesProps) => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const sparkles = useMemo(() => createSparkles(count), [count]);
-
-  if (themeName !== "fairycore") return null;
 
   return (
     <Box
       aria-hidden
       position="fixed"
-      inset={0}
+      top={0}
+      left={leftOffset}
+      right={0}
+      bottom={0}
       zIndex={-1}
       pointerEvents="none"
     >

@@ -122,10 +122,7 @@ const DailyForecast = () => {
   if (error) {
     return (
       <Center minH="40vh">
-        <Text
-          opacity={0.7}
-          color={mode.isDay ? mode.textColor : undefined}
-        >
+        <Text opacity={0.7} color={mode.isDay ? mode.textColor : undefined}>
           {error}
         </Text>
       </Center>
@@ -146,6 +143,7 @@ const DailyForecast = () => {
       mx="auto"
       py={{ base: 4, md: 8 }}
       color={mode.isDay ? mode.textColor : undefined}
+      textShadow={mode.isDay ? `1px 1px ${mode.textShadow}` : undefined}
       divider={<Box borderBottomWidth="1px" borderColor="whiteAlpha.100" />}
     >
       {days.map(({ point, label }) => (
