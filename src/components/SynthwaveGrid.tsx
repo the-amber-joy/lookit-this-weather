@@ -1,32 +1,31 @@
 import { Box, useTheme } from "@chakra-ui/react";
 
 // How far down the container (out of 100 viewBox units) the horizon sits.
-// Exported so a future sun/moon element can anchor to the same line - the
-// vanishing point is (50, HORIZON_Y).
-export const HORIZON_Y = 15;
+// Exported so a future sun/moon element can anchor to the same line.
+export const HORIZON_Y = 5;
 
 const COLUMN_COUNT = 16;
+// Columns fan out past the 0-100 viewBox width so the spread still covers
+// the full container on very wide or very narrow viewports.
+const COLUMN_MIN_X = -100;
+const COLUMN_MAX_X = 200;
+// The near (top) end of each column also spreads out a little instead of
+// meeting at a single vanishing point - a softer, less fisheye-like fan.
+const COLUMN_ORIGIN_MIN_X = 5;
+const COLUMN_ORIGIN_MAX_X = 95;
 
 const ROW_COUNT = 14;
 // Higher = rows bunch up more tightly near the horizon, mimicking
 // perspective foreshortening.
-const ROW_CURVE = 2.2;
+const ROW_CURVE = 2;
 
-// Column targets are spaced evenly along the visible frame's perimeter
-// (left edge, down to the bottom edge, up the right edge) rather than
-// along a fixed line at y=100. Anchoring wide-angle columns to a fixed
-// y left them exiting through the left/right edges partway up the
-// screen, clipped before reaching the bottom - leaving empty triangular
-// gaps in the bottom corners. Targeting the perimeter directly means
-// every column always reaches the edge of the visible area.
-function getColumnTargets(): { x: number; y: number }[] {
-  const edgeLength = 100 - HORIZON_Y;
-  const perimeter = edgeLength * 2 + 100;
+function getColumnEndpoints(): { x1: number; x2: number }[] {
   return Array.from({ length: COLUMN_COUNT + 1 }, (_, i) => {
-    const s = (i / COLUMN_COUNT) * perimeter;
-    if (s <= edgeLength) return { x: 0, y: HORIZON_Y + s };
-    if (s <= edgeLength + 100) return { x: s - edgeLength, y: 100 };
-    return { x: 100, y: 100 - (s - edgeLength - 100) };
+    const t = i / COLUMN_COUNT;
+    return {
+      x1: COLUMN_ORIGIN_MIN_X + t * (COLUMN_ORIGIN_MAX_X - COLUMN_ORIGIN_MIN_X),
+      x2: COLUMN_MIN_X + t * (COLUMN_MAX_X - COLUMN_MIN_X),
+    };
   });
 }
 
@@ -44,7 +43,7 @@ function getRowYPositions(): number[] {
 export default function SynthwaveGrid() {
   const { colors } = useTheme();
   const gridColor = colors.brand.ajBlueLvls[500];
-  const columnTargets = getColumnTargets();
+  const columnEndpoints = getColumnEndpoints();
   const rowYPositions = getRowYPositions();
 
   return (
@@ -54,7 +53,7 @@ export default function SynthwaveGrid() {
       left={0}
       right={0}
       bottom={0}
-      height="50%"
+      height="35%"
       zIndex={-1}
       overflow="hidden"
       pointerEvents="none"
@@ -88,8 +87,8 @@ export default function SynthwaveGrid() {
           vectorEffect="non-scaling-stroke"
           filter="url(#synthwave-grid-glow)"
         >
-          {columnTargets.map(({ x, y }) => (
-            <line key={`${x}-${y}`} x1={50} y1={HORIZON_Y} x2={x} y2={y} />
+          {columnEndpoints.map(({ x1, x2 }) => (
+            <line key={`${x1}-${x2}`} x1={x1} y1={HORIZON_Y} x2={x2} y2={100} />
           ))}
           {rowYPositions.map((y) => (
             <line key={y} x1={0} y1={y} x2={100} y2={y} />
