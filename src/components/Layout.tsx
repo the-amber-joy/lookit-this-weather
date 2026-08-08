@@ -215,23 +215,23 @@ const Layout = () => {
                   pointerEvents="none"
                 />
               )}
-              {isSynthwaveActive && active === index && (
-                <MotionPalmTree
-                  fill={colors.brand.ajDkGreenLvls[400]}
-                  layoutId="palmtree-desktop"
-                  transition={
-                    shouldReduceMotion
-                      ? { duration: 0 }
-                      : { type: "spring", stiffness: 300, damping: 24 }
-                  }
-                  aria-hidden
-                  boxSize="3.5rem"
-                  position="absolute"
-                  top="-1rem"
-                  left="-1.75rem"
-                  pointerEvents="none"
-                />
-              )}
+              <AnimatePresence>
+                {isSynthwaveActive && active === index && (
+                  <MotionPalmTree
+                    fill={colors.brand.ajDkGreenLvls[400]}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
+                    aria-hidden
+                    boxSize="3.5rem"
+                    position="absolute"
+                    top="-1rem"
+                    left="-1.75rem"
+                    pointerEvents="none"
+                  />
+                )}
+              </AnimatePresence>
               {label}
             </Button>
           ))}
@@ -364,23 +364,41 @@ const Layout = () => {
                   pointerEvents="none"
                 />
               )}
-              {isSynthwaveActive && active === index && (
-                <MotionPalmTree
-                  fill={colors.brand.ajDkGreenLvls[400]}
-                  layoutId="palmtree-mobile"
-                  transition={
-                    shouldReduceMotion
-                      ? { duration: 0 }
-                      : { type: "spring", stiffness: 300, damping: 24 }
-                  }
-                  aria-hidden
-                  boxSize="3.5rem"
-                  position="absolute"
-                  top="-0.75rem"
-                  left="0"
-                  pointerEvents="none"
-                />
-              )}
+              <AnimatePresence>
+                {isSynthwaveActive && active === index && (
+                  <MotionPalmTree
+                    fill={colors.brand.ajDkGreenLvls[400]}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
+                    aria-hidden
+                    boxSize="3.5rem"
+                    position="absolute"
+                    top="-0.75rem"
+                    left="-1.25rem"
+                    pointerEvents="none"
+                  />
+                )}
+              </AnimatePresence>
+              <AnimatePresence>
+                {isSynthwaveActive && active === index && (
+                  <MotionPalmTree
+                    fill={colors.brand.ajDkGreenLvls[400]}
+                    style={{ scaleX: -1 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
+                    aria-hidden
+                    boxSize="3.5rem"
+                    position="absolute"
+                    top="-0.75rem"
+                    right="-1.25rem"
+                    pointerEvents="none"
+                  />
+                )}
+              </AnimatePresence>
               <Stack spacing={1} align="center">
                 <Icon as={icon} boxSize={5} />
                 <Text fontSize="xs">{label}</Text>
