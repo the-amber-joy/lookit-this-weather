@@ -12,6 +12,14 @@ export interface ChangelogEntry {
 // whenever a user-facing change ships.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.1.16",
+    date: "2026-08-07",
+    notes: [
+      "Color adjustments to the Synthwave theme.",
+      "Palm tree tab indicator added to Synthwave theme.",
+    ],
+  },
+  {
     version: "1.1.15",
     date: "2026-08-06",
     notes: [

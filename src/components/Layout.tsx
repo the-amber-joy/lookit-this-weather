@@ -10,12 +10,14 @@ import type { ComponentWithAs, IconProps } from "@chakra-ui/react";
 import {
   Box,
   Button,
+  chakra,
   Flex,
   Icon,
   Image,
   Spinner,
   Stack,
   Text,
+  useTheme,
   VStack,
 } from "@chakra-ui/react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
@@ -32,6 +34,7 @@ import { useMode } from "../theme/themedMode";
 import CurrentWeather from "./CurrentWeather";
 import DailyForecast from "./DailyForecast";
 import HourlyForecast from "./HourlyForecast";
+import PalmTreeIcon from "./PalmTreeIcon";
 import RadarMap from "./RadarMap";
 import Themes from "./Settings";
 import Sparkles from "./Sparkles";
@@ -85,16 +88,19 @@ const DESKTOP_SIDEBAR_WIDTH = "12rem";
 
 const MotionBox = motion(Box);
 const MotionImage = motion(Image);
+const MotionPalmTree = motion(chakra(PalmTreeIcon));
 
 const Layout = () => {
   const [active, setActive] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
   const mode = useMode();
+  const { colors } = useTheme();
   const { pullDistance, refreshing } = usePullToRefresh(contentRef);
   const { themeName } = useThemeName();
   const isFairycoreNight = themeName === "fairycore" && !mode.isDay;
   const isFairycoreDayActive = themeName === "fairycore" && mode.isDay;
+  const isSynthwaveActive = themeName === "synthwave";
 
   useEffect(() => {
     contentRef.current?.scrollTo(0, 0);
@@ -143,7 +149,7 @@ const Layout = () => {
           height="100dvh"
           minW={DESKTOP_SIDEBAR_WIDTH}
           p={4}
-          bg={mode.surfaceBg ?? "brand.ajBlueLvls.200"}
+          bg={mode.surfaceBg ?? colors.brand.ajBlueLvls[200]}
           borderRightWidth="1px"
           borderColor="whiteAlpha.200"
           boxShadow="4px 0 12px rgba(0, 0, 0, 0.15)"
@@ -157,7 +163,14 @@ const Layout = () => {
               leftIcon={<Icon as={icon} />}
               onClick={() => setActive(index)}
               aria-current={active === index ? "page" : undefined}
-              bg={active === index ? "whiteAlpha.200" : undefined}
+              bg={
+                active === index
+                  ? (mode.tabBgColor ?? "whiteAlpha.200")
+                  : undefined
+              }
+              _hover={{
+                bg: mode.tabBgColor ?? "whiteAlpha.200",
+              }}
               color={
                 active === index
                   ? mode.accentColor
@@ -202,6 +215,23 @@ const Layout = () => {
                   pointerEvents="none"
                 />
               )}
+              <AnimatePresence>
+                {isSynthwaveActive && active === index && (
+                  <MotionPalmTree
+                    fill={colors.brand.ajDkGreenLvls[400]}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
+                    aria-hidden
+                    boxSize="3.5rem"
+                    position="absolute"
+                    top="-1rem"
+                    left="-1.75rem"
+                    pointerEvents="none"
+                  />
+                )}
+              </AnimatePresence>
               {label}
             </Button>
           ))}
@@ -275,7 +305,7 @@ const Layout = () => {
           right={0}
           zIndex={10}
           justify="space-around"
-          bg={mode.surfaceBg ?? "brand.ajBlueLvls.200"}
+          bg={mode.surfaceBg ?? colors.brand.ajBlueLvls[200]}
           borderTopWidth="1px"
           borderColor="whiteAlpha.200"
           boxShadow="0 -4px 12px rgba(0, 0, 0, 0.15)"
@@ -334,6 +364,41 @@ const Layout = () => {
                   pointerEvents="none"
                 />
               )}
+              <AnimatePresence>
+                {isSynthwaveActive && active === index && (
+                  <MotionPalmTree
+                    fill={colors.brand.ajDkGreenLvls[400]}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
+                    aria-hidden
+                    boxSize="3.5rem"
+                    position="absolute"
+                    top="-0.75rem"
+                    left="-1.25rem"
+                    pointerEvents="none"
+                  />
+                )}
+              </AnimatePresence>
+              <AnimatePresence>
+                {isSynthwaveActive && active === index && (
+                  <MotionPalmTree
+                    fill={colors.brand.ajDkGreenLvls[400]}
+                    style={{ scaleX: -1 }}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    transition={{ duration: shouldReduceMotion ? 0 : 0.3 }}
+                    aria-hidden
+                    boxSize="3.5rem"
+                    position="absolute"
+                    top="-0.75rem"
+                    right="-1.25rem"
+                    pointerEvents="none"
+                  />
+                )}
+              </AnimatePresence>
               <Stack spacing={1} align="center">
                 <Icon as={icon} boxSize={5} />
                 <Text fontSize="xs">{label}</Text>
