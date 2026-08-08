@@ -36,6 +36,7 @@ export interface Mode {
   showcaseTextShadow: string;
   /** Secondary/quieter text color for the showcase cards. */
   showcaseSubTextColor: string;
+  tabBgColor?: string;
 }
 
 export function useMode(): Mode {
@@ -52,6 +53,7 @@ export function useMode(): Mode {
         ? !systemPrefersDark
         : modePreference === "day";
 
+  // Night Mode Themes
   if (!isDay) {
     if (themeName === "synthwave") {
       return {
@@ -77,8 +79,6 @@ export function useMode(): Mode {
       cardTextColor: colors.white,
       accentColor: colors.brand.ajCheezLvls[400],
       pageBackground: undefined,
-      // Unused by Hero/ComfortCard at night (they compute their own
-      // per-condition tone), but kept consistent with the chrome colors.
       showcaseTextColor: colors.white,
       showcaseTextShadow: colors.brand.ajBlueLvls[200],
       showcaseSubTextColor: colors.whiteAlpha[900],
@@ -88,21 +88,12 @@ export function useMode(): Mode {
   if (themeName === "fairycore") {
     return {
       isDay,
-      // Light text (rather than dark) so it stays legible and on-brand
-      // against the purple/pink/gold pastel page gradient below, paired
-      // with a dark shadow for contrast against the lighter parts of it.
       textColor: colors.white,
       textShadow: colors.blackAlpha[400],
       subTextColor: colors.whiteAlpha[900],
       surfaceBg: colors.brand.ajPurpleLvls[600],
-      // Dark, unlike textColor above: MetricCard sits on this light pastel
-      // purple surface, not the page gradient, so it needs dark text for
-      // contrast rather than the light text used elsewhere.
       cardTextColor: colors.brand.ajPurpleLvls[200],
       accentColor: colors.brand.ajPinkLvls[200],
-      // Starting with lilac (bridging the Hero/ComfortCard's purple-gold
-      // gradient) before easing into blush and antique gold keeps the page
-      // from clashing with the purple showcase cards up top.
       pageBackground: `linear-gradient(160deg, ${colors.brand.ajPurpleLvls[300]}, ${colors.brand.ajPinkLvls[300]}, ${colors.brand.ajCheezLvls[300]})`,
       showcaseTextColor: colors.brand.ajBlueLvls[200],
       showcaseTextShadow: colors.blackAlpha[400],
@@ -113,25 +104,20 @@ export function useMode(): Mode {
   if (themeName === "synthwave") {
     return {
       isDay,
-      // Purple text/chrome over a pink-to-purple page gradient (sidebar
-      // is pink; see surfaceBg/pageBackground below).
       textColor: colors.brand.ajPurpleLvls[200],
       textShadow: colors.blackAlpha[400],
       subTextColor: colors.brand.ajPurpleLvls[300],
       surfaceBg: colors.brand.ajMagentaLvls[600],
       cardTextColor: colors.brand.ajPurpleLvls[200],
-      accentColor: colors.brand.ajPurpleLvls[300],
+      accentColor: colors.brand.ajBlueLvls[300],
       pageBackground: `linear-gradient(to bottom, ${colors.brand.ajMagentaLvls[600]}, ${colors.brand.ajYellowLvls[700]}, ${colors.brand.ajPurpleLvls[300]})`,
       showcaseTextColor: colors.brand.ajPurpleLvls[200],
       showcaseTextShadow: colors.blackAlpha[400],
       showcaseSubTextColor: colors.brand.ajPurpleLvls[300],
+      tabBgColor: colors.brand.ajPinkLvls[600],
     };
   }
 
-  // Default theme, daytime: lighter blue surface with dark text, instead of
-  // the navy chrome used at night. Matches the brightness of the existing
-  // clear-day card gradient so plain white text elsewhere (Daily, Hourly,
-  // Controls) stays legible against the page background.
   return {
     isDay,
     textColor: colors.brand.ajBlueLvls[200],

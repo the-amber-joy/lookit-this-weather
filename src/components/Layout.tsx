@@ -157,7 +157,10 @@ const Layout = () => {
               leftIcon={<Icon as={icon} />}
               onClick={() => setActive(index)}
               aria-current={active === index ? "page" : undefined}
-              bg={active === index ? "whiteAlpha.200" : undefined}
+              bg={active === index ? mode.tabBgColor ?? "whiteAlpha.200" : undefined}
+              _hover={{
+                bg:mode.tabBgColor ?? "whiteAlpha.200"
+              }}
               color={
                 active === index
                   ? mode.accentColor
