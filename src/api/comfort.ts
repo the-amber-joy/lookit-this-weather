@@ -107,6 +107,7 @@ function getBand(temperature: number, humidity: Humidity): ComfortBand {
           "Just about perfect out.",
           "Peak weather. Go enjoy it.",
           "Goldilocks conditions — not too much of anything.",
+          "Practically perfect."
         ],
       };
     }
