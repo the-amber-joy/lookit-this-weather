@@ -13,9 +13,10 @@ export interface ChangelogEntry {
 export const CHANGELOG: ChangelogEntry[] = [
   {
     version: "1.1.17",
-    date: "2026-08-08",
+    date: "2026-09-05",
     notes: [
       "Added swipe gestures for navigating between tabs.",
+      "The update banner no longer appears for deploys that don't change anything user-facing.",
     ],
   },
   {

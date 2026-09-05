@@ -1,6 +1,6 @@
 import react from "@vitejs/plugin-react";
 import { execSync } from "node:child_process";
-import { writeFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { type Plugin } from "vite";
 import { VitePWA } from "vite-plugin-pwa";
@@ -17,7 +17,14 @@ function buildInfo(): Plugin {
       } catch {
         // git not available; leave as "unknown"
       }
-      const contents = `commit: ${commit}\nbuilt: ${new Date().toISOString()}\n`;
+      // Read directly instead of importing so this isn't affected by
+      // resolveJsonModule/module settings applied to the app's TS build.
+      const { version } = JSON.parse(
+        readFileSync(resolve(__dirname, "package.json"), "utf-8"),
+      ) as { version: string };
+      // The update banner compares this against the running app's version to
+      // decide whether a waiting service worker is actually user-facing.
+      const contents = `commit: ${commit}\nbuilt: ${new Date().toISOString()}\nversion: ${version}\n`;
       writeFileSync(resolve(__dirname, "dist/build.txt"), contents);
     },
   };

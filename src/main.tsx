@@ -41,7 +41,7 @@ const updateSW = registerSW({
     });
   },
   onNeedRefresh() {
-    markUpdateAvailable();
+    void markUpdateAvailable();
   },
 });
 

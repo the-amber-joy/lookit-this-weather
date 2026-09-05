@@ -3,6 +3,8 @@
 // prompt the user to apply a newly-installed update instead of reloading
 // silently underneath them.
 
+import { APP_VERSION } from "./changelog";
+
 type Listener = (updateAvailable: boolean) => void;
 
 const listeners = new Set<Listener>();
@@ -16,8 +18,28 @@ export function registerUpdateHandler(
   applyUpdateFn = fn;
 }
 
+/**
+ * A waiting service worker gets installed for every deploy, even ones that
+ * only touch build tooling/tests and don't bump APP_VERSION (see the
+ * pre-push hook). Fetching the freshly-built build.txt (bypassing the SW's
+ * own cache) tells us whether this particular deploy actually shipped a new
+ * version worth interrupting the user for.
+ */
+async function isUserFacingUpdate(): Promise<boolean> {
+  try {
+    const response = await fetch(`${import.meta.env.BASE_URL}build.txt`, {
+      cache: "no-store",
+    });
+    const match = /version:\s*(\S+)/.exec(await response.text());
+    return match ? match[1] !== APP_VERSION : true;
+  } catch {
+    return true;
+  }
+}
+
 /** Called from main.tsx's onNeedRefresh callback. */
-export function markUpdateAvailable() {
+export async function markUpdateAvailable() {
+  if (!(await isUserFacingUpdate())) return;
   updateAvailable = true;
   listeners.forEach((listener) => listener(updateAvailable));
 }
