@@ -21,7 +21,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { ReactNode, useEffect, useRef, useState } from "react";
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react";
 
 import butterfly from "../assets/butterfly.png";
 import firefly from "../assets/firefly.png";
@@ -30,6 +30,7 @@ import {
   PULL_TRIGGER_DISTANCE,
   usePullToRefresh,
 } from "../hooks/usePullToRefresh";
+import { useSwipeTabs } from "../hooks/useSwipeTabs";
 import { useMode } from "../theme/themedMode";
 import CurrentWeather from "./CurrentWeather";
 import DailyForecast from "./DailyForecast";
@@ -97,6 +98,15 @@ const Layout = () => {
   const mode = useMode();
   const { colors } = useTheme();
   const { pullDistance, refreshing } = usePullToRefresh(contentRef);
+  const goToNextTab = useCallback(
+    () => setActive((prev) => Math.min(prev + 1, tabs.length - 1)),
+    [],
+  );
+  const goToPrevTab = useCallback(
+    () => setActive((prev) => Math.max(prev - 1, 0)),
+    [],
+  );
+  useSwipeTabs(contentRef, goToNextTab, goToPrevTab);
   const { themeName } = useThemeName();
   const isFairycoreNight = themeName === "fairycore" && !mode.isDay;
   const isFairycoreDayActive = themeName === "fairycore" && mode.isDay;
