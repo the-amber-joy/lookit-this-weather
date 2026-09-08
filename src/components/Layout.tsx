@@ -93,18 +93,27 @@ const MotionPalmTree = motion(chakra(PalmTreeIcon));
 
 const Layout = () => {
   const [active, setActive] = useState(0);
+  // +1/-1 tells the panel transition which side to slide in/out from.
+  const [direction, setDirection] = useState(0);
   const contentRef = useRef<HTMLDivElement>(null);
   const shouldReduceMotion = useReducedMotion();
   const mode = useMode();
   const { colors } = useTheme();
   const { pullDistance, refreshing } = usePullToRefresh(contentRef);
-  const goToNextTab = useCallback(
-    () => setActive((prev) => Math.min(prev + 1, tabs.length - 1)),
-    [],
-  );
-  const goToPrevTab = useCallback(
-    () => setActive((prev) => Math.max(prev - 1, 0)),
-    [],
+  const goToNextTab = useCallback(() => {
+    setDirection(1);
+    setActive((prev) => Math.min(prev + 1, tabs.length - 1));
+  }, []);
+  const goToPrevTab = useCallback(() => {
+    setDirection(-1);
+    setActive((prev) => Math.max(prev - 1, 0));
+  }, []);
+  const goToTab = useCallback(
+    (index: number) => {
+      setDirection(index > active ? 1 : -1);
+      setActive(index);
+    },
+    [active],
   );
   useSwipeTabs(contentRef, goToNextTab, goToPrevTab);
   const { themeName } = useThemeName();
@@ -171,7 +180,7 @@ const Layout = () => {
               variant="ghost"
               justifyContent="flex-start"
               leftIcon={<Icon as={icon} />}
-              onClick={() => setActive(index)}
+              onClick={() => goToTab(index)}
               aria-current={active === index ? "page" : undefined}
               bg={
                 active === index
@@ -288,13 +297,22 @@ const Layout = () => {
               />
             )}
           </Flex>
-          <AnimatePresence mode="wait" initial={false}>
+          <AnimatePresence mode="wait" initial={false} custom={direction}>
             <MotionBox
               key={active}
+              custom={direction}
               height={tabs[active].fillHeight ? "100%" : "auto"}
-              initial={shouldReduceMotion ? false : { opacity: 0, y: 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={shouldReduceMotion ? undefined : { opacity: 0, y: -8 }}
+              initial={
+                shouldReduceMotion
+                  ? false
+                  : (dir: number) => ({ opacity: 0, x: dir < 0 ? -40 : 40 })
+              }
+              animate={{ opacity: 1, x: 0 }}
+              exit={
+                shouldReduceMotion
+                  ? undefined
+                  : (dir: number) => ({ opacity: 0, x: dir < 0 ? 40 : -40 })
+              }
               transition={{
                 duration: shouldReduceMotion ? 0 : 0.2,
                 ease: "easeOut",
@@ -328,7 +346,7 @@ const Layout = () => {
               as="button"
               position="relative"
               flex="1"
-              onClick={() => setActive(index)}
+              onClick={() => goToTab(index)}
               aria-current={active === index ? "page" : undefined}
               color={
                 active === index

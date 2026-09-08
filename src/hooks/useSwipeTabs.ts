@@ -36,7 +36,11 @@ export function useSwipeTabs(
         return;
       }
       const touch = event.touches[0];
-      start.current = { x: touch.clientX, y: touch.clientY, time: event.timeStamp };
+      start.current = {
+        x: touch.clientX,
+        y: touch.clientY,
+        time: event.timeStamp,
+      };
       isHorizontal.current = false;
     };
 

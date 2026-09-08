@@ -15,7 +15,8 @@ export const CHANGELOG: ChangelogEntry[] = [
     version: "1.1.18",
     date: "2026-09-07",
     notes: [
-      "Improved swipe gesture detection for tab navigation.",
+      "Fixed an issue where panning the map would cause swipe navigation to trigger unexpectedly.",
+      "Added sliding animation when changing tabs."
     ],
   },
   {
