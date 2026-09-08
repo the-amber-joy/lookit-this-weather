@@ -8,6 +8,10 @@ const SWIPE_TRIGGER_DISTANCE = 50;
 // gesture commits to being a swipe (and starts blocking vertical scroll).
 const DIRECTION_LOCK_DISTANCE = 10;
 
+// Minimum speed (px/ms) required for a swipe to trigger a tab change, so
+// slow drags (e.g. panning the radar map) don't get mistaken for a swipe.
+const MIN_SWIPE_VELOCITY = 0.3;
+
 /**
  * Adds a touch-driven horizontal swipe gesture to a container, calling
  * onSwipeLeft/onSwipeRight once the user drags past SWIPE_TRIGGER_DISTANCE
@@ -19,7 +23,7 @@ export function useSwipeTabs(
   onSwipeLeft: () => void,
   onSwipeRight: () => void,
 ) {
-  const start = useRef<{ x: number; y: number } | null>(null);
+  const start = useRef<{ x: number; y: number; time: number } | null>(null);
   const isHorizontal = useRef(false);
 
   useEffect(() => {
@@ -32,7 +36,7 @@ export function useSwipeTabs(
         return;
       }
       const touch = event.touches[0];
-      start.current = { x: touch.clientX, y: touch.clientY };
+      start.current = { x: touch.clientX, y: touch.clientY, time: event.timeStamp };
       isHorizontal.current = false;
     };
 
@@ -61,6 +65,10 @@ export function useSwipeTabs(
 
       const deltaX = event.changedTouches[0].clientX - startPoint.x;
       if (Math.abs(deltaX) < SWIPE_TRIGGER_DISTANCE) return;
+
+      const elapsed = event.timeStamp - startPoint.time || 1;
+      if (Math.abs(deltaX) / elapsed < MIN_SWIPE_VELOCITY) return;
+
       if (deltaX < 0) onSwipeLeft();
       else onSwipeRight();
     };

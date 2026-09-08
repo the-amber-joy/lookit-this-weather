@@ -12,6 +12,13 @@ export interface ChangelogEntry {
 // whenever a user-facing change ships.
 export const CHANGELOG: ChangelogEntry[] = [
   {
+    version: "1.1.18",
+    date: "2026-09-07",
+    notes: [
+      "Improved swipe gesture detection for tab navigation.",
+    ],
+  },
+  {
     version: "1.1.17",
     date: "2026-09-05",
     notes: [
